@@ -6,10 +6,64 @@
 
 generator client {
   provider = "prisma-client-js"
-
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+enum Role {
+  User
+  Admin
+}
+
+enum JenisLaporan {
+  Hilang
+  Ditemukan
+}
+
+enum StatusLaporan {
+  Diterima
+  Diproses
+  Ditolak
+}
+
+model tb_user {
+  id        Int      @id @default(autoincrement())
+  nama      String   @db.VarChar(50)
+  email     String   @unique @db.VarChar(100)
+  password  String   @db.VarChar(255)
+  notelp    String   @db.VarChar(50)
+  role      Role     @default(User)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model tb_lost {
+  id           Int           @id @default(autoincrement())
+  namaBarang   String        @db.VarChar(50)
+  lokasiHilang String        @db.VarChar(255)
+  deskripsi    String        @db.VarChar(500)
+  jenis        JenisLaporan
+  status       StatusLaporan @default(Diproses)
+  foto         String?       @db.VarChar(255)
+  waktuHilang  DateTime      @default(now())
+  kontak       String        @db.VarChar(50)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
+
+model tb_found {
+  id         Int           @id @default(autoincrement())
+  namabarang String        @db.VarChar(50)
+  lokasiTemu String        @db.VarChar(255)
+  deskripsi  String        @db.VarChar(500)
+  jenis      JenisLaporan
+  status     StatusLaporan @default(Diproses)
+  foto       String?       @db.VarChar(255)
+  waktuTemu  DateTime      @default(now())
+  kontak     String        @db.VarChar(50)
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
 }
