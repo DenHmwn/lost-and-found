@@ -19,7 +19,7 @@ enum Role {
 }
 
 enum JenisLaporan {
-  Hilang 
+  Hilang
   Ditemukan
 }
 
@@ -29,24 +29,32 @@ enum StatusLaporan {
   Ditolak
 }
 
-model user {
-  id        Int      @id @default(autoincrement())
-  nama      String   @db.VarChar(50)
-  email     String   @unique @db.VarChar(100)
-  password  String   @db.VarChar(255)
-  role      Role     @default(User)
-  notelp    String   @db.VarChar(20)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model tb_user {
+  id              Int         @id @default(autoincrement())
+  nama            String      @db.VarChar(50)
+  email           String      @unique @db.VarChar(100)
+  password        String      @db.VarChar(255)
+  role            Role        @default(User)
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  laporanDibuat   tb_barang[] @relation("UserReport")
+  laporanDikelola tb_barang[] @relation("AdminReport")
 }
 
-model barang {
-  id Int @id @default(autoincrement())
-  namaBarang String @db.VarChar(50)
-  lokasi String @db.VarChar(255)
-  deskripsi String @db.VarChar(500)
-  jenis JenisLaporan
-  status StatusLaporan
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model tb_barang {
+  id         Int           @id @default(autoincrement())
+  namabarang String        @db.VarChar(50)
+  lokasi     String        @db.VarChar(255)
+  notelp     String        @db.VarChar(20)
+  deskripsi  String        @db.VarChar(500)
+  jenis      JenisLaporan
+  status     StatusLaporan
+  foto       String?       @db.VarChar(255)
+  waktu      DateTime      @default(now())
+  userId     Int
+  user       tb_user       @relation("UserReport", fields: [userId], references: [id])
+  adminId    Int?
+  admin      tb_user?      @relation("AdminReport", fields: [adminId], references: [id])
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
 }
