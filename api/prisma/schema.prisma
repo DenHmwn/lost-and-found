@@ -30,31 +30,40 @@ enum StatusLaporan {
 }
 
 model tb_user {
-  id              Int         @id @default(autoincrement())
-  nama            String      @db.VarChar(50)
-  email           String      @unique @db.VarChar(100)
-  password        String      @db.VarChar(255)
-  role            Role        @default(User)
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
-  laporanDibuat   tb_barang[] @relation("UserReport")
-  laporanDikelola tb_barang[] @relation("AdminReport")
+  id        Int      @id @default(autoincrement())
+  nama      String   @db.VarChar(50)
+  email     String   @unique @db.VarChar(100)
+  password  String   @db.VarChar(255)
+  notelp    String   @db.VarChar(50)
+  role      Role     @default(User)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
-model tb_barang {
+model tb_lost {
+  id           Int           @id @default(autoincrement())
+  namaBarang   String        @db.VarChar(50)
+  lokasiHilang String        @db.VarChar(255)
+  deskripsi    String        @db.VarChar(500)
+  jenis        JenisLaporan
+  status       StatusLaporan @default(Diproses)
+  foto         String?       @db.VarChar(255)
+  waktuHilang  DateTime      @default(now())
+  kontak       String        @db.VarChar(50)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
+
+model tb_found {
   id         Int           @id @default(autoincrement())
   namabarang String        @db.VarChar(50)
-  lokasi     String        @db.VarChar(255)
-  notelp     String        @db.VarChar(20)
+  lokasiTemu String        @db.VarChar(255)
   deskripsi  String        @db.VarChar(500)
   jenis      JenisLaporan
-  status     StatusLaporan
+  status     StatusLaporan @default(Diproses)
   foto       String?       @db.VarChar(255)
-  waktu      DateTime      @default(now())
-  userId     Int
-  user       tb_user       @relation("UserReport", fields: [userId], references: [id])
-  adminId    Int?
-  admin      tb_user?      @relation("AdminReport", fields: [adminId], references: [id])
+  waktuTemu  DateTime      @default(now())
+  kontak     String        @db.VarChar(50)
   createdAt  DateTime      @default(now())
   updatedAt  DateTime      @updatedAt
 }
