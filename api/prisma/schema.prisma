@@ -9,9 +9,10 @@ datasource db {
 
 model User {
   id           Int           @id @default(autoincrement())
-  name         String
+  name         String        @db.VarChar(50)
   email        String        @unique
-  password     String
+  password     String        @db.VarChar(25)
+  notelp       String        @default("081234567890") @db.VarChar(15)
   role         Role          @default(USER)
   lostReports  LostReport[]
   foundReports FoundReport[]
@@ -22,7 +23,6 @@ model LostReport {
   namaBarang   String       @db.VarChar(25)
   deskripsi    String       @db.VarChar(255)
   lokasiHilang String       @db.VarChar(50)
-  notelp       String       @db.VarChar(15)
   status       LostStatus   @default(PENDING)
   statusReport StatusReport @default(OnProgress)
   createdAt    DateTime     @default(now())
@@ -36,7 +36,6 @@ model FoundReport {
   namaBarang   String       @db.VarChar(25)
   deskripsi    String       @db.VarChar(255)
   lokasiTemu   String       @db.VarChar(50)
-  notelp       String       @db.VarChar(15)
   statusReport StatusReport @default(OnProgress)
   createdAt    DateTime     @default(now())
   admin        User         @relation(fields: [adminId], references: [id])
