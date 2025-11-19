@@ -1,3 +1,4 @@
+import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
 // GET semua laporan lost
@@ -56,6 +57,20 @@ export async function POST(req: Request) {
           message: "Data tidak lengkap. Pastikan semua field terisi.",
         },
         { status: 400 }
+      );
+    }
+    // Validasi userId ada atau tidak
+    const userExists = await prisma.user.findUnique({
+      where: { id: Number(userId) },
+    });
+
+    if (!userExists) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "User tidak ditemukan",
+        },
+        { status: 404 }
       );
     }
 }
