@@ -70,4 +70,8 @@ export async function POST(req: Request) {
       { status: 400 }
     );
   }
+   //   validasi admin ada atau tidak
+  const adminExists = await prisma.user.findUnique({
+    where: { id: Number(adminId) },
+  });
 }
