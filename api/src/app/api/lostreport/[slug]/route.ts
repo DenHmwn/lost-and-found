@@ -201,31 +201,35 @@ export async function DELETE(
   request: Request,
   { params }: { params: Promise<{ slug: string }> }
 ) {
-    const { slug } = await params;
+  const { slug } = await params;
 
-    // Validasi ID
-    const id = Number(slug);
-    if (isNaN(id)) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "ID tidak valid",
-        },
-        { status: 400 }
-      );
-    }
-    // Cek apakah data ada atau tidak
-    const existingRecord = await prisma.lostReport.findUnique({
-      where: { id },
-    });
+  // Validasi ID
+  const id = Number(slug);
+  if (isNaN(id)) {
+    return NextResponse.json(
+      {
+        success: false,
+        message: "ID tidak valid",
+      },
+      { status: 400 }
+    );
+  }
+  // Cek apakah data ada atau tidak
+  const existingRecord = await prisma.lostReport.findUnique({
+    where: { id },
+  });
 
-    if (!existingRecord) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Data laporan tidak ditemukan",
-        },
-        { status: 404 }
-      );
-    }
+  if (!existingRecord) {
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Data laporan tidak ditemukan",
+      },
+      { status: 404 }
+    );
+  }
+  // Delete data
+  await prisma.lostReport.delete({
+    where: { id },
+  });
 }
