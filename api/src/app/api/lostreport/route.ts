@@ -47,6 +47,7 @@ export async function GET() {
 
 // POST pada lost report
 export async function POST(req: Request) {
+    try {
     const data = await req.json();
     const { namaBarang, deskripsi, lokasiHilang, userId } = data;
 
@@ -95,5 +96,25 @@ export async function POST(req: Request) {
           },
         },
       },
-    });
+    });// response success
+    return NextResponse.json(
+      {
+        success: true,
+        message: "Laporan barang hilang berhasil dibuat",
+        data: report,
+      },
+      { status: 201 }
+    );
+    // response error
+  } catch (error) {
+    console.error("Error creating lost report:", error);
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Gagal membuat laporan",
+        error: error instanceof Error ? error.message : "Unknown error",
+      },
+      { status: 500 }
+    );
+  }
 }
