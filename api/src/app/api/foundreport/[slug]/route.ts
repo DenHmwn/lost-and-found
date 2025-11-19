@@ -178,4 +178,21 @@ export async function PUT(
       );
     }
   }
+  // Cek apakah lostReport sudah memiliki foundReport lain
+  if (existingRecord.lostReportId !== Number(data.lostReportId)) {
+    const alreadyMatched = await prisma.foundReport.findUnique({
+      where: { lostReportId: Number(data.lostReportId) },
+    });
+
+    if (alreadyMatched) {
+      return NextResponse.json(
+        {
+          success: false,
+          message:
+            "Laporan barang hilang ini sudah memiliki pasangan barang temuan",
+        },
+        { status: 409 }
+      );
+    }
+  }
 }
