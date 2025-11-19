@@ -148,4 +148,10 @@ export async function GET(
         { status: 404 }
       );
     }
+    // response success
+    return NextResponse.json({
+      success: true,
+      message: "Berhasil mengambil data user",
+      data: report,
+    });
 }
