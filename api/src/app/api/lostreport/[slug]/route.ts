@@ -154,4 +154,27 @@ export async function PUT(
         { status: 404 }
       );
     }
+    // Update laporan
+    const updatedReport = await prisma.lostReport.update({
+      where: { id },
+      data: {
+        namaBarang: data.namaBarang.trim(),
+        deskripsi: data.deskripsi.trim(),
+        lokasiHilang: data.lokasiHilang.trim(),
+        status: data.status || existingRecord.status,
+        statusReport: data.statusReport || existingRecord.statusReport,
+        userId: Number(data.userId),
+      },
+      include: {
+        // include data user
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            notelp: true,
+          },
+        },
+      },
+    });
 }
