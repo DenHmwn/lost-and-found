@@ -57,11 +57,12 @@ export async function DELETE(
   }
 }
 
- // put user by id
+// put user by id
 export const PUT = async (
   request: NextRequest,
   context: { params: Promise<{ slug: string }> }
 ) => {
+  try {
     const { slug } = await context.params;
     const userId = Number(slug);
 
@@ -88,7 +89,7 @@ export const PUT = async (
         success: false,
       });
     }
-   // Update user langsung di sini
+    // Update user langsung di sini
     const updatedUser = await prisma.user.update({
       where: { id: userId },
       data,
@@ -99,4 +100,11 @@ export const PUT = async (
       success: true,
       data: updatedUser,
     });
-}
+    // response error
+  } catch (error: unknown) {
+    return NextResponse.json({
+      message: (error as Error).message || "Terjadi kesalahan",
+      success: false,
+    });
+  }
+};
