@@ -1,3 +1,4 @@
+import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
 // DELETE user by id
@@ -18,4 +19,18 @@ export async function DELETE(
       { status: 400 }
     );
   }
+  // cek apakah data nya ada
+    const existingRecord = await prisma.user.findUnique({
+      where: { id },
+    });
+
+    if (!existingRecord) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Data laporan tidak ditemukan",
+        },
+        { status: 404 }
+      );
+    }
 }
