@@ -33,4 +33,13 @@ export async function DELETE(
         { status: 404 }
       );
     }
+     // Delete data
+    await prisma.user.delete({
+      where: { id },
+    });
+    // response success
+    return NextResponse.json({
+      success: true,
+      message: "Data user berhasil dihapus",
+    });
 }
