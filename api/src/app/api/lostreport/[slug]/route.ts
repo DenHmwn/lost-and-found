@@ -100,4 +100,15 @@ export async function PUT(
         { status: 400 }
       );
     }
+    // Validasi status jika ada
+    if (data.status && !Object.values(LostStatus).includes(data.status)) {
+      return NextResponse.json(
+        {
+          success: false,
+          message:
+            "Status tidak valid. Gunakan: PENDING, APPROVED, atau REJECTED",
+        },
+        { status: 400 }
+      );
+    }
 }
