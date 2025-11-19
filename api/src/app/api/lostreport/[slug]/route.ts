@@ -140,4 +140,18 @@ export async function PUT(
         { status: 404 }
       );
     }
+    // Validasi userId ada atau tidak
+    const userExists = await prisma.user.findUnique({
+      where: { id: Number(data.userId) },
+    });
+
+    if (!userExists) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "User tidak ditemukan",
+        },
+        { status: 404 }
+      );
+    }
 }
