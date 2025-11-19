@@ -48,4 +48,9 @@ export const POST = async (req: NextRequest) => {
       },
     })
 
+    // response success
+    return NextResponse.json({
+      message: "Data berhasil disimpan",
+      success: true
+    }) 
 }
