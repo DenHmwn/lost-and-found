@@ -126,4 +126,26 @@ export async function PUT(
         { status: 404 }
       );
     }
+    // Validasi admin ada atau tidaknya dan adalah ADMIN role
+    const adminExists = await prisma.user.findUnique({
+      where: { id: Number(data.adminId) },
+    });
+    if (!adminExists) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Admin tidak ditemukan",
+        },
+        { status: 404 }
+      );
+    }
+    if (adminExists.role !== "ADMIN") {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "User bukan admin",
+        },
+        { status: 403 }
+      );
+    }
 }
