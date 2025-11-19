@@ -1,4 +1,5 @@
 import prisma from "@/lib/prisma";
+import { StatusReport } from "@prisma/client";
 import { NextResponse } from "next/server";
 
 // buat fungsi GET by id
@@ -107,6 +108,20 @@ export async function PUT(
           success: false,
           message:
             "Status tidak valid. Gunakan: PENDING, APPROVED, atau REJECTED",
+        },
+        { status: 400 }
+      );
+    }
+    //  Validasi statusReport jika ada
+    if (
+      data.statusReport &&
+      !Object.values(StatusReport).includes(data.statusReport)
+    ) {
+      return NextResponse.json(
+        {
+          success: false,
+          message:
+            "StatusReport tidak valid. Gunakan: Done, OnProgress, atau Closed",
         },
         { status: 400 }
       );
