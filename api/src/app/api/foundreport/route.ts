@@ -74,4 +74,13 @@ export async function POST(req: Request) {
   const adminExists = await prisma.user.findUnique({
     where: { id: Number(adminId) },
   });
+  if (!adminExists) {
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Admin tidak ditemukan",
+      },
+      { status: 404 }
+    );
+  }
 }
