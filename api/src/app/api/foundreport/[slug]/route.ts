@@ -47,4 +47,14 @@ export async function GET(
         },
       },
     });
+    // cek jika data tidak ditemukan
+    if (!report) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Data barang temuan tidak ditemukan",
+        },
+        { status: 404 }
+      );
+    }
 }
