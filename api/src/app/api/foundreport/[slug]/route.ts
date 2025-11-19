@@ -97,4 +97,19 @@ export async function PUT(
         { status: 400 }
       );
     }
+    // Validasi input required
+    if (
+      !data.namaBarang ||
+      !data.deskripsi ||
+      !data.lokasiTemu ||
+      !data.adminId
+    ) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Data tidak lengkap. Pastikan semua field terisi.",
+        },
+        { status: 400 }
+      );
+    }
 }
