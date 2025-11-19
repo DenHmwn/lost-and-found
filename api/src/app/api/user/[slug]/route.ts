@@ -6,20 +6,21 @@ export async function DELETE(
   request: Request,
   { params }: { params: Promise<{ slug: string }> }
 ) {
-  const { slug } = await params;
+  try {
+    const { slug } = await params;
 
-  // Validasi ID
-  const id = Number(slug);
-  if (isNaN(id)) {
-    return NextResponse.json(
-      {
-        success: false,
-        message: "ID tidak valid",
-      },
-      { status: 400 }
-    );
-  }
-  // cek apakah data nya ada
+    // Validasi ID
+    const id = Number(slug);
+    if (isNaN(id)) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "ID tidak valid",
+        },
+        { status: 400 }
+      );
+    }
+    // cek apakah data nya ada
     const existingRecord = await prisma.user.findUnique({
       where: { id },
     });
@@ -33,7 +34,7 @@ export async function DELETE(
         { status: 404 }
       );
     }
-     // Delete data
+    // Delete data
     await prisma.user.delete({
       where: { id },
     });
@@ -42,4 +43,16 @@ export async function DELETE(
       success: true,
       message: "Data user berhasil dihapus",
     });
+    // response error
+  } catch (error) {
+    console.error("Error deleting lost report:", error);
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Gagal menghapus data laporan",
+        error: error instanceof Error ? error.message : "Unknown error",
+      },
+      { status: 500 }
+    );
+  }
 }
