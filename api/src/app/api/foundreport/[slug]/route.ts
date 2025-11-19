@@ -285,4 +285,8 @@ export async function DELETE(
         { status: 404 }
       );
     }
+    // Delete data
+    await prisma.foundReport.delete({
+      where: { id },
+    });
 }
