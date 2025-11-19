@@ -41,3 +41,21 @@ export async function GET() {
     );
   }
 }
+
+
+// POST pada lost report
+export async function POST(req: Request) {
+    const data = await req.json();
+    const { namaBarang, deskripsi, lokasiHilang, userId } = data;
+
+    // Validasi input
+    if (!namaBarang || !deskripsi || !lokasiHilang || !userId) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Data tidak lengkap. Pastikan semua field terisi.",
+        },
+        { status: 400 }
+      );
+    }
+}
