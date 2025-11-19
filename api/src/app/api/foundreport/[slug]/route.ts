@@ -1,4 +1,5 @@
 import prisma from "@/lib/prisma";
+import { StatusReport } from "@prisma/client";
 import { NextResponse } from "next/server";
 
 export async function GET(
@@ -146,6 +147,20 @@ export async function PUT(
           message: "User bukan admin",
         },
         { status: 403 }
+      );
+    }
+    // Validasi statusReport jika dikirim
+    if (
+      data.statusReport &&
+      !Object.values(StatusReport).includes(data.statusReport)
+    ) {
+      return NextResponse.json(
+        {
+          success: false,
+          message:
+            "Status report tidak valid. Gunakan: Done, OnProgress, Closed",
+        },
+        { status: 400 }
       );
     }
 }
