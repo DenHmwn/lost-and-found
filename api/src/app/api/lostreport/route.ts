@@ -1,4 +1,5 @@
 import prisma from "@/lib/prisma";
+import { LostStatus } from "@prisma/client";
 import { NextResponse } from "next/server";
 
 // GET semua laporan lost
@@ -73,4 +74,26 @@ export async function POST(req: Request) {
         { status: 404 }
       );
     }
+
+    // Create report
+    const report = await prisma.lostReport.create({
+      data: {
+        namaBarang: namaBarang.trim(),
+        deskripsi: deskripsi.trim(),
+        lokasiHilang: lokasiHilang.trim(),
+        userId: Number(userId),
+        status: LostStatus.PENDING,
+      },
+      include: {
+        // include user
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            notelp: true,
+          },
+        },
+      },
+    });
 }
