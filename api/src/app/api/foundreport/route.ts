@@ -83,4 +83,14 @@ export async function POST(req: Request) {
       { status: 404 }
     );
   }
+  if (adminExists.role !== "ADMIN") {
+    return NextResponse.json(
+      {
+        success: false,
+        message:
+          "Pengguna ini bukan admin. Hanya admin yang dapat membuat laporan barang temuan.",
+      },
+      { status: 403 }
+    );
+  }
 }
