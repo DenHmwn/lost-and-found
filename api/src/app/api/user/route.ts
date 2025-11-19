@@ -1,5 +1,5 @@
 import prisma from "@/lib/prisma";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 // buat GET user
 export const GET = async () => {
@@ -14,3 +14,20 @@ export const GET = async () => {
       data: users,
     });
 };
+
+// Buat POST user
+export const POST = async (req: NextRequest) => {
+  // simpan data
+  const data = await req.json();
+  // cek apakah udh ada apa belum
+  const check = await prisma.user.findFirst({
+    where: {
+      email: data.email,
+      notelp: data.notelp
+    },
+    select: {
+      email: true,
+      notelp: true
+    }
+  })
+}
