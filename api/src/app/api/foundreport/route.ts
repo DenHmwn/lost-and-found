@@ -53,3 +53,21 @@ export async function GET() {
     );
   }
 }
+
+// BUat fungsi POST
+export async function POST(req: Request) {
+  const data = await req.json();
+  const { namaBarang, deskripsi, lokasiTemu, adminId } = data;
+
+  // validasi input data
+  if (!namaBarang || !deskripsi || !lokasiTemu || !adminId) {
+    return NextResponse.json(
+      {
+        success: false,
+        message:
+          "Data tidak lengkap. Pastikan nama barang, deskripsi, lokasi temuan, dan admin ID terisi.",
+      },
+      { status: 400 }
+    );
+  }
+}
