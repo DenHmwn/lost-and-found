@@ -195,4 +195,42 @@ export async function PUT(
       );
     }
   }
+  // Update data
+    const updatedReport = await prisma.foundReport.update({
+      where: { id },
+      data: {
+        namaBarang: data.namaBarang.trim(),
+        deskripsi: data.deskripsi.trim(),
+        lokasiTemu: data.lokasiTemu.trim(),
+        adminId: Number(data.adminId),
+        // Update lostReportId (bisa null jika ingin unlink)
+        lostReportId: data.lostReportId ? Number(data.lostReportId) : null,
+        // Update statusReport jika dikirim, jika tidak pakai yang lama
+        statusReport: data.statusReport || existingRecord.statusReport,
+      },
+      include: {
+        // Return data admin (tanpa password)
+        admin: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            notelp: true,
+          },
+        },
+        // Return data lostReport jika ada
+        lostReport: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+                notelp: true,
+              },
+            },
+          },
+        },
+      },
+    });
 }
