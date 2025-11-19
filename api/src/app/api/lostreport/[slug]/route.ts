@@ -1,5 +1,5 @@
 import prisma from "@/lib/prisma";
-import { StatusReport } from "@prisma/client";
+import { LostStatus, StatusReport } from "@prisma/client";
 import { NextResponse } from "next/server";
 
 // buat fungsi GET by id
@@ -124,6 +124,20 @@ export async function PUT(
             "StatusReport tidak valid. Gunakan: Done, OnProgress, atau Closed",
         },
         { status: 400 }
+      );
+    }
+    // Cek apakah record ada atau tidak
+    const existingRecord = await prisma.lostReport.findUnique({
+      where: { id },
+    });
+
+    if (!existingRecord) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Data laporan tidak ditemukan",
+        },
+        { status: 404 }
       );
     }
 }
