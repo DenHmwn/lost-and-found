@@ -88,4 +88,15 @@ export const PUT = async (
         success: false,
       });
     }
+   // Update user langsung di sini
+    const updatedUser = await prisma.user.update({
+      where: { id: userId },
+      data,
+    });
+    // response success
+    return NextResponse.json({
+      message: "data berhasil diubah",
+      success: true,
+      data: updatedUser,
+    });
 }
