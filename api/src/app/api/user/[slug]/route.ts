@@ -138,4 +138,14 @@ export async function GET(
         role: true,
       },
     });
+    // jika data tidak ditemukan
+    if (!report) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Data user tidak ditemukan",
+        },
+        { status: 404 }
+      );
+    }
 }
