@@ -37,4 +37,15 @@ export const POST = async (req: NextRequest) => {
       success: false
     })
   }
+  // simpan data sesuai request
+    await prisma.user.create({
+      data: {
+        name: data.name,
+        email: data.email,
+        password: data.password,
+        notelp: data.notelp,
+        role: data.role,
+      },
+    })
+
 }
