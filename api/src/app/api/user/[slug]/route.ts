@@ -73,4 +73,19 @@ export const PUT = async (
     }
 
     const data = await request.json();
+
+    // Cek email apakah sudah dipakai user lain
+    const existingUser = await prisma.user.findFirst({
+      where: {
+        email: data.email,
+        NOT: { id: userId },
+      },
+    });
+
+    if (existingUser) {
+      return NextResponse.json({
+        message: "email sudah digunakan user lain",
+        success: false,
+      });
+    }
 }
