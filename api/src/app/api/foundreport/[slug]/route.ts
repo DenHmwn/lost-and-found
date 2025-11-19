@@ -1,3 +1,4 @@
+import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
 export async function GET(
@@ -17,4 +18,33 @@ export async function GET(
         { status: 400 }
       );
     }
+    // get laporan by id
+    const report = await prisma.foundReport.findUnique({
+      where: { id },
+      include: {
+        // include sama data admin
+        admin: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            notelp: true,
+            role: true,
+          },
+        },
+        lostReport: {
+          include: {
+            // include sama data user yang kehilangan barang
+            user: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+                notelp: true,
+              },
+            },
+          },
+        },
+      },
+    });
 }
