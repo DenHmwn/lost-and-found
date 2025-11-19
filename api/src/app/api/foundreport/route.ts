@@ -70,7 +70,7 @@ export async function POST(req: Request) {
       { status: 400 }
     );
   }
-   //   validasi admin ada atau tidak
+  //   validasi admin ada atau tidak
   const adminExists = await prisma.user.findUnique({
     where: { id: Number(adminId) },
   });
@@ -108,5 +108,20 @@ export async function POST(req: Request) {
         { status: 404 }
       );
     }
+  }
+  // Cek apakah lostReport sudah memiliki foundReport
+  const alreadyMatched = await prisma.foundReport.findUnique({
+    where: { lostReportId: Number(lostReportId) },
+  });
+
+  if (alreadyMatched) {
+    return NextResponse.json(
+      {
+        success: false,
+        message:
+          "Laporan barang hilang ini sudah memiliki pasangan barang temuan",
+      },
+      { status: 409 }
+    );
   }
 }
