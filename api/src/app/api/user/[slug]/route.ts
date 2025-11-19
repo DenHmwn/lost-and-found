@@ -114,20 +114,21 @@ export async function GET(
   request: Request,
   { params }: { params: Promise<{ slug: string }> }
 ) {
-  const { slug } = await params;
+  try {
+    const { slug } = await params;
 
-  // Validasi ID
-  const id = Number(slug);
-  if (isNaN(id)) {
-    return NextResponse.json(
-      {
-        success: false,
-        message: "ID tidak valid",
-      },
-      { status: 400 }
-    );
-  }
-  // user by id
+    // Validasi ID
+    const id = Number(slug);
+    if (isNaN(id)) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "ID tidak valid",
+        },
+        { status: 400 }
+      );
+    }
+    // user by id
     const report = await prisma.user.findUnique({
       where: { id },
       select: {
@@ -154,4 +155,15 @@ export async function GET(
       message: "Berhasil mengambil data user",
       data: report,
     });
+  } catch (error) {
+    console.error("Error fetching lost report:", error);
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Gagal mengambil data user",
+        error: error instanceof Error ? error.message : "Unknown error",
+      },
+      { status: 500 }
+    );
+  }
 }
