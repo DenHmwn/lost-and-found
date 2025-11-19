@@ -259,6 +259,7 @@ export async function DELETE(
   request: Request,
   { params }: { params: Promise<{ slug: string }> }
 ) {
+  try {
     const { slug } = await params;
     // Validasi ID
     const id = Number(slug);
@@ -289,4 +290,21 @@ export async function DELETE(
     await prisma.foundReport.delete({
       where: { id },
     });
+    // response success
+    return NextResponse.json({
+      success: true,
+      message: "Data barang temuan berhasil dihapus",
+    });
+    // response error
+  } catch (error) {
+    console.error("Error deleting found report:", error);
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Gagal menghapus data barang temuan",
+        error: error instanceof Error ? error.message : "Unknown error",
+      },
+      { status: 500 }
+    );
+  }
 }
