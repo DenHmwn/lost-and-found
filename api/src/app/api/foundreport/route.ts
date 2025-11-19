@@ -124,4 +124,36 @@ export async function POST(req: Request) {
       { status: 409 }
     );
   }
+  //   create report
+  const report = await prisma.foundReport.create({
+      data: {
+        namaBarang: namaBarang.trim(),
+        deskripsi: deskripsi.trim(),
+        lokasiTemu: lokasiTemu.trim(),
+        adminId: Number(adminId),
+        lostReportId: lostReportId ? Number(lostReportId) : null
+      },
+      include: {
+        admin: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            notelp: true
+          }
+        },
+        lostReport: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+                notelp: true
+              }
+            }
+          }
+        }
+      }
+    });
 }
