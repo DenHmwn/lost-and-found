@@ -127,4 +127,15 @@ export async function GET(
       { status: 400 }
     );
   }
+  // user by id
+    const report = await prisma.user.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        notelp: true,
+        role: true,
+      },
+    });
 }
