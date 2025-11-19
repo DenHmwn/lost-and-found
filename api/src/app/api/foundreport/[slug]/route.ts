@@ -112,4 +112,18 @@ export async function PUT(
         { status: 400 }
       );
     }
+    // Cek apakah record ada
+    const existingRecord = await prisma.foundReport.findUnique({
+      where: { id },
+    });
+
+    if (!existingRecord) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Data barang temuan tidak ditemukan",
+        },
+        { status: 404 }
+      );
+    }
 }
