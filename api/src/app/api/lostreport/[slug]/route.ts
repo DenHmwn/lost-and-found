@@ -201,35 +201,52 @@ export async function DELETE(
   request: Request,
   { params }: { params: Promise<{ slug: string }> }
 ) {
-  const { slug } = await params;
+  try {
+    const { slug } = await params;
 
-  // Validasi ID
-  const id = Number(slug);
-  if (isNaN(id)) {
+    // Validasi ID
+    const id = Number(slug);
+    if (isNaN(id)) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "ID tidak valid",
+        },
+        { status: 400 }
+      );
+    }
+    // Cek apakah data ada atau tidak
+    const existingRecord = await prisma.lostReport.findUnique({
+      where: { id },
+    });
+
+    if (!existingRecord) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Data laporan tidak ditemukan",
+        },
+        { status: 404 }
+      );
+    }
+    // Delete data
+    await prisma.lostReport.delete({
+      where: { id },
+    });
+    // response success
+    return NextResponse.json({
+      success: true,
+      message: "Data laporan berhasil dihapus",
+    });
+  } catch (error) {
+    console.error("Error deleting lost report:", error);
     return NextResponse.json(
       {
         success: false,
-        message: "ID tidak valid",
+        message: "Gagal menghapus data laporan",
+        error: error instanceof Error ? error.message : "Unknown error",
       },
-      { status: 400 }
+      { status: 500 }
     );
   }
-  // Cek apakah data ada atau tidak
-  const existingRecord = await prisma.lostReport.findUnique({
-    where: { id },
-  });
-
-  if (!existingRecord) {
-    return NextResponse.json(
-      {
-        success: false,
-        message: "Data laporan tidak ditemukan",
-      },
-      { status: 404 }
-    );
-  }
-  // Delete data
-  await prisma.lostReport.delete({
-    where: { id },
-  });
 }
