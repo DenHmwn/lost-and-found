@@ -30,4 +30,11 @@ export const POST = async (req: NextRequest) => {
       notelp: true
     }
   })
+  // jika user tidak ada
+  if (check) {
+    return NextResponse.json({
+      message: "data user gagal disimpan, email atau no telp sudah ada",
+      success: false
+    })
+  }
 }
