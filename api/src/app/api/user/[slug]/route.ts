@@ -1,5 +1,5 @@
 import prisma from "@/lib/prisma";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 // DELETE user by id
 export async function DELETE(
@@ -55,4 +55,22 @@ export async function DELETE(
       { status: 500 }
     );
   }
+}
+
+ // put user by id
+export const PUT = async (
+  request: NextRequest,
+  context: { params: Promise<{ slug: string }> }
+) => {
+    const { slug } = await context.params;
+    const userId = Number(slug);
+
+    if (isNaN(userId)) {
+      return NextResponse.json({
+        message: "id tidak valid",
+        success: false,
+      });
+    }
+
+    const data = await request.json();
 }
