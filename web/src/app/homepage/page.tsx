@@ -6,7 +6,7 @@ export default function HomePageUser() {
   return (
     <section className="min-h-screen bg-gray-300/70">
       {/* Header */}
-      <header className="relative bg-white border-b border-gray-200">
+      <header className="relative bg-white border-b border-gray-200 shadow-xl">
         <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-5">
           <section className="flex items-center justify-between">
             <section className="text-2xl font-bold text-gray-900">
@@ -39,18 +39,18 @@ export default function HomePageUser() {
 
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
             Lost and Found adalah platform penemuan dan pelaporan barang hilang
-            di Universitas XYZ. Memudahkan mahasiswa dan staff menemukan
-            kembali barang mereka.
+            di Universitas XYZ. Memudahkan mahasiswa dan staff menemukan kembali
+            barang mereka.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-3 justify-center pt-6">
             <Link href="/login">
-              <Button className="h-12 px-8 bg-gray-900 text-white font-medium rounded-md hover:bg-gray-800">
+              <Button className="h-12 px-8 bg-gray-900 text-white font-medium rounded-md hover:bg-gray-800 shadow-md hover:shadow-2xl">
                 Laporkan Barang Hilang
               </Button>
             </Link>
             <Link href="/login">
-              <Button className="h-12 px-8 bg-white text-gray-900 font-medium rounded-md border border-gray-300 hover:bg-gray-50">
+              <Button className="h-12 px-8 bg-white text-gray-900 font-medium rounded-md border border-gray-300 hover:bg-gray-50 shadow-md hover:shadow-2xl">
                 Lihat Barang Ditemukan
               </Button>
             </Link>
@@ -73,7 +73,7 @@ export default function HomePageUser() {
               Aman & Terpercaya
             </h3>
             <p className="text-gray-600 text-sm">
-              Data terlindungi dengan sistem keamanan terbaik
+              Data terlindungi dengan aman
             </p>
           </div>
 
