@@ -8,7 +8,7 @@ export default function HomePage() {
         <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-5">
           <section className="flex items-center justify-between">
             <section className="text-3xl font-extrabold tracking-tighter text-gray-900">
-              UTI
+              XYZ
             </section>
             <section className="flex space-x-4">
               <Link href="/login">
