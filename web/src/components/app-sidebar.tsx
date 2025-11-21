@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import {
+  IconBox,
   IconCamera,
   IconChartBar,
   IconDashboard,
@@ -12,7 +13,9 @@ import {
   IconFolder,
   IconHelp,
   IconInnerShadowTop,
+  IconList,
   IconListDetails,
+  IconPackage,
   IconReport,
   IconSearch,
   IconSettings,
@@ -32,6 +35,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
+import Link from "next/link"
 
 const data = {
   user: {
@@ -133,47 +137,57 @@ const data = {
   ],
   documents: [
     {
-      name: "Data Library",
-      url: "#",
-      icon: IconDatabase,
+      name: "Dashboard",
+      url: "/homepage/user/dashboard",
+      icon: IconDashboard,
     },
     {
-      name: "Reports",
+      name: "Barang Hilang",
       url: "#",
-      icon: IconReport,
+      icon: IconList,
     },
     {
-      name: "Word Assistant",
+      name: "Barang Ditemukan",
       url: "#",
-      icon: IconFileWord,
+      icon: IconList,
+    },
+    {
+      name: "Buat Laporan Hilang",
+      url: "#",
+      icon: IconSearch,
+    },
+    {
+      name: "List Admin",
+      url: "#",
+      icon: IconUsers,
     },
   ],
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
-    <Sidebar collapsible="offcanvas" {...props}>
-      <SidebarHeader>
+    <Sidebar collapsible="offcanvas" {...props} className="bg-gray-200/70">
+      <SidebarHeader className="bg-gray-200/70">
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton
               asChild
               className="data-[slot=sidebar-menu-button]:!p-1.5"
             >
-              <a href="#">
-                <IconInnerShadowTop className="!size-5" />
-                <span className="text-base font-semibold">Acme Inc.</span>
-              </a>
+              <Link href="/homepage/user/dashboard">
+                <IconBox />
+                <span className="text-base font-semibold">Lost & Found</span>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
-      <SidebarContent>
-        <NavMain items={data.navMain} />
+      <SidebarContent className="bg-gray-200/70">
+        {/* <NavMain items={data.navMain} /> */}
         <NavDocuments items={data.documents} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
+        {/* <NavSecondary items={data.navSecondary} className="mt-auto" /> */}
       </SidebarContent>
-      <SidebarFooter>
+      <SidebarFooter className="bg-gray-200/70">
         <NavUser user={data.user} />
       </SidebarFooter>
     </Sidebar>
