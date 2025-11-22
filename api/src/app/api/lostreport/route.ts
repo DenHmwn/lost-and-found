@@ -25,11 +25,16 @@ export async function GET() {
       },
     });
     // response success
-    return NextResponse.json({
-      success: true,
-      message: "Berhasil mengambil data laporan",
-      data: reports,
-    });
+    return NextResponse.json(
+      {
+        success: true,
+        message: "Berhasil mengambil data laporan",
+        data: reports,
+      },
+      {
+        status: 200,
+      }
+    );
     // response error
   } catch (error) {
     console.error("Error fetching lost reports:", error);
@@ -44,10 +49,9 @@ export async function GET() {
   }
 }
 
-
 // POST pada lost report
 export async function POST(req: Request) {
-    try {
+  try {
     const data = await req.json();
     const { namaBarang, deskripsi, lokasiHilang, userId } = data;
 
@@ -61,6 +65,7 @@ export async function POST(req: Request) {
         { status: 400 }
       );
     }
+
     // Validasi userId ada atau tidak
     const userExists = await prisma.user.findUnique({
       where: { id: Number(userId) },
@@ -75,7 +80,6 @@ export async function POST(req: Request) {
         { status: 404 }
       );
     }
-
     // Create report
     const report = await prisma.lostReport.create({
       data: {
@@ -96,7 +100,8 @@ export async function POST(req: Request) {
           },
         },
       },
-    });// response success
+    });
+    // response success
     return NextResponse.json(
       {
         success: true,
