@@ -2,7 +2,7 @@ import prisma from "@/lib/prisma";
 import { LostStatus, StatusReport } from "@prisma/client";
 import { NextResponse } from "next/server";
 
-// GET LOST REPORT BY ID
+// buat fungsi GET by id
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ slug: string }> }
@@ -10,17 +10,22 @@ export async function GET(
   try {
     const { slug } = await params;
 
+    // Validasi ID
     const id = Number(slug);
     if (isNaN(id)) {
       return NextResponse.json(
-        { success: false, message: "ID tidak valid" },
+        {
+          success: false,
+          message: "ID tidak valid",
+        },
         { status: 400 }
       );
     }
-
+    // laporan by id
     const report = await prisma.lostReport.findUnique({
       where: { id },
       include: {
+        // include yang melaporkan
         user: {
           select: {
             id: true,
@@ -30,24 +35,30 @@ export async function GET(
             role: true,
           },
         },
+        // include barang temuan jika sudah dicocokkan
         foundReport: true,
       },
     });
-
+    // jika laporan tidak ditemukan
     if (!report) {
       return NextResponse.json(
-        { success: false, message: "Data laporan tidak ditemukan" },
+        {
+          success: false,
+          message: "Data laporan tidak ditemukan",
+        },
         { status: 404 }
       );
     }
-
+    // response success
     return NextResponse.json(
       {
         success: true,
         message: "Berhasil mengambil data laporan",
         data: report,
       },
-      { status: 200 }
+      {
+        status: 200,
+      }
     );
   } catch (error) {
     console.error("Error fetching lost report:", error);
@@ -62,7 +73,7 @@ export async function GET(
   }
 }
 
-// UPDATE LOST REPORT BY ID
+// PUT lostreport by id
 export async function PUT(
   request: Request,
   { params }: { params: Promise<{ slug: string }> }
@@ -71,14 +82,18 @@ export async function PUT(
     const { slug } = await params;
     const data = await request.json();
 
+    // Validasi ID
     const id = Number(slug);
     if (isNaN(id)) {
       return NextResponse.json(
-        { success: false, message: "ID tidak valid" },
+        {
+          success: false,
+          message: "ID tidak valid",
+        },
         { status: 400 }
       );
     }
-
+    // Validasi input
     if (
       !data.namaBarang ||
       !data.deskripsi ||
@@ -93,7 +108,7 @@ export async function PUT(
         { status: 400 }
       );
     }
-
+    // Validasi status jika ada
     if (data.status && !Object.values(LostStatus).includes(data.status)) {
       return NextResponse.json(
         {
@@ -104,7 +119,7 @@ export async function PUT(
         { status: 400 }
       );
     }
-
+    //  Validasi statusReport jika ada
     if (
       data.statusReport &&
       !Object.values(StatusReport).includes(data.statusReport)
@@ -118,29 +133,35 @@ export async function PUT(
         { status: 400 }
       );
     }
-
+    // Cek apakah record ada atau tidak
     const existingRecord = await prisma.lostReport.findUnique({
       where: { id },
     });
 
     if (!existingRecord) {
       return NextResponse.json(
-        { success: false, message: "Data laporan tidak ditemukan" },
+        {
+          success: false,
+          message: "Data laporan tidak ditemukan",
+        },
         { status: 404 }
       );
     }
-
+    // Validasi userId ada atau tidak
     const userExists = await prisma.user.findUnique({
       where: { id: Number(data.userId) },
     });
 
     if (!userExists) {
       return NextResponse.json(
-        { success: false, message: "User tidak ditemukan" },
+        {
+          success: false,
+          message: "User tidak ditemukan",
+        },
         { status: 404 }
       );
     }
-
+    // Update laporan
     const updatedReport = await prisma.lostReport.update({
       where: { id },
       data: {
@@ -152,6 +173,7 @@ export async function PUT(
         userId: Number(data.userId),
       },
       include: {
+        // include data user
         user: {
           select: {
             id: true,
@@ -162,14 +184,16 @@ export async function PUT(
         },
       },
     });
-
+    // response success
     return NextResponse.json(
       {
         success: true,
         message: "Data laporan berhasil diubah",
         data: updatedReport,
       },
-      { status: 200 }
+      {
+        status: 200,
+      }
     );
   } catch (error) {
     console.error("Error updating lost report:", error);
@@ -184,7 +208,7 @@ export async function PUT(
   }
 }
 
-// DELETE LOST REPORT BY ID
+// Delete LostReport by id
 export async function DELETE(
   request: Request,
   { params }: { params: Promise<{ slug: string }> }
@@ -192,33 +216,44 @@ export async function DELETE(
   try {
     const { slug } = await params;
 
+    // Validasi ID
     const id = Number(slug);
     if (isNaN(id)) {
       return NextResponse.json(
-        { success: false, message: "ID tidak valid" },
+        {
+          success: false,
+          message: "ID tidak valid",
+        },
         { status: 400 }
       );
     }
-
+    // Cek apakah data ada atau tidak
     const existingRecord = await prisma.lostReport.findUnique({
       where: { id },
     });
 
     if (!existingRecord) {
       return NextResponse.json(
-        { success: false, message: "Data laporan tidak ditemukan" },
+        {
+          success: false,
+          message: "Data laporan tidak ditemukan",
+        },
         { status: 404 }
       );
     }
-
-    await prisma.lostReport.delete({ where: { id } });
-
+    // Delete data
+    await prisma.lostReport.delete({
+      where: { id },
+    });
+    // response success
     return NextResponse.json(
       {
         success: true,
         message: "Data laporan berhasil dihapus",
       },
-      { status: 200 }
+      {
+        status: 200,
+      }
     );
   } catch (error) {
     console.error("Error deleting lost report:", error);
