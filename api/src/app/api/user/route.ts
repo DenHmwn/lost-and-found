@@ -1,43 +1,67 @@
 import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
-// buat GET user
+// get all user
 export const GET = async () => {
-  const users = await prisma.user.findMany({
-  orderBy: {
-    id: "desc"
-  }
-  });
-   return NextResponse.json({
-      success: true,
-      message: "Berhasil mengambil data laporan",
-      data: users,
+  try {
+    const users = await prisma.user.findMany({
+      orderBy: { id: "desc" },
     });
+
+    return NextResponse.json(
+      {
+        success: true,
+        message: "Berhasil mengambil data user",
+        data: users,
+      },
+      { status: 200 }
+    );
+  } catch (error) {
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Gagal mengambil data user",
+        error: error instanceof Error ? error.message : "Unknown error",
+      },
+      { status: 500 }
+    );
+  }
 };
 
-// Buat POST user
+// buat POST user
 export const POST = async (req: NextRequest) => {
-  // simpan data
-  const data = await req.json();
-  // cek apakah udh ada apa belum
-  const check = await prisma.user.findFirst({
-    where: {
-      email: data.email,
-      notelp: data.notelp
-    },
-    select: {
-      email: true,
-      notelp: true
+  try {
+    const data = await req.json();
+
+    // Validasi sederhana
+    if (!data.name || !data.email || !data.password || !data.notelp) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Data tidak lengkap",
+        },
+        { status: 400 }
+      );
     }
-  })
-  // jika user tidak ada
-  if (check) {
-    return NextResponse.json({
-      message: "data user gagal disimpan, email atau no telp sudah ada",
-      success: false
-    })
-  }
-  // simpan data sesuai request
+
+    // Cek apakah email atau notelp sudah digunakan
+    const check = await prisma.user.findFirst({
+      where: {
+        OR: [{ email: data.email }, { notelp: data.notelp }],
+      },
+    });
+
+    if (check) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Email atau no telp sudah digunakan user lain",
+        },
+        { status: 409 }
+      );
+    }
+
+    // Simpan data user
     await prisma.user.create({
       data: {
         name: data.name,
@@ -46,11 +70,23 @@ export const POST = async (req: NextRequest) => {
         notelp: data.notelp,
         role: data.role,
       },
-    })
+    });
 
-    // response success
-    return NextResponse.json({
-      message: "Data berhasil disimpan",
-      success: true
-    }) 
-}
+    return NextResponse.json(
+      {
+        success: true,
+        message: "Data berhasil disimpan",
+      },
+      { status: 201 }
+    );
+  } catch (error) {
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Gagal menyimpan data",
+        error: error instanceof Error ? error.message : "Unknown error",
+      },
+      { status: 500 }
+    );
+  }
+};

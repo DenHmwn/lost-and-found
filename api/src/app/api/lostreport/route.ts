@@ -2,10 +2,9 @@ import prisma from "@/lib/prisma";
 import { LostStatus } from "@prisma/client";
 import { NextResponse } from "next/server";
 
-// GET semua laporan lost
+// buat GET all lost reports
 export async function GET() {
   try {
-    // data semua laporan sama laporan include relasi
     const reports = await prisma.lostReport.findMany({
       include: {
         user: {
@@ -17,20 +16,19 @@ export async function GET() {
             role: true,
           },
         },
-        // relasi ke foundreport (jika sudah dicocokkan dengan barang temuan)
         foundReport: true,
       },
-      orderBy: {
-        createdAt: "desc",
+      orderBy: { createdAt: "desc" },
+    });
+
+    return NextResponse.json(
+      {
+        success: true,
+        message: "Berhasil mengambil data laporan",
+        data: reports,
       },
-    });
-    // response success
-    return NextResponse.json({
-      success: true,
-      message: "Berhasil mengambil data laporan",
-      data: reports,
-    });
-    // response error
+      { status: 200 }
+    );
   } catch (error) {
     console.error("Error fetching lost reports:", error);
     return NextResponse.json(
@@ -44,10 +42,9 @@ export async function GET() {
   }
 }
 
-
-// POST pada lost report
+// buat POST lost report
 export async function POST(req: Request) {
-    try {
+  try {
     const data = await req.json();
     const { namaBarang, deskripsi, lokasiHilang, userId } = data;
 
@@ -61,7 +58,8 @@ export async function POST(req: Request) {
         { status: 400 }
       );
     }
-    // Validasi userId ada atau tidak
+
+    // Validasi userId harus ada
     const userExists = await prisma.user.findUnique({
       where: { id: Number(userId) },
     });
@@ -86,7 +84,6 @@ export async function POST(req: Request) {
         status: LostStatus.PENDING,
       },
       include: {
-        // include user
         user: {
           select: {
             id: true,
@@ -96,7 +93,8 @@ export async function POST(req: Request) {
           },
         },
       },
-    });// response success
+    });
+
     return NextResponse.json(
       {
         success: true,
@@ -105,7 +103,6 @@ export async function POST(req: Request) {
       },
       { status: 201 }
     );
-    // response error
   } catch (error) {
     console.error("Error creating lost report:", error);
     return NextResponse.json(

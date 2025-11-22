@@ -6,7 +6,6 @@ export async function GET() {
   try {
     const reports = await prisma.foundReport.findMany({
       include: {
-        // rellasi ke admin yang buat laporan temu
         admin: {
           select: {
             id: true,
@@ -16,10 +15,8 @@ export async function GET() {
             role: true,
           },
         },
-        // relasi ke lostreport (jika udah di cocokkan)
         lostReport: {
           include: {
-            // include sama data user yang kehilangan barang
             user: {
               select: {
                 id: true,
@@ -35,12 +32,15 @@ export async function GET() {
         createdAt: "desc",
       },
     });
-    //   Response Success
-    return NextResponse.json({
-      success: true,
-      message: "Berhasil mengambil data barang temuan",
-      data: reports,
-    });
+
+    return NextResponse.json(
+      {
+        success: true,
+        message: "Berhasil mengambil data barang temuan",
+        data: reports,
+      },
+      { status: 200 } 
+    );
   } catch (error) {
     console.error("Error fetching found reports:", error);
     return NextResponse.json(
@@ -49,18 +49,18 @@ export async function GET() {
         message: "Gagal mengambil data barang temuan",
         error: error instanceof Error ? error.message : "Unknown error",
       },
-      { status: 500 }
+      { status: 500 } 
     );
   }
 }
 
-// BUat fungsi POST
+// POST create found report
 export async function POST(req: Request) {
   try {
     const data = await req.json();
     const { namaBarang, deskripsi, lokasiTemu, adminId, lostReportId } = data;
 
-    // validasi input data
+    // Validasi input
     if (!namaBarang || !deskripsi || !lokasiTemu || !adminId) {
       return NextResponse.json(
         {
@@ -68,22 +68,25 @@ export async function POST(req: Request) {
           message:
             "Data tidak lengkap. Pastikan nama barang, deskripsi, lokasi temuan, dan admin ID terisi.",
         },
-        { status: 400 }
+        { status: 400 } 
       );
     }
-    //   validasi admin ada atau tidak
+
+    // Validasi admin
     const adminExists = await prisma.user.findUnique({
       where: { id: Number(adminId) },
     });
+
     if (!adminExists) {
       return NextResponse.json(
         {
           success: false,
           message: "Admin tidak ditemukan",
         },
-        { status: 404 }
+        { status: 404 } 
       );
     }
+
     if (adminExists.role !== "ADMIN") {
       return NextResponse.json(
         {
@@ -91,10 +94,11 @@ export async function POST(req: Request) {
           message:
             "Pengguna ini bukan admin. Hanya admin yang dapat membuat laporan barang temuan.",
         },
-        { status: 403 }
+        { status: 403 } 
       );
     }
-    // Validasi lostReportId jika ada
+
+    // Validasi lostReportId jika dikirim
     if (lostReportId) {
       const lostReportExists = await prisma.lostReport.findUnique({
         where: { id: Number(lostReportId) },
@@ -106,14 +110,17 @@ export async function POST(req: Request) {
             success: false,
             message: "Laporan barang hilang tidak ditemukan",
           },
-          { status: 404 }
+          { status: 404 } 
         );
       }
     }
-    // Cek apakah lostReport sudah memiliki foundReport
-    const alreadyMatched = await prisma.foundReport.findUnique({
-      where: { lostReportId: Number(lostReportId) },
-    });
+
+    // Cek apakah lostReport sudah punya pasangan foundReport
+    const alreadyMatched =
+      lostReportId &&
+      (await prisma.foundReport.findUnique({
+        where: { lostReportId: Number(lostReportId) },
+      }));
 
     if (alreadyMatched) {
       return NextResponse.json(
@@ -122,10 +129,11 @@ export async function POST(req: Request) {
           message:
             "Laporan barang hilang ini sudah memiliki pasangan barang temuan",
         },
-        { status: 409 }
+        { status: 409 } 
       );
     }
-    //   create report
+
+    // Create report
     const report = await prisma.foundReport.create({
       data: {
         namaBarang: namaBarang.trim(),
@@ -157,16 +165,15 @@ export async function POST(req: Request) {
         },
       },
     });
-    // Response Success
+
     return NextResponse.json(
       {
         success: true,
         message: "Laporan barang temuan berhasil dibuat",
         data: report,
       },
-      { status: 201 }
+      { status: 201 } 
     );
-    // Response Error
   } catch (error) {
     console.error("Error creating found report:", error);
     return NextResponse.json(
