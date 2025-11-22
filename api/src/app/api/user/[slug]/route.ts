@@ -72,7 +72,10 @@ export const PUT = async (
       return NextResponse.json({
         message: "id tidak valid",
         success: false,
-      });
+      },
+    {
+        status: 400,
+    });
     }
 
     const data = await request.json();
@@ -116,7 +119,10 @@ export const PUT = async (
     return NextResponse.json({
       message: (error as Error).message || "Terjadi kesalahan",
       success: false,
-    });
+    },
+  {
+      status: 500,
+  });
   }
 };
 
