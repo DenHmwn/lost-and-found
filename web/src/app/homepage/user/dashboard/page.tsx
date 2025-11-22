@@ -1,9 +1,6 @@
-import { AppSidebar } from "@/components/app-sidebar"
-import { SiteHeader } from "@/components/site-header"
-import {
-  SidebarInset,
-  SidebarProvider,
-} from "@/components/ui/sidebar"
+import { AppSidebar } from "@/components/AppSidebar";
+import { SiteHeader } from "@/components/SiteHeader";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 
 export default function DashboardUser() {
   return (
@@ -19,10 +16,9 @@ export default function DashboardUser() {
       <SidebarInset>
         <SiteHeader />
         <section className="flex flex-1 flex-col">
-          <section className="@container/main flex flex-1 flex-col gap-2">
-          </section>
+          <section className="@container/main flex flex-1 flex-col gap-2"></section>
         </section>
       </SidebarInset>
     </SidebarProvider>
-  )
+  );
 }
