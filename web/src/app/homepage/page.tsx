@@ -43,7 +43,7 @@ export default function HomePageUser() {
             barang mereka.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-3 justify-center pt-6">
+          <section className="flex flex-col sm:flex-row gap-3 justify-center pt-6">
             <Link href="/login">
               <Button className="h-12 px-8 bg-gray-900 text-white font-medium rounded-md hover:bg-gray-800 shadow-md hover:shadow-2xl">
                 Laporkan Barang Hilang
@@ -54,37 +54,37 @@ export default function HomePageUser() {
                 Lihat Barang Ditemukan
               </Button>
             </Link>
-          </div>
+          </section>
         </section>
 
         {/* Simple info cards */}
         <section className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-20">
-          <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-md hover:shadow-xl">
+          <section className="bg-white rounded-lg p-6 border border-gray-200 shadow-md hover:shadow-xl">
             <h3 className="font-semibold text-lg text-gray-900 mb-2">
               Mudah & Cepat
             </h3>
             <p className="text-gray-600 text-sm">
               Laporkan atau temukan barang dalam beberapa klik
             </p>
-          </div>
+          </section>
 
-          <div className="bg-white rounded-lg p-6 border border-gray-200  shadow-md hover:shadow-xl">
+          <section className="bg-white rounded-lg p-6 border border-gray-200  shadow-md hover:shadow-xl">
             <h3 className="font-semibold text-lg text-gray-900 mb-2">
               Aman & Terpercaya
             </h3>
             <p className="text-gray-600 text-sm">
               Data terlindungi dengan aman
             </p>
-          </div>
+          </section>
 
-          <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-md hover:shadow-xl">
+          <section className="bg-white rounded-lg p-6 border border-gray-200 shadow-md hover:shadow-xl">
             <h3 className="font-semibold text-lg text-gray-900 mb-2">
               Komunitas Kampus
             </h3>
             <p className="text-gray-600 text-sm">
               Bergabung dengan mahasiswa dan staff universitas
             </p>
-          </div>
+          </section>
         </section>
       </section>
     </section>
