@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { useLostReports } from "@/hooks/useLostReport";
 import { LostReport } from "@/types/LostReport";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 
 
@@ -245,33 +246,33 @@ export default function ListBarangHilangPage() {
                   </section>
 
                   <section className="overflow-x-auto">
-                    <table className="w-full">
-                      <thead>
-                        <tr className="border-b bg-muted/30">
-                          <th className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                    <Table className="w-full">
+                      <TableHeader>
+                        <TableRow className="border-b bg-muted/30">
+                          <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
                             Info Barang
-                          </th>
-                          <th className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                          </TableHead>
+                          <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
                             Lokasi
-                          </th>
-                          <th className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                          </TableHead>
+                          <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
                             Pelapor
-                          </th>
-                          <th className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                          </TableHead>
+                          <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
                             Status
-                          </th>
-                          <th className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                          </TableHead>
+                          <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
                             Status Laporan
-                          </th>
-                          <th className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                          </TableHead>
+                          <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
                             Tanggal
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody className="sectionide-y sectionide-border">
+                          </TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody className="sectionide-y sectionide-border">
                         {lostReports.length === 0 ? (
-                          <tr>
-                            <td colSpan={6} className="px-6 py-16 text-center">
+                          <TableRow>
+                            <TableCell colSpan={6} className="px-6 py-16 text-center">
                               <Package className="mx-auto h-12 w-12 text-muted-foreground/50" />
                               <p className="mt-4 font-medium text-muted-foreground">
                                 Belum ada laporan
@@ -279,15 +280,15 @@ export default function ListBarangHilangPage() {
                               <p className="text-sm text-muted-foreground">
                                 Laporan barang hilang akan muncul di sini
                               </p>
-                            </td>
-                          </tr>
+                            </TableCell>
+                          </TableRow>
                         ) : (
                           lostReports.map((report: LostReport) => (
-                            <tr
+                            <TableRow
                               key={report.id}
                               className="transition-colors hover:bg-muted/50"
                             >
-                              <td className="px-6 py-4">
+                              <TableCell className="px-6 py-4">
                                 <section className="flex items-start gap-3">
                                   <section className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
                                     <Package className="h-5 w-5 text-primary" />
@@ -301,16 +302,16 @@ export default function ListBarangHilangPage() {
                                     </p>
                                   </section>
                                 </section>
-                              </td>
-                              <td className="px-6 py-4">
+                              </TableCell>
+                              <TableCell className="px-6 py-4">
                                 <section className="flex items-center gap-2">
                                   <MapPin className="h-4 w-4 text-muted-foreground" />
                                   <span className="text-sm">
                                     {report.lokasiHilang}
                                   </span>
                                 </section>
-                              </td>
-                              <td className="px-6 py-4">
+                              </TableCell>
+                              <TableCell className="px-6 py-4">
                                 <section className="flex items-center gap-2">
                                   <section className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10">
                                     <User className="h-4 w-4 text-primary" />
@@ -324,28 +325,28 @@ export default function ListBarangHilangPage() {
                                     </p>
                                   </section>
                                 </section>
-                              </td>
-                              <td className="px-6 py-4">
+                              </TableCell>
+                              <TableCell className="px-6 py-4">
                                 <StatusBadge status={report.status} />
-                              </td>
-                              <td className="px-6 py-4">
+                              </TableCell>
+                              <TableCell className="px-6 py-4">
                                 <StatusReportBadge
                                   status={report.statusReport}
                                 />
-                              </td>
-                              <td className="px-6 py-4">
+                              </TableCell>
+                              <TableCell className="px-6 py-4">
                                 <section className="flex items-center gap-2 text-sm text-muted-foreground">
                                   <Calendar className="h-4 w-4" />
                                   <span className="text-xs">
                                     {formatDate(report.createdAt)}
                                   </span>
                                 </section>
-                              </td>
-                            </tr>
+                              </TableCell>
+                            </TableRow>
                           ))
                         )}
-                      </tbody>
-                    </table>
+                      </TableBody>
+                    </Table>
                   </section>
                 </section>
               </article>
