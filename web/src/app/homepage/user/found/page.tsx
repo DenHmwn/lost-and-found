@@ -121,7 +121,7 @@ export default function ListBarangTemuPage() {
         <section className="flex flex-1 flex-col">
           <section className="@container/main flex flex-1 flex-col gap-6 p-6">
             {/* Header */}
-            <section className="space-y-2">
+            <header className="space-y-2">
               <section className="flex items-center gap-2">
                 <section className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
                   <Package className="h-5 w-5 text-primary" />
@@ -135,7 +135,7 @@ export default function ListBarangTemuPage() {
                   </p>
                 </section>
               </section>
-            </section>
+            </header>
 
             {isLoading ? (
               <section className="flex h-[400px] items-center justify-center rounded-lg border border-dashed">
@@ -155,7 +155,7 @@ export default function ListBarangTemuPage() {
                 </p>
               </section>
             ) : (
-              <>
+              <article>
                 {/* Stats Cards */}
                 <section className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                   <section className="rounded-lg border bg-card p-6 shadow-sm">
@@ -336,7 +336,7 @@ export default function ListBarangTemuPage() {
                     </table>
                   </section>
                 </section>
-              </>
+              </article>
             )}
           </section>
         </section>
