@@ -14,24 +14,9 @@ import {
   Calendar,
 } from "lucide-react";
 import { useLostReports } from "@/hooks/useLostReport";
+import { LostReport } from "@/types/LostReport";
 
-interface User {
-  id: number;
-  name: string;
-  email: string;
-  notelp: string;
-}
 
-interface LostReport {
-  id: number;
-  namaBarang: string;
-  deskripsi: string;
-  lokasiHilang: string;
-  status: "PENDING" | "APPROVED" | "REJECTED";
-  statusReport: "Done" | "OnProgress" | "Closed";
-  createdAt: string;
-  user: User;
-}
 
 export default function ListBarangHilangPage() {
   // Fetch data menggunakan custom hook
