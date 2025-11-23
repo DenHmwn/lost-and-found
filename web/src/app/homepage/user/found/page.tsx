@@ -14,24 +14,7 @@ import {
   Calendar,
 } from "lucide-react";
 import { useFoundReports } from "@/hooks/useFoundReport";
-
-interface User {
-  id: number;
-  name: string;
-  email: string;
-  notelp: string;
-}
-
-interface FoundReport {
-  id: number;
-  namaBarang: string;
-  deskripsi: string;
-  lokasiTemu: string;
-  statusReport: "Done" | "OnProgress" | "Closed";
-  createdAt: string;
-  admin: User;
-  lostReportId: number | null;
-}
+import { FoundReport } from "@/types/FoundReport";
 
 export default function ListBarangTemuPage() {
   // Fetch data menggunakan custom hook
