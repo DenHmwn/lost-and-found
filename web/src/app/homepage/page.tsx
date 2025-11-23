@@ -29,7 +29,7 @@ export default function HomePageUser() {
       </header>
 
       {/* Main Content */}
-      <section className="relative mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-24">
+      <article className="relative mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-24">
         <section className="text-center space-y-6">
           <h1 className="font-bold text-4xl md:text-5xl text-gray-900">
             Website Penemuan dan
@@ -86,7 +86,7 @@ export default function HomePageUser() {
             </p>
           </section>
         </section>
-      </section>
+      </article>
     </section>
   );
 }
