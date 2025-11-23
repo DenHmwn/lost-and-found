@@ -147,119 +147,119 @@ export default function ListBarangHilangPage() {
       <AppSidebar variant="inset" />
       <SidebarInset>
         <SiteHeader />
-        <div className="flex flex-1 flex-col">
-          <div className="@container/main flex flex-1 flex-col gap-6 p-6">
+        <section className="flex flex-1 flex-col">
+          <section className="@container/main flex flex-1 flex-col gap-6 p-6">
             {/* Header */}
-            <div className="space-y-2">
-              <div className="flex items-center gap-2">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
+            <section className="space-y-2">
+              <section className="flex items-center gap-2">
+                <section className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
                   <Package className="h-5 w-5 text-primary" />
-                </div>
-                <div>
+                </section>
+                <section>
                   <h1 className="text-2xl font-bold tracking-tight">
                     Barang Hilang
                   </h1>
                   <p className="text-sm text-muted-foreground">
                     Kelola dan pantau semua laporan barang hilang
                   </p>
-                </div>
-              </div>
-            </div>
+                </section>
+              </section>
+            </section>
 
             {isLoading ? (
-              <div className="flex h-[400px] items-center justify-center rounded-lg border border-dashed">
-                <div className="flex flex-col items-center gap-2">
+              <section className="flex h-[400px] items-center justify-center rounded-lg border border-dashed">
+                <section className="flex flex-col items-center gap-2">
                   <Loader2 className="h-8 w-8 animate-spin text-primary" />
                   <span className="text-sm text-muted-foreground">
                     Memuat data...
                   </span>
-                </div>
-              </div>
+                </section>
+              </section>
             ) : error ? (
-              <div className="rounded-lg border border-red-200 bg-red-50 p-6 text-center">
+              <section className="rounded-lg border border-red-200 bg-red-50 p-6 text-center">
                 <XCircle className="mx-auto h-10 w-10 text-red-600 mb-2" />
                 <p className="font-medium text-red-900">Gagal memuat data</p>
                 <p className="text-sm text-red-700 mt-1">
                   Silakan coba refresh halaman atau hubungi administrator
                 </p>
-              </div>
+              </section>
             ) : (
               <>
                 {/* Stats Cards */}
-                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                  <div className="rounded-lg border bg-card p-6 shadow-sm">
-                    <div className="flex items-center justify-between">
-                      <div>
+                <section className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                  <section className="rounded-lg border bg-card p-6 shadow-sm">
+                    <section className="flex items-center justify-between">
+                      <section>
                         <p className="text-sm font-medium text-muted-foreground">
                           Total Laporan
                         </p>
                         <p className="mt-2 text-3xl font-bold">{stats.total}</p>
-                      </div>
-                      <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100">
+                      </section>
+                      <section className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100">
                         <Package className="h-6 w-6 text-blue-600" />
-                      </div>
-                    </div>
-                  </div>
+                      </section>
+                    </section>
+                  </section>
 
-                  <div className="rounded-lg border bg-card p-6 shadow-sm">
-                    <div className="flex items-center justify-between">
-                      <div>
+                  <section className="rounded-lg border bg-card p-6 shadow-sm">
+                    <section className="flex items-center justify-between">
+                      <section>
                         <p className="text-sm font-medium text-muted-foreground">
                           Menunggu Approval
                         </p>
                         <p className="mt-2 text-3xl font-bold">
                           {stats.pending}
                         </p>
-                      </div>
-                      <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-yellow-100">
+                      </section>
+                      <section className="flex h-12 w-12 items-center justify-center rounded-lg bg-yellow-100">
                         <Clock className="h-6 w-6 text-yellow-600" />
-                      </div>
-                    </div>
-                  </div>
+                      </section>
+                    </section>
+                  </section>
 
-                  <div className="rounded-lg border bg-card p-6 shadow-sm">
-                    <div className="flex items-center justify-between">
-                      <div>
+                  <section className="rounded-lg border bg-card p-6 shadow-sm">
+                    <section className="flex items-center justify-between">
+                      <section>
                         <p className="text-sm font-medium text-muted-foreground">
                           Disetujui
                         </p>
                         <p className="mt-2 text-3xl font-bold">
                           {stats.approved}
                         </p>
-                      </div>
-                      <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-green-100">
+                      </section>
+                      <section className="flex h-12 w-12 items-center justify-center rounded-lg bg-green-100">
                         <CheckCircle2 className="h-6 w-6 text-green-600" />
-                      </div>
-                    </div>
-                  </div>
+                      </section>
+                    </section>
+                  </section>
 
-                  <div className="rounded-lg border bg-card p-6 shadow-sm">
-                    <div className="flex items-center justify-between">
-                      <div>
+                  <section className="rounded-lg border bg-card p-6 shadow-sm">
+                    <section className="flex items-center justify-between">
+                      <section>
                         <p className="text-sm font-medium text-muted-foreground">
                           Dalam Proses
                         </p>
                         <p className="mt-2 text-3xl font-bold">
                           {stats.onProgress}
                         </p>
-                      </div>
-                      <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-orange-100">
+                      </section>
+                      <section className="flex h-12 w-12 items-center justify-center rounded-lg bg-orange-100">
                         <Loader2 className="h-6 w-6 text-orange-600" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                      </section>
+                    </section>
+                  </section>
+                </section>
 
                 {/* Table */}
-                <div className="rounded-lg border bg-card shadow-sm">
-                  <div className="border-b bg-muted/50 px-6 py-4">
+                <section className="rounded-lg border bg-card shadow-sm">
+                  <section className="border-b bg-muted/50 px-6 py-4">
                     <h2 className="font-semibold">Daftar Laporan</h2>
                     <p className="text-sm text-muted-foreground">
                       Total {lostReports.length} laporan barang hilang
                     </p>
-                  </div>
+                  </section>
 
-                  <div className="overflow-x-auto">
+                  <section className="overflow-x-auto">
                     <table className="w-full">
                       <thead>
                         <tr className="border-b bg-muted/30">
@@ -283,7 +283,7 @@ export default function ListBarangHilangPage() {
                           </th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-border">
+                      <tbody className="sectionide-y sectionide-border">
                         {lostReports.length === 0 ? (
                           <tr>
                             <td colSpan={6} className="px-6 py-16 text-center">
@@ -303,42 +303,42 @@ export default function ListBarangHilangPage() {
                               className="transition-colors hover:bg-muted/50"
                             >
                               <td className="px-6 py-4">
-                                <div className="flex items-start gap-3">
-                                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
+                                <section className="flex items-start gap-3">
+                                  <section className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
                                     <Package className="h-5 w-5 text-primary" />
-                                  </div>
-                                  <div className="min-w-0 flex-1">
+                                  </section>
+                                  <section className="min-w-0 flex-1">
                                     <p className="font-medium text-sm">
                                       {report.namaBarang}
                                     </p>
                                     <p className="text-xs text-muted-foreground line-clamp-2 mt-0.5">
                                       {report.deskripsi}
                                     </p>
-                                  </div>
-                                </div>
+                                  </section>
+                                </section>
                               </td>
                               <td className="px-6 py-4">
-                                <div className="flex items-center gap-2">
+                                <section className="flex items-center gap-2">
                                   <MapPin className="h-4 w-4 text-muted-foreground" />
                                   <span className="text-sm">
                                     {report.lokasiHilang}
                                   </span>
-                                </div>
+                                </section>
                               </td>
                               <td className="px-6 py-4">
-                                <div className="flex items-center gap-2">
-                                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10">
+                                <section className="flex items-center gap-2">
+                                  <section className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10">
                                     <User className="h-4 w-4 text-primary" />
-                                  </div>
-                                  <div>
+                                  </section>
+                                  <section>
                                     <p className="text-sm font-medium">
                                       {report.user.name}
                                     </p>
                                     <p className="text-xs text-muted-foreground">
                                       {report.user.notelp}
                                     </p>
-                                  </div>
-                                </div>
+                                  </section>
+                                </section>
                               </td>
                               <td className="px-6 py-4">
                                 <StatusBadge status={report.status} />
@@ -349,24 +349,24 @@ export default function ListBarangHilangPage() {
                                 />
                               </td>
                               <td className="px-6 py-4">
-                                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                                <section className="flex items-center gap-2 text-sm text-muted-foreground">
                                   <Calendar className="h-4 w-4" />
                                   <span className="text-xs">
                                     {formatDate(report.createdAt)}
                                   </span>
-                                </div>
+                                </section>
                               </td>
                             </tr>
                           ))
                         )}
                       </tbody>
                     </table>
-                  </div>
-                </div>
+                  </section>
+                </section>
               </>
             )}
-          </div>
-        </div>
+          </section>
+        </section>
       </SidebarInset>
     </SidebarProvider>
   );
