@@ -12,7 +12,11 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { Textarea } from "@/components/ui/textarea";
 import { ChevronDownIcon, PackageSearchIcon } from "lucide-react";
@@ -88,46 +92,52 @@ export default function LaporanBarangHilangPage() {
                   placeholder="Masukkan Deskripsi Barang"
                   className="mb-5"
                 />
-                <div>
-                  <Label
-                    htmlFor="date-picker"
-                    className="mx-2 mb-1.5 text-base"
-                  >
-                    Tanggal
-                  </Label>
-                  <Popover open={open} onOpenChange={setOpen}>
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant="outline"
-                        id="date-picker"
-                        className="w-32 justify-between font-normal"
-                      >
-                        {date ? date.toLocaleDateString() : "Pilih tanggal"}
-                        <ChevronDownIcon />
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent
-                      className="w-auto overflow-hidden p-0"
-                      align="start"
+                <section className="flex flex-col gap-4 mb-5">
+                  <div>
+                    <Label
+                      htmlFor="date-picker"
+                      className="mx-2 mb-1.5 text-base"
                     >
-                      <Calendar
-                        mode="single"
-                        selected={date}
-                        captionLayout="dropdown"
-                        onSelect={(date) => {
-                          setDate(date);
-                          setOpen(false);
-                        }}
-                      />
-                    </PopoverContent>
-                  </Popover>
-                </div>
-                <div>
-                  <Label htmlFor="time-picker" className="px-1">
-                    Waktu
-                  </Label>
-                  <Input type="time" id="time-picker" step="60" />
-                </div>
+                      Tanggal
+                    </Label>
+                    <Popover open={open} onOpenChange={setOpen}>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          id="date-picker"
+                          className="w-32 justify-between font-normal"
+                        >
+                          {date ? date.toLocaleDateString() : "Pilih tanggal"}
+                          <ChevronDownIcon />
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent
+                        className="w-auto overflow-hidden p-0"
+                        align="start"
+                      >
+                        <Calendar
+                          mode="single"
+                          selected={date}
+                          captionLayout="dropdown"
+                          onSelect={(date) => {
+                            setDate(date);
+                            setOpen(false);
+                          }}
+                        />
+                      </PopoverContent>
+                    </Popover>
+                  </div>
+                  <div>
+                    <Label htmlFor="time-picker" className="px-1">
+                      Waktu
+                    </Label>
+                    <Input type="time" id="time-picker" step="60" />
+                  </div>
+                </section>
+                <section className=" flex justify-end gap-5">
+                  <Button variant="outline">Batal</Button>
+                  <Button>Kirim Laporan</Button>
+                </section>
               </CardContent>
             </Card>
           </section>
