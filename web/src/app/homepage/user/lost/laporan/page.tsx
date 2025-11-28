@@ -1,13 +1,28 @@
+"use client";
 import { AppSidebar } from "@/components/AppSidebar";
 import { SiteHeader } from "@/components/SiteHeader";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { Textarea } from "@/components/ui/textarea";
-import { PackageSearchIcon } from "lucide-react";
+import { ChevronDownIcon, PackageSearchIcon } from "lucide-react";
+import React from "react";
 
 export default function LaporanBarangHilangPage() {
+  // State untuk calendar
+  const [open, setOpen] = React.useState(false);
+  const [date, setDate] = React.useState<Date>();
+
   return (
     <SidebarProvider
       style={
@@ -73,6 +88,46 @@ export default function LaporanBarangHilangPage() {
                   placeholder="Masukkan Deskripsi Barang"
                   className="mb-5"
                 />
+                <div>
+                  <Label
+                    htmlFor="date-picker"
+                    className="mx-2 mb-1.5 text-base"
+                  >
+                    Tanggal
+                  </Label>
+                  <Popover open={open} onOpenChange={setOpen}>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        id="date-picker"
+                        className="w-32 justify-between font-normal"
+                      >
+                        {date ? date.toLocaleDateString() : "Pilih tanggal"}
+                        <ChevronDownIcon />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent
+                      className="w-auto overflow-hidden p-0"
+                      align="start"
+                    >
+                      <Calendar
+                        mode="single"
+                        selected={date}
+                        captionLayout="dropdown"
+                        onSelect={(date) => {
+                          setDate(date);
+                          setOpen(false);
+                        }}
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </div>
+                <div>
+                  <Label htmlFor="time-picker" className="px-1">
+                    Waktu
+                  </Label>
+                  <Input type="time" id="time-picker" step="60" />
+                </div>
               </CardContent>
             </Card>
           </section>
