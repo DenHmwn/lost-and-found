@@ -16,6 +16,7 @@ import {
   IconList,
   IconListDetails,
   IconPackage,
+  IconPlus,
   IconReport,
   IconSearch,
   IconSettings,
@@ -142,19 +143,19 @@ const data = {
       icon: IconDashboard,
     },
     {
-      name: "Barang Hilang",
+      name: "List Barang Hilang",
       url: "/homepage/user/lost",
-      icon: IconList,
+      icon: IconSearch,
     },
     {
-      name: "Barang Ditemukan",
+      name: "List Barang Ditemukan",
       url: "/homepage/user/found",
-      icon: IconList,
+      icon: IconBox,
     },
     {
       name: "Buat Laporan Hilang",
-      url: "#",
-      icon: IconSearch,
+      url: "/homepage/user/lost/laporan",
+      icon: IconPlus,
     },
     {
       name: "List Admin",
