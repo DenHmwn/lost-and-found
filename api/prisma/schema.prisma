@@ -4,7 +4,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  // url      = env("DATABASE_URL")
+  url      = env("DATABASE_URL")
 }
 
 model User {
@@ -12,7 +12,7 @@ model User {
   name         String        @db.VarChar(50)
   email        String        @unique
   password     String        @db.VarChar(25)
-  notelp       String        @default("081234567890") @db.VarChar(15)
+  notelp       String        @unique @db.VarChar(15)
   role         Role          @default(USER)
   lostReports  LostReport[]
   foundReports FoundReport[]
