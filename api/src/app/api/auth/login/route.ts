@@ -59,6 +59,21 @@ export async function POST(req: Request) {
       role: user.role,
     });
 
+    // Buat response dengan user data
+    const response = NextResponse.json({
+      success: true,
+      message: "Login berhasil",
+      accessToken,
+      refreshToken,
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        role: user.role,
+        notelp: user.notelp,
+      },
+    });
+
 
   } catch (error) {
     console.error("Login error:", error);
