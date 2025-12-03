@@ -16,7 +16,7 @@ export async function POST(req: Request) {
     }
 
     // Cari user berdasarkan email
-    const user = await prisma.user.findUnique({ 
+    const user = await prisma.user.findUnique({
       where: { email },
       select: {
         id: true,
@@ -25,7 +25,7 @@ export async function POST(req: Request) {
         password: true,
         role: true,
         notelp: true,
-      }
+      },
     });
 
     // cek email
@@ -75,31 +75,31 @@ export async function POST(req: Request) {
     });
 
     // Set token HTTP-only cookie untuk keamanan
-    response.cookies.set("accesstoken", accessToken,  {
+    response.cookies.set("accesstoken", accessToken, {
       // Tidak bisa diakses JavaScript
-      httpOnly: true, 
+      httpOnly: true,
       // HTTPS only di production
-      secure: process.env.NODE_ENV === "production", 
-      // set waktu kedaluwarsa 
+      secure: process.env.NODE_ENV === "production",
+      // set waktu kedaluwarsa
       maxAge: 60 * 15, //15 mnt
-      path: "/", 
+      path: "/",
       // Proteksi CSRF
-      sameSite: "lax", 
+      sameSite: "lax",
     });
-    
-    response.cookies.set("refreshToken", refreshToken,  {
+
+    response.cookies.set("refreshToken", refreshToken, {
       // Tidak bisa diakses JavaScript
-      httpOnly: true, 
+      httpOnly: true,
       // HTTPS only di production
-      secure: process.env.NODE_ENV === "production", 
-      // set waktu kedaluwarsa 
+      secure: process.env.NODE_ENV === "production",
+      // set waktu kedaluwarsa
       maxAge: 60 * 60 * 24 * 7,
-      path: "/", 
+      path: "/",
       // Proteksi CSRF
-      sameSite: "lax", 
+      sameSite: "lax",
     });
 
-
+    return response;
   } catch (error) {
     console.error("Login error:", error);
     return NextResponse.json(
