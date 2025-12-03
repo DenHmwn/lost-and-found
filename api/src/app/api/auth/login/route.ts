@@ -1,3 +1,4 @@
+import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
@@ -11,6 +12,20 @@ export async function POST(req: Request) {
         { status: 400 }
       );
     }
+
+    // Cari user berdasarkan email
+    const user = await prisma.user.findUnique({ 
+      where: { email },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        password: true,
+        role: true,
+        notelp: true,
+      }
+    });
+
   } catch (error) {
     console.error("Login error:", error);
     return NextResponse.json(
