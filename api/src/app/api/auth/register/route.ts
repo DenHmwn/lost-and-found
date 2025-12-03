@@ -31,6 +31,19 @@ export async function POST(req: Request) {
         { status: 400 }
       );
     }
+
+    // Cek apakah email sudah digunakan
+    const existingUser = await prisma.user.findUnique({ 
+      where: { email } 
+    });
+
+    if (existingUser) {
+      return NextResponse.json(
+        { success: false, message: "Email sudah digunakan" },
+        { status: 400 }
+      );
+    }
+    
   } catch (error) {
     console.error("Register error:", error);
     return NextResponse.json(
