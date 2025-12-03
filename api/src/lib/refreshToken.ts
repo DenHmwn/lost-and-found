@@ -1,5 +1,5 @@
 import { SignJWT } from "jose";
-import { TokenPayload } from "./tokenPayload";
+import { TokenPayload } from "./interface";
 import { SECRET } from "./secret";
 
 export async function RefreshToken(payload: TokenPayload): Promise<string> {
