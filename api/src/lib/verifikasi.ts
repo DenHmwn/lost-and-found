@@ -1,5 +1,5 @@
 import { jwtVerify } from "jose";
-import { TokenPayload } from "./tokenPayload";
+import { TokenPayload } from "./interface";
 import { SECRET } from "./secret";
 
 export async function verifyToken(token: string): Promise<TokenPayload | null> {
