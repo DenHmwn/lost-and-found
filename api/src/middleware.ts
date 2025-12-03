@@ -5,7 +5,7 @@ import type { NextRequest } from "next/server";
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  // const response = NextResponse.next();
+  const response = NextResponse.next();
 
   // skip nextjs internal paths
   if (pathname.startsWith("/_next/")) {
@@ -30,11 +30,14 @@ export async function middleware(req: NextRequest) {
   const bearerToken = authHeader?.split(" ")[1];
   const cookieToken = req.cookies.get("accessToken")?.value;
 
-  // Prioritas: Bearer token > Cookie token
+  // get token
+  const tokenFromHeader = authHeader?.split(" ")[1];
+
+    // Prioritas: Bearer token > Cookie token
   const token = bearerToken || cookieToken;
 
   // cek token ada atau tidak
-  if (!token) {
+  if (!tokenFromHeader) {
     return NextResponse.json(
       {
         success: false,
@@ -48,14 +51,14 @@ export async function middleware(req: NextRequest) {
   // verifikasi token
   try {
     const secret = new TextEncoder().encode(process.env.JWT_SECRET!);
-    const { payload } = await jwtVerify(token, secret);
+    const { payload } = await jwtVerify(tokenFromHeader, secret);
 
     // buat request header untuk user info di berrier token
     const requestHeaders = new Headers(req.headers);
     requestHeaders.set("user-id", String(payload.id));
-    requestHeaders.set("user-name", String(payload.name));
-    requestHeaders.set("user-role", String(payload.role));
-    requestHeaders.set("user-authenticated", "true");
+    requestHeaders.set("x-user-name", String(payload.name));
+    requestHeaders.set("x-user-role", String(payload.role));
+    requestHeaders.set("x-authenticated", "true");
 
     return NextResponse.next({
       request: {
@@ -84,7 +87,7 @@ export async function middleware(req: NextRequest) {
   //   "Content-Type, Authorization"
   // );
 
-  // return response;
+  return response;
 }
 
 export const config = {
