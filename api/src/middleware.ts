@@ -5,7 +5,7 @@ import type { NextRequest } from "next/server";
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  const response = NextResponse.next();
+  // const response = NextResponse.next();
 
   // skip nextjs internal paths
   if (pathname.startsWith("/_next/")) {
@@ -25,11 +25,13 @@ export async function middleware(req: NextRequest) {
   if (pathname === "/api/user" && req.method === "POST") {
     return NextResponse.next();
   }
-  // Get token from Authorization header
+   // Get token dari Authorization header ATAU cookie
   const authHeader = req.headers.get("authorization");
+  const bearerToken = authHeader?.split(" ")[1];
+  const cookieToken = req.cookies.get("accessToken")?.value;
 
-  // get token
-  const token = authHeader?.split(" ")[1];
+  // Prioritas: Bearer token > Cookie token
+  const token = bearerToken || cookieToken;
 
   // cek token ada atau tidak
   if (!token) {
@@ -51,9 +53,9 @@ export async function middleware(req: NextRequest) {
     // buat request header untuk user info di berrier token
     const requestHeaders = new Headers(req.headers);
     requestHeaders.set("user-id", String(payload.id));
-    // requestHeaders.set("x-user-name", String(payload.name));
-    // requestHeaders.set("x-user-role", String(payload.role));
-    // requestHeaders.set("x-authenticated", "true");
+    requestHeaders.set("user-name", String(payload.name));
+    requestHeaders.set("user-role", String(payload.role));
+    requestHeaders.set("user-authenticated", "true");
 
     return NextResponse.next({
       request: {
@@ -82,7 +84,7 @@ export async function middleware(req: NextRequest) {
   //   "Content-Type, Authorization"
   // );
 
-  return response;
+  // return response;
 }
 
 export const config = {

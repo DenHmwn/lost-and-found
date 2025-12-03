@@ -1,4 +1,4 @@
-import { verifyToken } from "@/lib/auth";
+import { verifyToken } from "@/lib/verifikasi";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
@@ -17,10 +17,10 @@ export async function POST(req: NextRequest) {
 
     if (!decoded) {
       return NextResponse.json(
-        { 
-          success: false, 
+        {
+          success: false,
           message: "Token invalid atau expired",
-          details: "Token tidak bisa diverifikasi dengan JWT_SECRET yang ada"
+          details: "Token tidak bisa diverifikasi dengan JWT_SECRET yang ada",
         },
         { status: 401 }
       );
@@ -31,15 +31,14 @@ export async function POST(req: NextRequest) {
       message: "Token valid",
       decoded,
     });
-
   } catch (error: unknown) {
     console.error("Verify token error:", error);
     const errorMessage = error instanceof Error ? error.message : String(error);
     return NextResponse.json(
-      { 
-        success: false, 
+      {
+        success: false,
         message: "Gagal memverifikasi token",
-        error: errorMessage 
+        error: errorMessage,
       },
       { status: 500 }
     );

@@ -1,5 +1,6 @@
-import { AccessToken, RefreshToken } from "@/lib/auth";
+import { AccessToken } from "@/lib/accessToken";
 import prisma from "@/lib/prisma";
+import { RefreshToken } from "@/lib/refreshToken";
 import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
 
