@@ -43,9 +43,33 @@ export async function POST(req: Request) {
         { status: 400 }
       );
     }
-    
+
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Buat user baru
+    const newUser = await prisma.user.create({
+      data: { 
+        name, 
+        email, 
+        password: hashedPassword, 
+        notelp: notelp || null,
+        role: "USER", // role default pas regis
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        notelp: true,
+        role: true,
+      }
+    });
+
+    return NextResponse.json({ 
+      success: true, 
+      message: "Registrasi berhasil",
+      data: newUser 
+    }, { status: 201 });
 
   } catch (error) {
     console.error("Register error:", error);
