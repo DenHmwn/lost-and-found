@@ -44,6 +44,9 @@ export async function POST(req: Request) {
       );
     }
     
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
   } catch (error) {
     console.error("Register error:", error);
     return NextResponse.json(
