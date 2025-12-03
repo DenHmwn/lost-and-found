@@ -1,7 +1,8 @@
+import { jwtVerify } from "jose";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-export function middleware(req: NextRequest) {
+export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
   const response = NextResponse.next();
@@ -12,7 +13,7 @@ export function middleware(req: NextRequest) {
   }
 
   // kasih access auth routes
-  if (  
+  if (
     pathname.startsWith("/api/auth/login") ||
     pathname.startsWith("/api/auth/register") ||
     pathname.startsWith("/api/auth/verify")
@@ -32,30 +33,64 @@ export function middleware(req: NextRequest) {
 
   // cek token ada atau tidak
   if (!token) {
-    
     return NextResponse.json(
-      { 
+      {
         success: false,
         message: "Akses ditolak: Token tidak ada",
-        authenticated: false
+        authenticated: false,
       },
       { status: 401 }
     );
   }
 
-  response.headers.set("Access-Control-Allow-Origin", "*");
-  response.headers.set(
-    "Access-Control-Allow-Methods",
-    "GET, POST, DELETE, PUT"
-  );
-  response.headers.set(
-    "Access-Control-Allow-Headers",
-    "Content-Type, Authorization"
-  );
+  // verifikasi token
+  try {
+    const secret = new TextEncoder().encode(process.env.JWT_SECRET!);
+    const { payload } = await jwtVerify(token, secret);
+
+    // buat request header untuk user info di berrier token
+    const requestHeaders = new Headers(req.headers);
+    requestHeaders.set("x-user-id", String(payload.id));
+    // requestHeaders.set("x-user-name", String(payload.name));
+    // requestHeaders.set("x-user-role", String(payload.role));
+    // requestHeaders.set("x-authenticated", "true");
+
+    return NextResponse.next({
+      request: {
+        headers: requestHeaders,
+      },
+    });
+  } catch (err) {
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Token invalid atau expired",
+        error: err instanceof Error ? err.message : String(err),
+        authenticated: false,
+      },
+      { status: 401 }
+    );
+  }
+
+  // response.headers.set("Access-Control-Allow-Origin", "*");
+  // response.headers.set(
+  //   "Access-Control-Allow-Methods",
+  //   "GET, POST, DELETE, PUT"
+  // );
+  // response.headers.set(
+  //   "Access-Control-Allow-Headers",
+  //   "Content-Type, Authorization"
+  // );
 
   return response;
 }
 
 export const config = {
-  matcher: ["/api/:path*"],
+  matcher: [
+    "/api/:path*",
+    "/api/user",
+    "/api/user/:path*",
+    "/api/lostreport/:path*",
+    "/api/foundreport/:path*",
+  ],
 };
