@@ -1,4 +1,4 @@
-import { AccessToken } from "@/lib/auth";
+import { AccessToken, RefreshToken } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
@@ -47,6 +47,13 @@ export async function POST(req: Request) {
 
     // Buat acces token
     const accessToken = await AccessToken({
+      id: String(user.id),
+      name: user.name,
+      role: user.role,
+    });
+
+    // Buat refresh token
+    const refreshToken = await RefreshToken({
       id: String(user.id),
       name: user.name,
       role: user.role,
