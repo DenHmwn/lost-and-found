@@ -75,7 +75,7 @@ export async function POST(req: Request) {
     });
 
     // Set token HTTP-only cookie untuk keamanan
-    response.cookies.set("accesstoken", accessToken, {
+    response.cookies.set("accessToken", accessToken, {
       // Tidak bisa diakses JavaScript
       httpOnly: true,
       // HTTPS only di production
