@@ -20,6 +20,29 @@ export function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
+  // Allow user regis
+  if (pathname === "/api/user" && req.method === "POST") {
+    return NextResponse.next();
+  }
+  // Get token from Authorization header
+  const authHeader = req.headers.get("authorization");
+
+  // get token
+  const token = authHeader?.split(" ")[1];
+
+  // cek token ada atau tidak
+  if (!token) {
+    
+    return NextResponse.json(
+      { 
+        success: false,
+        message: "Akses ditolak: Token tidak ada",
+        authenticated: false
+      },
+      { status: 401 }
+    );
+  }
+
   response.headers.set("Access-Control-Allow-Origin", "*");
   response.headers.set(
     "Access-Control-Allow-Methods",
