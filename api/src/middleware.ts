@@ -56,9 +56,9 @@ export async function middleware(req: NextRequest) {
     // buat request header untuk user info di berrier token
     const requestHeaders = new Headers(req.headers);
     requestHeaders.set("user-id", String(payload.id));
-    requestHeaders.set("x-user-name", String(payload.name));
-    requestHeaders.set("x-user-role", String(payload.role));
-    requestHeaders.set("x-authenticated", "true");
+    requestHeaders.set("user-name", String(payload.name));
+    requestHeaders.set("user-role", String(payload.role));
+    requestHeaders.set("authenticated", "true");
 
     return NextResponse.next({
       request: {
