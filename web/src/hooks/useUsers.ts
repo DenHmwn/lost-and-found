@@ -1,11 +1,11 @@
 import useSWR from "swr";
-import axios from "axios";
+import { api } from "@/lib/axios";
 
-const fetcher = (url: string) => axios.get(url).then((res) => res.data);
+const fetcher = (url: string) => api.get(url).then(res => res.data);
 
 export function useUsers() {
   const { data, error, isLoading } = useSWR(
-    "http://localhost:3000/api/user",
+    "/user",
     fetcher
   );
 
