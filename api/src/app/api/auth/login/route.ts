@@ -82,7 +82,7 @@ export async function POST(req: Request) {
       // HTTPS only di production
       secure: process.env.NODE_ENV === "production",
       // set waktu kedaluwarsa
-      maxAge: 60 * 15, //15 mnt
+      maxAge: 1 * 60,
       path: "/",
       // Proteksi CSRF
       sameSite: "lax",
@@ -94,7 +94,7 @@ export async function POST(req: Request) {
       // HTTPS only di production
       secure: process.env.NODE_ENV === "production",
       // set waktu kedaluwarsa
-      maxAge: 60 * 60 * 24 * 7,
+      maxAge: 60 * 2,
       path: "/",
       // Proteksi CSRF
       sameSite: "lax",

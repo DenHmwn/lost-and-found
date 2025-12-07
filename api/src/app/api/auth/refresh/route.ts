@@ -44,14 +44,14 @@ export async function GET(req: NextRequest) {
       accessToken: newAccessToken,
     });
 
-    // Set access token cookie baru
-    res.cookies.set("accessToken", newAccessToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      maxAge: 60 * 15, // 15 menit
-      path: "/",
-      sameSite: "lax",
-    });
+    // // Set access token cookie baru
+    // res.cookies.set("accessToken", newAccessToken, {
+    //   httpOnly: true,
+    //   secure: process.env.NODE_ENV === "production",
+    //   maxAge: 60 * 15, // 15 menit
+    //   path: "/",
+    //   sameSite: "lax",
+    // });
 
     return res;
   } catch (error) {
