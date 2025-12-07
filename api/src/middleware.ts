@@ -4,11 +4,17 @@ import type { NextRequest } from "next/server";
 
 // Helper function untuk set CORS headers
 function setCorsHeaders(response: NextResponse) {
-  response.headers.set('Access-Control-Allow-Origin', 'http://localhost:3000');
-  response.headers.set('Access-Control-Allow-Methods', 'GET, POST, DELETE, PUT, PATCH, OPTIONS');
-  response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  response.headers.set('Access-Control-Allow-Credentials', 'true');
-  response.headers.set('Access-Control-Max-Age', '86400');
+  response.headers.set("Access-Control-Allow-Origin", "http://localhost:3000");
+  response.headers.set(
+    "Access-Control-Allow-Methods",
+    "GET, POST, DELETE, PUT, PATCH, OPTIONS"
+  );
+  response.headers.set(
+    "Access-Control-Allow-Headers",
+    "Content-Type, Authorization"
+  );
+  response.headers.set("Access-Control-Allow-Credentials", "true");
+  response.headers.set("Access-Control-Max-Age", "86400");
   return response;
 }
 
@@ -16,7 +22,7 @@ export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
   // Handle preflight options request
-  if (req.method === 'OPTIONS') {
+  if (req.method === "OPTIONS") {
     const response = new NextResponse(null, { status: 200 });
     return setCorsHeaders(response);
   }
@@ -24,6 +30,11 @@ export async function middleware(req: NextRequest) {
   // Skip nextjs internal paths
   if (pathname.startsWith("/_next/")) {
     return NextResponse.next();
+  }
+
+  if (pathname.startsWith("/api/auth/refresh")) {
+    const res = NextResponse.next();
+    return setCorsHeaders(res);
   }
 
   // Kasih akses auth routes
@@ -44,28 +55,38 @@ export async function middleware(req: NextRequest) {
 
   // Get token dari Authorization header ATAU cookie
   const authHeader = req.headers.get("authorization");
+  const tokenFromHeader = authHeader?.split(" ")[1];
+  const cookieToken = req.cookies.get("accessToken")?.value;
+  const token = tokenFromHeader || cookieToken;
+  if (!token) {
+  const res = NextResponse.json(
+    { success: false, message: "Token tidak ada", authenticated: false },
+    { status: 401 }
+  );
+  return setCorsHeaders(res);
+}
+
   // const bearerToken = authHeader?.split(" ")[1];
   // const cookieToken = req.cookies.get("accessToken")?.value;
 
-  const tokenFromHeader = authHeader?.split(" ")[1];
 
   // Jika token tidak ada
-  if (!tokenFromHeader) {
-    const response = NextResponse.json(
-      {
-        success: false,
-        message: "Akses ditolak: Token tidak ada",
-        authenticated: false,
-      },
-      { status: 401 }
-    );
-    return setCorsHeaders(response);
-  }
+  // if (!tokenFromHeader) {
+  //   const response = NextResponse.json(
+  //     {
+  //       success: false,
+  //       message: "Akses ditolak: Token tidak ada",
+  //       authenticated: false,
+  //     },
+  //     { status: 401 }
+  //   );
+  //   return setCorsHeaders(response);
+  // }
 
   // Verifikasi token
   try {
     const secret = new TextEncoder().encode(process.env.JWT_SECRET!);
-    const { payload } = await jwtVerify(tokenFromHeader, secret);
+    const { payload } = await jwtVerify(token, secret);
 
     // Buat request header untuk user info
     const requestHeaders = new Headers(req.headers);
@@ -101,6 +122,10 @@ export const config = {
     "/api/user/:path*",
     "/api/lostreport/:path*",
     "/api/foundreport/:path*",
-    "/api/auth/:path*",
+    "/api/auth/login",
+    // "/api/auth/register",
+    // "/api/auth/verify",
+    "/api/auth/logout",
+    "/api/auth/refresh",
   ],
 };
