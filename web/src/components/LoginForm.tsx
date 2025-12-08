@@ -50,14 +50,22 @@ export function LoginForm({
         // Simpan token di localStorage (untuk Bearer token)
         localStorage.setItem("accessToken", data.accessToken);
 
+        const role = data.user?.role;
+
+        // Redirect berdasarkan role
+        if (role === "ADMIN") {
+          router.push("/homepage/admin/dashboard");
+        } else if (role === "USER") {
+          router.push("/homepage/user/dashboard");
+        }
         // Redirect ke dashboard
-        router.push("/homepage/user/dashboard");
+        // router.push("/homepage/user/dashboard");
       }
     } catch (err: unknown) {
       const error = err as ApiError;
       setError(error.response?.data?.message || "Login gagal");
     } finally {
-      setIsLoading(true);
+      setIsLoading(false);
     }
   };
 
@@ -111,7 +119,8 @@ export function LoginForm({
                 />
               </Field>
               <Field>
-                <Button type="submit" className="w-full" disabled={isLoading}>Login
+                <Button type="submit" className="w-full" disabled={isLoading}>
+                  Login
                   {/* {isLoading ? "Loading..." : "Login"} */}
                 </Button>
                 <Button variant="outline" type="button">
@@ -121,7 +130,7 @@ export function LoginForm({
               <section className="text-center text-sm">
                 Belum punya akun?
                 <Link
-                  href="/signup" 
+                  href="/signup"
                   className="underline underline-offset-4 hover:text-primary"
                 >
                   Daftar
