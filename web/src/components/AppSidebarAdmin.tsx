@@ -37,9 +37,10 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
+import { NavAdmin } from "./NavAdmin";
 
 const data = {
-  user: {
+  admin: {
     name: "shadcn",
     email: "m@example.com",
     avatar: "/avatars/shadcn.jpg",
@@ -189,7 +190,7 @@ export function AppSidebarAdmin({ ...props }: React.ComponentProps<typeof Sideba
         {/* <NavSecondary items={data.navSecondary} className="mt-auto" /> */}
       </SidebarContent>
       <SidebarFooter className="bg-gray-200/70">
-        <NavUser user={data.user} />
+        <NavAdmin user={data.admin} />
       </SidebarFooter>
     </Sidebar>
   );
