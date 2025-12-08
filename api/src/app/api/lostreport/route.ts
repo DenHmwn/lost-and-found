@@ -80,6 +80,18 @@ export async function POST(req: Request) {
         { status: 404 }
       );
     }
+    // validasi laporan
+    if (userExists.role !== "USER") {
+      return NextResponse.json(
+        {
+          success: false,
+          message:
+            "Pengguna ini adalah admin. Hanya user yang dapat membuat laporan barang kehilangan.",
+        },
+        { status: 403 }
+      );
+    }
+
     // Create report
     const report = await prisma.lostReport.create({
       data: {
