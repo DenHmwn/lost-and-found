@@ -8,7 +8,7 @@ export const api = axios.create({
   withCredentials: true,
 });
 
-// Interceptor untuk mengambil token dari localStorage 
+// Interceptor untuk mengambil token dari localStorage
 api.interceptors.request.use(
   (config) => {
     // Cek token di localStorage
@@ -93,6 +93,32 @@ api.interceptors.response.use(
       }
     }
 
+    return Promise.reject(error);
+  }
+);
+
+// Fungsi untuk logout
+export async function logout() {
+  try {
+    await api.post("/auth/logout", {}, { withCredentials: true });
+
+    // Hapus token di localStorage
+    localStorage.removeItem("accessToken");
+
+    // Redirect paksa ke login
+    window.location.href = "/login";
+  } catch (err) {
+    console.error("Logout gagal:", err);
+  }
+}
+
+// Interceptor untuk handle 401 error
+api.interceptors.response.use(
+  res => res,
+  error => {
+    if (error.response?.status === 401) {
+      window.location.href = "/login";
+    }
     return Promise.reject(error);
   }
 );
