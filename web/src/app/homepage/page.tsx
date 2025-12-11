@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import React from "react";
 
-export default function HomePageUser() {
+export default function HomePage() {
   return (
     <section className="min-h-screen bg-gray-300/70">
       {/* Header */}
