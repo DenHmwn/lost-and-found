@@ -9,7 +9,10 @@ export async function POST(req: Request) {
     // Validasi input
     if (!name || !email || !password || !notelp) {
       return NextResponse.json(
-        { success: false, message: "Nama, email, password, dan notelp harus diisi" },
+        {
+          success: false,
+          message: "Nama, email, password, dan notelp harus diisi",
+        },
         { status: 400 }
       );
     }
@@ -31,9 +34,17 @@ export async function POST(req: Request) {
       );
     }
 
+    // Validasi panjang no telepon
+    if (notelp.length > 15) {
+      return NextResponse.json(
+        { success: false, message: "No telepon maksimal 15 karakter" },
+        { status: 400 }
+      );
+    }
+
     // Cek apakah email sudah digunakan
-    const existingUser = await prisma.user.findUnique({ 
-      where: { email } 
+    const existingUser = await prisma.user.findUnique({
+      where: { email },
     });
 
     if (existingUser) {
@@ -43,16 +54,27 @@ export async function POST(req: Request) {
       );
     }
 
+    // cek notelp
+    const existingNotelp = await prisma.user.findUnique({
+      where: { notelp },
+    });
+    if (existingNotelp) {
+      return NextResponse.json(
+        { success: false, message: "No telepon sudah digunakan" },
+        { status: 400 }
+      );
+    }
+
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Buat user baru
     const newUser = await prisma.user.create({
-      data: { 
-        name, 
-        email, 
-        password: hashedPassword, 
-        notelp: notelp || null,
+      data: {
+        name,
+        email,
+        password: hashedPassword,
+        notelp: notelp.trim(),
         role: role || "USER", // role default pas regis
       },
       select: {
@@ -61,15 +83,17 @@ export async function POST(req: Request) {
         email: true,
         notelp: true,
         role: true,
-      }
+      },
     });
 
-    return NextResponse.json({ 
-      success: true, 
-      message: "Registrasi berhasil",
-      data: newUser 
-    }, { status: 201 });
-
+    return NextResponse.json(
+      {
+        success: true,
+        message: "Registrasi berhasil",
+        data: newUser,
+      },
+      { status: 201 }
+    );
   } catch (error) {
     console.error("Register error:", error);
     return NextResponse.json(
