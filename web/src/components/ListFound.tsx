@@ -23,6 +23,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { AppSidebarAdmin } from "@/components/AppSidebarAdmin";
+import { formatDate } from "@/lib/scripts";
 
 export default function ListFoundPage() {
   // Fetch data menggunakan custom hook
@@ -63,17 +64,6 @@ export default function ListFoundPage() {
         {variant.text}
       </span>
     );
-  };
-
-  // Format Date
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("id-ID", {
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
   };
 
   // Stats Cards
