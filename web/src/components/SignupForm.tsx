@@ -17,7 +17,9 @@ import { Input } from "@/components/ui/input";
 import { api } from "@/lib/axios";
 import axios from "axios";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "sonner";
 
 export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
   const [form, setForm] = useState({
@@ -31,6 +33,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const router = useRouter();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
@@ -73,7 +76,6 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
         return;
       }
 
-      setSuccess("Registrasi berhasil, silakan login");
       setForm({
         name: "",
         email: "",
@@ -81,6 +83,9 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
         confirmPassword: "",
         notelp: "",
       });
+      // redirect setelah sukses
+      toast.success("Registrasi berhasil, silakan login");
+      router.replace("/login");
     } catch (err) {
       if (axios.isAxiosError(err)) {
         setError(err.response?.data?.message || "Registrasi gagal");
@@ -169,11 +174,6 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
             {error && (
               <FieldDescription className="text-red-500">
                 {error}
-              </FieldDescription>
-            )}
-            {success && (
-              <FieldDescription className="text-green-500">
-                {success}
               </FieldDescription>
             )}
             <FieldGroup>
