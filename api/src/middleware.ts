@@ -123,7 +123,7 @@ export const config = {
     "/api/lostreport/:path*",
     "/api/foundreport/:path*",
     "/api/auth/login",
-    // "/api/auth/register",
+    "/api/auth/register",
     // "/api/auth/verify",
     "/api/auth/logout",
     "/api/auth/refresh",
