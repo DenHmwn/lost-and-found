@@ -1,5 +1,5 @@
 "use client";
-import { AppSidebar } from "@/components/AppSidebar";
+import { AppSidebarUser } from "@/components/AppSidebarUser";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -36,7 +36,7 @@ export default function LaporanBarangHilangPage() {
         } as React.CSSProperties
       }
     >
-      <AppSidebar variant="inset" />
+      <AppSidebarUser variant="inset" />
       <SidebarInset>
         <SiteHeader />
         <section className="flex flex-1 flex-col">
