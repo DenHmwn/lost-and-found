@@ -265,13 +265,13 @@ export default function ListFoundAdminPage() {
                                     <p className="font-medium text-sm">
                                       {report.namaBarang}
                                     </p>
-                                    {/* <p className="text-xs text-muted-foreground line-clamp-2 mt-0.5">
+                                    <p className="text-xs text-muted-foreground line-clamp-2 mt-0.5">
                                       {report.deskripsi}
-                                    </p> */}
+                                    </p>
                                     {report.lostReportId && (
                                       <span className="inline-flex items-center gap-1 mt-1 text-xs text-purple-600 bg-purple-50 px-2 py-0.5 rounded">
                                         <CheckCircle2 className="h-3 w-3" />
-                                        Tercocok dengan laporan #
+                                        Tercocok dengan laporan
                                         {report.lostReportId}
                                       </span>
                                     )}
