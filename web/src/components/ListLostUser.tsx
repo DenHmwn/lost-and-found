@@ -22,8 +22,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { AppSidebarAdmin } from "@/components/AppSidebarAdmin";
 import { formatDate } from "@/lib/scripts";
+import { AppSidebarUser } from "./AppSidebarUser";
 
 export default function ListLostUserPage() {
   // Fetch data menggunakan custom hook
@@ -125,7 +125,7 @@ export default function ListLostUserPage() {
         } as React.CSSProperties
       }
     >
-      <AppSidebarAdmin variant="inset" />
+      <AppSidebarUser variant="inset" />
       <SidebarInset>
         <SiteHeader />
         <section className="flex flex-1 flex-col">

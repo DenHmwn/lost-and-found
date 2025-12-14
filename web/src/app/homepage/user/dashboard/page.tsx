@@ -1,4 +1,4 @@
-import { AppSidebar } from "@/components/AppSidebar";
+import { AppSidebarUser } from "@/components/AppSidebarUser";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 
@@ -12,7 +12,7 @@ export default function DashboardUser() {
         } as React.CSSProperties
       }
     >
-      <AppSidebar variant="inset" />
+      <AppSidebarUser variant="inset" />
       <SidebarInset>
         <SiteHeader />
         <section className="flex flex-1 flex-col">
