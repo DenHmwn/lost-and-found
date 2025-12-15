@@ -4,6 +4,17 @@ import { NextRequest, NextResponse } from "next/server";
 // buat GET user
 export const GET = async () => {
   const users = await prisma.user.findMany({
+    where: {
+      role: {
+        in: ["USER", "ADMIN"],
+      },
+    },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      notelp: true,
+    },
     orderBy: {
       id: "desc",
     },
