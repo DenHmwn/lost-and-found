@@ -1,22 +1,13 @@
 "use client";
+import { useState } from "react";
 import { AppSidebarUser } from "@/components/AppSidebarUser";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { Textarea } from "@/components/ui/textarea";
 import { ChevronDownIcon, PackageSearchIcon } from "lucide-react";
@@ -24,8 +15,56 @@ import React from "react";
 
 export default function LaporanBarangHilangPage() {
   // State untuk calendar
-  const [open, setOpen] = React.useState(false);
-  const [date, setDate] = React.useState<Date>();
+  const [namaBarang, setNamaBarang] = useState("");
+  const [lokasiHilang, setLokasiHilang] = useState("");
+  const [deskripsi, setDeskripsi] = useState("");
+  const [date, setDate] = useState<Date>();
+  const [time, setTime] = useState("");
+  const [open, setOpen] = useState(false);
+
+    const handleSubmit = async () => {
+    if (!namaBarang || !lokasiHilang || !deskripsi || !date || !time) {
+      alert("Harap lengkapi semua data sebelum mengirim laporan.");
+      return;
+    }
+
+     try {
+      const userId = 2; // Sementara, ganti dengan ID user yang sedang login
+      const payload = {
+        namaBarang,
+        lokasiHilang,
+        deskripsi,
+        userId,
+        tanggal: date.toISOString().split("T")[0],
+        waktu: time,
+      };
+
+       const res = await fetch("/api/lostreport", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const result = await res.json();
+
+      if (res.ok) {
+        alert("Laporan berhasil dikirim.");
+        // Reset form
+        setNamaBarang("");
+        setLokasiHilang("");
+        setDeskripsi("");
+        setDate(undefined);
+        setTime("");
+      } else {
+        alert("Gagal mengirim laporan: " + result.message);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Terjadi kesalahan saat mengirim laporan.");
+    }
+  };
 
   return (
     <SidebarProvider
@@ -72,41 +111,38 @@ export default function LaporanBarangHilangPage() {
               <CardContent>
                 <Label className="mx-2 mb-1.5 text-base">Nama Barang</Label>
                 <Input
+                  value={namaBarang}
+                  onChange={(e) => setNamaBarang(e.target.value)}
                   maxLength={20}
                   placeholder="Masukkan Nama Barang"
                   className="mb-5"
                 ></Input>
-                <Label className="mx-2 mb-1.5 text-base ">
-                  Lokasi Barang Terakhir Hilang
-                </Label>
+                <Label className="mx-2 mb-1.5 text-base ">Lokasi Barang Terakhir Hilang</Label>
                 <Input
+                  value={lokasiHilang}
+                  onChange={(e) => setLokasiHilang(e.target.value)}
                   maxLength={50}
                   placeholder="Contoh: Gedung A, Ruang 1, Lantai 3"
                   className="mb-5"
                 ></Input>
-                <Label className="mx-2 mb-1.5 text-base ">
-                  Deskripsi Barang
-                </Label>
+                <Label className="mx-2 mb-1.5 text-base ">Deskripsi Barang</Label>
                 <Textarea
+                  value={deskripsi}
+                  onChange={(e) => setDeskripsi(e.target.value)}
                   maxLength={250}
                   placeholder="Masukkan Deskripsi Barang"
                   className="mb-5"
                 />
                 <section className="flex flex-col gap-4 mb-5">
                   <div>
-                    <Label
-                      htmlFor="date-picker"
-                      className="mx-2 mb-1.5 text-base"
-                    >
-                      Tanggal
+                    <Label htmlFor="date-picker" className="mx-2 mb-1.5 text-base">Tanggal
                     </Label>
                     <Popover open={open} onOpenChange={setOpen}>
                       <PopoverTrigger asChild>
                         <Button
                           variant="outline"
                           id="date-picker"
-                          className="w-32 justify-between font-normal"
-                        >
+                          className="w-32 justify-between font-normal">
                           {date ? date.toLocaleDateString() : "Pilih tanggal"}
                           <ChevronDownIcon />
                         </Button>
@@ -127,16 +163,18 @@ export default function LaporanBarangHilangPage() {
                       </PopoverContent>
                     </Popover>
                   </div>
+
                   <div>
                     <Label htmlFor="time-picker" className="px-1">
                       Waktu
                     </Label>
-                    <Input type="time" id="time-picker" step="60" />
+                    <Input type="time" id="time-picker" step="60" onChange={(e) => setTime(e.target.value)} />
                   </div>
                 </section>
+
                 <section className=" flex justify-end gap-5">
                   <Button variant="outline">Batal</Button>
-                  <Button>Kirim Laporan</Button>
+                  <Button onClick={handleSubmit}>Kirim Laporan</Button>
                 </section>
               </CardContent>
             </Card>
