@@ -1,6 +1,6 @@
-import prisma from "@/lib/prisma";
-import { LostStatus } from "@prisma/client";
 import { NextResponse } from "next/server";
+import { LostStatus } from "@prisma/client";
+import prisma from "@/lib/prisma";
 
 // GET semua laporan lost
 export async function GET() {
@@ -55,6 +55,7 @@ export async function POST(req: Request) {
     const data = await req.json();
     const { namaBarang, deskripsi, lokasiHilang, userId, tanggal, waktu } = data;
 
+    // Validasi semua field wajib
     if (!namaBarang || !deskripsi || !lokasiHilang || !userId || !tanggal || !waktu) {
       return NextResponse.json(
         {
@@ -65,24 +66,35 @@ export async function POST(req: Request) {
       );
     }
 
-    const userExists = await prisma.user.findUnique({
+    // Validasi user
+    const user = await prisma.user.findUnique({
       where: { id: Number(userId) },
     });
 
-    if (!userExists) {
+    if (!user) {
       return NextResponse.json(
         { success: false, message: "User tidak ditemukan" },
         { status: 404 }
       );
     }
 
-    if (userExists.role !== "USER") {
+    if (user.role !== "USER") {
       return NextResponse.json(
         { success: false, message: "Hanya user yang dapat membuat laporan." },
         { status: 403 }
       );
     }
 
+    // Validasi dan parsing tanggal
+    const tanggalHilang = new Date(tanggal);
+    if (isNaN(tanggalHilang.getTime())) {
+      return NextResponse.json(
+        { success: false, message: "Format tanggal tidak valid." },
+        { status: 400 }
+      );
+    }
+
+    // Simpan ke database
     const report = await prisma.lostReport.create({
       data: {
         namaBarang: namaBarang.trim(),
@@ -90,8 +102,8 @@ export async function POST(req: Request) {
         lokasiHilang: lokasiHilang.trim(),
         userId: Number(userId),
         status: LostStatus.PENDING,
-        tanggalHilang: new Date(tanggal), 
-        waktuHilang: waktu,               
+        tanggalHilang,
+        waktuHilang: waktu.trim(),
       },
       include: {
         user: {
@@ -108,13 +120,14 @@ export async function POST(req: Request) {
     return NextResponse.json(
       {
         success: true,
-        message: "Laporan barang hilang berhasil dibuat",
+        message: "Laporan barang hilang berhasil dibuat.",
         data: report,
       },
       { status: 201 }
     );
   } catch (error) {
     console.error("Error creating lost report:", error);
+
     return NextResponse.json(
       {
         success: false,
