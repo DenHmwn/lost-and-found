@@ -1,6 +1,6 @@
-import prisma from "@/lib/prisma";
-import { LostStatus } from "@prisma/client";
 import { NextResponse } from "next/server";
+import { LostStatus } from "@prisma/client";
+import prisma from "@/lib/prisma";
 
 // GET semua laporan lost
 export async function GET() {
@@ -53,10 +53,10 @@ export async function GET() {
 export async function POST(req: Request) {
   try {
     const data = await req.json();
-    const { namaBarang, deskripsi, lokasiHilang, userId } = data;
+    const { namaBarang, deskripsi, lokasiHilang, userId, tanggal, waktu } = data;
 
-    // Validasi input
-    if (!namaBarang || !deskripsi || !lokasiHilang || !userId) {
+    // Validasi semua field wajib
+    if (!namaBarang || !deskripsi || !lokasiHilang || !userId || !tanggal || !waktu) {
       return NextResponse.json(
         {
           success: false,
@@ -66,33 +66,35 @@ export async function POST(req: Request) {
       );
     }
 
-    // Validasi userId ada atau tidak
-    const userExists = await prisma.user.findUnique({
+    // Validasi user
+    const user = await prisma.user.findUnique({
       where: { id: Number(userId) },
     });
 
-    if (!userExists) {
+    if (!user) {
       return NextResponse.json(
-        {
-          success: false,
-          message: "User tidak ditemukan",
-        },
+        { success: false, message: "User tidak ditemukan" },
         { status: 404 }
       );
     }
-    // validasi laporan
-    if (userExists.role !== "USER") {
+
+    if (user.role !== "USER") {
       return NextResponse.json(
-        {
-          success: false,
-          message:
-            "Pengguna ini adalah admin. Hanya user yang dapat membuat laporan barang kehilangan.",
-        },
+        { success: false, message: "Hanya user yang dapat membuat laporan." },
         { status: 403 }
       );
     }
 
-    // Create report
+    // Validasi dan parsing tanggal
+    const tanggalHilang = new Date(tanggal);
+    if (isNaN(tanggalHilang.getTime())) {
+      return NextResponse.json(
+        { success: false, message: "Format tanggal tidak valid." },
+        { status: 400 }
+      );
+    }
+
+    // Simpan ke database
     const report = await prisma.lostReport.create({
       data: {
         namaBarang: namaBarang.trim(),
@@ -100,9 +102,10 @@ export async function POST(req: Request) {
         lokasiHilang: lokasiHilang.trim(),
         userId: Number(userId),
         status: LostStatus.PENDING,
+        tanggalHilang,
+        waktuHilang: waktu.trim(),
       },
       include: {
-        // include user
         user: {
           select: {
             id: true,
@@ -113,18 +116,18 @@ export async function POST(req: Request) {
         },
       },
     });
-    // response success
+
     return NextResponse.json(
       {
         success: true,
-        message: "Laporan barang hilang berhasil dibuat",
+        message: "Laporan barang hilang berhasil dibuat.",
         data: report,
       },
       { status: 201 }
     );
-    // response error
   } catch (error) {
     console.error("Error creating lost report:", error);
+
     return NextResponse.json(
       {
         success: false,
@@ -135,3 +138,4 @@ export async function POST(req: Request) {
     );
   }
 }
+
