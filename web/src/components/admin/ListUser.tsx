@@ -20,6 +20,8 @@ import { Users } from "@/types/users";
 export default function ListUser() {
   const { data: users, isLoading, error } = useUsers();
 
+  const user = users?.filter((user: Users) => user.role === "USER") || [];
+
   return (
     <SidebarProvider
       style={
@@ -72,7 +74,7 @@ export default function ListUser() {
               <section className="border-b bg-muted/50 px-6 py-4">
                 <h2 className="font-semibold">Daftar User</h2>
                 <p className="text-sm text-muted-foreground">
-                  Total {users.length} user
+                  Total {user.length} user
                 </p>
               </section>
 
@@ -93,7 +95,7 @@ export default function ListUser() {
                   </TableHeader>
 
                   <TableBody>
-                    {users.length === 0 ? (
+                    {user.length === 0 ? (
                       <TableRow>
                         <TableCell
                           colSpan={3}
@@ -106,7 +108,7 @@ export default function ListUser() {
                         </TableCell>
                       </TableRow>
                     ) : (
-                      users.map((user: Users) => (
+                      user.map((user: Users) => (
                         <TableRow
                           key={user.id}
                           className="hover:bg-muted/50 transition"
