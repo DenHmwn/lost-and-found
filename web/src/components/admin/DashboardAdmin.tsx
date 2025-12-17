@@ -60,4 +60,9 @@ export default function DashboardAdmin() {
 
    }, [foundReports, lostReports, users]);
 
+    const recentItems = useMemo(() => {
+    if (!foundReports && !lostReports) return [];
+
+}
+
 }
