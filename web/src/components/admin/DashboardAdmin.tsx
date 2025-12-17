@@ -88,4 +88,33 @@ export default function DashboardAdmin() {
       .slice(0, 5);
 }, [foundReports, lostReports]);
 
+
+    const successRate = useMemo(() => {
+    if (!foundReports || foundReports.length === 0) return 0;
+    return Math.round((stats.claimed / stats.totalFound) * 100);
+  }, [stats.claimed, stats.totalFound, foundReports]);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
