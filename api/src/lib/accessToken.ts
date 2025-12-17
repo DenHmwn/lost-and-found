@@ -10,6 +10,6 @@ export async function AccessToken(payload: TokenPayload): Promise<string> {
   })
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
-    .setExpirationTime("1m")
+    .setExpirationTime("20m")
     .sign(SECRET);
 }
