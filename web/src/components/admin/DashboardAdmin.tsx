@@ -48,6 +48,16 @@ export default function DashboardAdmin() {
         const date = item?.createdAt || item?.createdAt;
         return date ? new Date(date).toDateString() === today : false;
       }).length || 0;
-   }
+
+      return {
+      totalLost,
+      totalFound,
+      claimed,
+      totalUsers,
+      lostToday,
+      foundToday,
+    };
+
+   }, [foundReports, lostReports, users]);
 
 }
