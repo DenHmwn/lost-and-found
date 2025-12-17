@@ -94,7 +94,19 @@ export default function DashboardAdmin() {
     return Math.round((stats.claimed / stats.totalFound) * 100);
   }, [stats.claimed, stats.totalFound, foundReports]);
 
+  const formatTimeAgo = (date: string): string => {
+    const now = new Date();
+    const past = new Date(date);
+    const diffMs = now.getTime() - past.getTime();
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+    const diffDays = Math.floor(diffMs / 86400000);
 
+    if (diffMins < 60) return `${diffMins} menit lalu`;
+    if (diffHours < 24) return `${diffHours} jam lalu`;
+    if (diffDays === 1) return "1 hari lalu";
+    return `${diffDays} hari lalu`;
+  };
 
 
 
