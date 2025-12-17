@@ -159,7 +159,7 @@ const data = {
     },
     {
       name: "List Admin",
-      url: "/homepage/user/listadmin",
+      url: "/homepage/user/list-admin",
       icon: IconUsers,
     },
   ],
