@@ -14,6 +14,7 @@ export const GET = async () => {
       name: true,
       email: true,
       notelp: true,
+      role: true,
     },
     orderBy: {
       id: "desc",
