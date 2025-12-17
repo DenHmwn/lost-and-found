@@ -12,3 +12,4 @@ import {
   TrendingUp,
   Users,
 } from "lucide-react";
+import { useMemo } from "react";
