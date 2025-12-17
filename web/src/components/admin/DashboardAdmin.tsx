@@ -23,5 +23,9 @@ export default function DashboardAdmin() {
     type: "hilang" | "ditemukan";
     itemName: string;
   }
+    const { data: foundReports, isLoading: loadingFound } = useFoundReports();
+
+
+
 
 }
