@@ -170,6 +170,7 @@ export default function DashboardAdmin() {
         } as React.CSSProperties
       }
     >
+        <AppSidebarAdmin variant="inset" />
 
 
 
@@ -203,7 +204,6 @@ export default function DashboardAdmin() {
 
 
 
-        
     </SidebarProvider>
     
 
