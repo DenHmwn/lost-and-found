@@ -1,3 +1,4 @@
+'use client'
 import React from "react";
 import { AppSidebarAdmin } from "../AppSidebarAdmin";
 import { SidebarInset, SidebarProvider } from "../ui/sidebar";
@@ -54,7 +55,15 @@ export default function ListUser() {
               <p className="text-sm text-red-700">{error}</p>
             </section>
           ) : (
-            
+            /* Table */
+            <section className="rounded-lg border bg-card shadow-sm">
+              <section className="border-b bg-muted/50 px-6 py-4">
+                <h2 className="font-semibold">Daftar User</h2>
+                <p className="text-sm text-muted-foreground">
+                  Total {users.length} user
+                </p>
+              </section>
+              </section>
           )}
         </section>
       </SidebarInset>
