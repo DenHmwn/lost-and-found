@@ -63,6 +63,12 @@ export default function DashboardAdmin() {
     const recentItems = useMemo(() => {
     if (!foundReports && !lostReports) return [];
 
+    const foundItems: RecentItem[] = (foundReports || []).map(
+      (item: FoundReport) => ({
+        ...item,
+        type: "ditemukan" as const,
+      })
+    );
 }
 
 }
