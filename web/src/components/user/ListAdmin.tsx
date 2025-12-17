@@ -1,10 +1,14 @@
+'use client';
 import React from 'react'
 import { SidebarInset, SidebarProvider } from '../ui/sidebar';
 import { SiteHeader } from '../SiteHeader';
 import { AppSidebarUser } from '../AppSidebarUser';
 import { IconUsers } from '@tabler/icons-react';
+import { useUsers } from '@/hooks/useUsers';
+import { Loader2 } from 'lucide-react';
 
 export default function ListAdmin() {
+  const { data: users, isLoading, error } = useUsers();
   return (
     <SidebarProvider
       style={
@@ -32,6 +36,17 @@ export default function ListAdmin() {
               </section>
             </section>
           </header>
+          {/* Loading */}
+          {isLoading ? (
+            <section className="flex h-[400px] items-center justify-center rounded-lg border border-dashed">
+              <section className="flex flex-col items-center gap-2">
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                <span className="text-sm text-muted-foreground">
+                  Memuat data...
+                </span>
+              </section>
+            </section>
+          ) : null}
           </section>
       </SidebarInset>
     </SidebarProvider>
