@@ -1,4 +1,4 @@
-import ListFoundPage from "@/components/ListFound";
+import ListFoundPage from "@/components/user/ListFoundUser";
 
 
 export default function ListBarangTemuPage() {
