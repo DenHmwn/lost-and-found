@@ -17,3 +17,8 @@ import { useLostReports } from "@/hooks/useLostReport";
 import { useUsers } from "@/hooks/useUsers";
 import { FoundReport } from "@/types/FoundReport";
 import { LostReport } from "@/types/LostReport";
+
+export default function DashboardAdmin() {
+    
+}
+
