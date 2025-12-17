@@ -198,6 +198,14 @@ export default function DashboardAdmin() {
                 </div>
               </div>
 
+            {/* Main Content */}
+            <div className="p-6">
+
+
+
+
+           
+
 
 
 
