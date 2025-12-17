@@ -24,6 +24,8 @@ export default function DashboardAdmin() {
     itemName: string;
   }
     const { data: foundReports, isLoading: loadingFound } = useFoundReports();
+    const { data: lostReports, isLoading: loadingLost } = useLostReports();
+
 
 
 
