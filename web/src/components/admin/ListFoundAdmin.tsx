@@ -26,7 +26,7 @@ import { AppSidebarAdmin } from "@/components/AppSidebarAdmin";
 import { formatDate } from "@/lib/scripts";
 
 
-export default function ListFoundAdminPage() {
+export default function ListFoundAdmin() {
   // Fetch data menggunakan custom hook
   const { data: FoundReports = [], error, isLoading } = useFoundReports();
 
