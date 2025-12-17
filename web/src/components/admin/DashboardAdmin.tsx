@@ -108,7 +108,7 @@ export default function DashboardAdmin() {
     return `${diffDays} hari lalu`;
   };
 
-
+  const isLoading = loadingFound || loadingLost || loadingUsers;
 
 
 
