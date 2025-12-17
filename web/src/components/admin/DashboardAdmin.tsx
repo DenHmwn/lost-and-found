@@ -2,7 +2,6 @@
 import { AppSidebarAdmin } from "@/components/AppSidebarAdmin";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-
 import {
   AlertCircle,
   CheckCircle,
@@ -13,3 +12,6 @@ import {
   Users,
 } from "lucide-react";
 import { useMemo } from "react";
+import { useFoundReports } from "@/hooks/useFoundReport";
+import { useLostReports } from "@/hooks/useLostReport";
+import { useUsers } from "@/hooks/useUsers";
