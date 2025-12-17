@@ -1,14 +1,25 @@
-'use client'
+"use client";
+
 import React from "react";
 import { AppSidebarAdmin } from "../AppSidebarAdmin";
 import { SidebarInset, SidebarProvider } from "../ui/sidebar";
 import { SiteHeader } from "../SiteHeader";
 import { IconUsers } from "@tabler/icons-react";
-import { Loader2, XCircle } from "lucide-react";
+import { Loader2, Mail, Phone, User as UserIcon, XCircle } from "lucide-react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "../ui/table";
 import { useUsers } from "@/hooks/useUsers";
+import { Users } from "@/types/users";
 
 export default function ListUser() {
-    const { data: users, isLoading, error } = useUsers();
+  const { data: users, isLoading, error } = useUsers();
+
   return (
     <SidebarProvider
       style={
@@ -37,6 +48,7 @@ export default function ListUser() {
               </section>
             </section>
           </header>
+
           {/* Loading */}
           {isLoading ? (
             <section className="flex h-[400px] items-center justify-center rounded-lg border border-dashed">
@@ -63,7 +75,66 @@ export default function ListUser() {
                   Total {users.length} user
                 </p>
               </section>
+
+              <section className="overflow-x-auto">
+                <Table className="w-full">
+                  <TableHeader>
+                    <TableRow className="bg-muted/30">
+                      <TableHead className="px-6 py-4 text-xs uppercase">
+                        Nama
+                      </TableHead>
+                      <TableHead className="px-6 py-4 text-xs uppercase">
+                        Email
+                      </TableHead>
+                      <TableHead className="px-6 py-4 text-xs uppercase">
+                        No. Telp
+                      </TableHead>
+                    </TableRow>
+                  </TableHeader>
+
+                  <TableBody>
+                    {users.length === 0 ? (
+                      <TableRow>
+                        <TableCell
+                          colSpan={3}
+                          className="px-6 py-16 text-center"
+                        >
+                          <IconUsers className="mx-auto h-12 w-12 text-muted-foreground/50" />
+                          <p className="mt-4 font-medium text-muted-foreground">
+                            Belum ada user
+                          </p>
+                        </TableCell>
+                      </TableRow>
+                    ) : (
+                      users.map((user: Users) => (
+                        <TableRow
+                          key={user.id}
+                          className="hover:bg-muted/50 transition"
+                        >
+                          <TableCell className="px-6 py-4">
+                            <section className="flex items-center gap-2">
+                              <span className="font-medium">{user.name}</span>
+                            </section>
+                          </TableCell>
+
+                          <TableCell className="px-6 py-4">
+                            <section className="flex items-center gap-2 text-sm">
+                              {user.email}
+                            </section>
+                          </TableCell>
+
+                          <TableCell className="px-6 py-4">
+                            <section className="flex items-center gap-2 text-sm">
+                              {user.notelp}
+                            </section>
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    )}
+                  </TableBody>
+                </Table>
               </section>
+            </section>
           )}
         </section>
       </SidebarInset>
