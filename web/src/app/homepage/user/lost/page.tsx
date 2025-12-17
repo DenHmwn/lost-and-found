@@ -1,4 +1,4 @@
-import ListLostUserPage from "@/components/ListLostUser";
+import ListLostUserPage from "@/components/user/ListLostUser";
 
 export default function ListBarangHilangPage() {
   return (
