@@ -42,9 +42,12 @@ export default function DashboardAdmin() {
         const date = item?.createdAt || item?.createdAt;
         return date ? new Date(date).toDateString() === today : false;
       }).length || 0;
+
+    const foundToday =
+      foundReports?.filter((item: FoundReport | undefined) => {
+        const date = item?.createdAt || item?.createdAt;
+        return date ? new Date(date).toDateString() === today : false;
+      }).length || 0;
    }
-
-
-
 
 }
