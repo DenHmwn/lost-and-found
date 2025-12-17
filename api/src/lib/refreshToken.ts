@@ -10,6 +10,6 @@ export async function RefreshToken(payload: TokenPayload): Promise<string> {
   })
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
-    .setExpirationTime("2m")
+    .setExpirationTime("3d")
     .sign(SECRET);
 }
