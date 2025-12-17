@@ -29,6 +29,7 @@ export default function DashboardAdmin() {
 
    const stats = useMemo(() => {
     const totalLost = lostReports?.length || 0;
+    const totalUsers = users?.length || 0;
    }
 
 
