@@ -3,4 +3,5 @@ export interface Users {
   name: string;
   email: string;
   notelp: string;
+  role: string;
 }
