@@ -2,7 +2,7 @@ import { AppSidebarUser } from "@/components/AppSidebarUser";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 
-export default function DashboardUser() {
+export default function DashboardUserPage() {
   return (
     <SidebarProvider
       style={
