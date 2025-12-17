@@ -28,6 +28,8 @@ export default function DashboardAdmin() {
     const { data: users, isLoading: loadingUsers } = useUsers();
 
    const stats = useMemo(() => {
+    const totalLost = lostReports?.length || 0;
+   }
 
 
 
