@@ -27,6 +27,7 @@ export default function DashboardAdmin() {
     const { data: lostReports, isLoading: loadingLost } = useLostReports();
 
       const { data: users, isLoading: loadingUsers } = useUsers();
+    const { data: users, isLoading: loadingUsers } = useUsers();
 
 
 
