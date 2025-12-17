@@ -34,9 +34,9 @@ export default function ListAdmin() {
                 <IconUsers className="h-5 w-5 text-primary" />
               </section>
               <section>
-                <h1 className="text-2xl font-bold tracking-tight">List User</h1>
+                <h1 className="text-2xl font-bold tracking-tight">List admin</h1>
                 <p className="text-sm text-muted-foreground">
-                  Daftar user yang sudah terdaftar
+                  Daftar admin yang sudah terdaftar
                 </p>
               </section>
             </section>
@@ -55,16 +55,16 @@ export default function ListAdmin() {
             /* Error */
             <section className="rounded-lg border border-red-200 bg-red-50 p-6 text-center">
               <XCircle className="mx-auto mb-2 h-10 w-10 text-red-600" />
-              <p className="font-medium text-red-900">Gagal memuat data user</p>
+              <p className="font-medium text-red-900">Gagal memuat data admin</p>
               <p className="text-sm text-red-700">{error}</p>
             </section>
           ) : (
             /* Table */
             <section className="rounded-lg border bg-card shadow-sm">
               <section className="border-b bg-muted/50 px-6 py-4">
-                <h2 className="font-semibold">Daftar User</h2>
+                <h2 className="font-semibold">Daftar Admin</h2>
                 <p className="text-sm text-muted-foreground">
-                  Total {users.length} user
+                  Total {users.length} Admin
                 </p>
               </section>
             </section>
