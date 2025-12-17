@@ -19,6 +19,9 @@ import { FoundReport } from "@/types/FoundReport";
 import { LostReport } from "@/types/LostReport";
 
 export default function DashboardAdmin() {
-    
-}
+     interface RecentItem extends Partial<FoundReport & LostReport> {
+    type: "hilang" | "ditemukan";
+    itemName: string;
+  }
 
+}
