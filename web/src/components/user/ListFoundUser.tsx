@@ -23,9 +23,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { formatDate } from "@/lib/scripts";
-import { AppSidebarUser } from "./AppSidebarUser";
+import { AppSidebarUser } from "../AppSidebarUser";
 
-export default function ListFoundPage() {
+export default function ListFoundUser() {
   // Fetch data menggunakan custom hook
   const { data: FoundReports = [], error, isLoading } = useFoundReports();
 

@@ -1,7 +1,5 @@
-import ListLostPage from "@/components/ListLost";
+import ListLostAdmin from "@/components/admin/ListLostAdmin";
 
 export default function ListBarangHilangPage() {
-  return (
-    <ListLostPage/>
-  )
+  return <ListLostAdmin/>;
 }

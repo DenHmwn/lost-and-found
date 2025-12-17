@@ -1,7 +1,5 @@
-import ListFoundAdminPage from "@/components/ListFoundAdmin";
+import ListFoundAdmin from "@/components/admin/ListFoundAdmin";
 
 export default function ListBarangTemuPage() {
-  return(
-    <ListFoundAdminPage/>
-  )
+  return <ListFoundAdmin />;
 }
