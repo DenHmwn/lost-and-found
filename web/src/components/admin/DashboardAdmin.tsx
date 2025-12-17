@@ -76,6 +76,8 @@ export default function DashboardAdmin() {
         type: "hilang" as const,
       })
     );
+
+    const allItems = [...foundItems, ...lostItems];
 }
 
 }
