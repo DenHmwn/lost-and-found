@@ -1,4 +1,4 @@
-import LaporanBarangTemu from "@/components/FoundReport";
+import LaporanBarangTemu from "@/components/admin/FoundReport";
 
 
 export default function LaporanBarangTemuPage() {
