@@ -173,6 +173,9 @@ export default function DashboardAdmin() {
         <AppSidebarAdmin variant="inset" />
         <SidebarInset>
         <SiteHeader />
+         <section className="flex flex-1 flex-col">
+          <section className="@container/main flex flex-1 flex-col gap-2">
+            <div className="min-h-screen bg-gray-50"></div>
 
 
 
