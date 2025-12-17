@@ -110,7 +110,44 @@ export default function DashboardAdmin() {
 
   const isLoading = loadingFound || loadingLost || loadingUsers;
 
-
+  const statsConfig = [
+    {
+      title: "Total Barang Hilang",
+      value: stats.totalLost,
+      change: `+${stats.lostToday} hari ini`,
+      icon: Search,
+      color: "bg-red-500",
+      lightBg: "bg-red-50",
+      textColor: "text-red-600",
+    },
+    {
+      title: "Total Barang Ditemukan",
+      value: stats.totalFound,
+      change: `+${stats.foundToday} hari ini`,
+      icon: Package,
+      color: "bg-blue-500",
+      lightBg: "bg-blue-50",
+      textColor: "text-blue-600",
+    },
+    {
+      title: "Berhasil Dikembalikan",
+      value: stats.claimed,
+      change: `${successRate}% dari total`,
+      icon: CheckCircle,
+      color: "bg-green-500",
+      lightBg: "bg-green-50",
+      textColor: "text-green-600",
+    },
+    {
+      title: "Total User",
+      value: stats.totalUsers,
+      change: "Pengguna aktif",
+      icon: Users,
+      color: "bg-purple-500",
+      lightBg: "bg-purple-50",
+      textColor: "text-purple-600",
+    },
+  ];
 
 
 
