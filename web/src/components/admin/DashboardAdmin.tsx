@@ -29,6 +29,7 @@ export default function DashboardAdmin() {
 
    const stats = useMemo(() => {
     const totalLost = lostReports?.length || 0;
+    const totalFound = foundReports?.length || 0;
     const totalUsers = users?.length || 0;
 
      const claimed =
@@ -175,7 +176,8 @@ export default function DashboardAdmin() {
         <SiteHeader />
          <section className="flex flex-1 flex-col">
           <section className="@container/main flex flex-1 flex-col gap-2">
-            <div className="min-h-screen bg-gray-50"></div>
+            <div className="min-h-screen bg-gray-50">
+            
             {/* Header */}
              <div className="bg-white border-b border-gray-200 px-6 py-4">
                 <div className="flex items-center justify-between">
@@ -371,61 +373,13 @@ export default function DashboardAdmin() {
                         </button>
                       </div>
                     </div>   
-
-                    
-
-
-
-           
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                    </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </section>
+      </SidebarInset>
     </SidebarProvider>
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    );
-}
+  );
+}        
