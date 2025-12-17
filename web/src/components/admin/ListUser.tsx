@@ -3,8 +3,11 @@ import { AppSidebarAdmin } from "../AppSidebarAdmin";
 import { SidebarInset, SidebarProvider } from "../ui/sidebar";
 import { SiteHeader } from "../SiteHeader";
 import { IconUsers } from "@tabler/icons-react";
+import { Loader2, XCircle } from "lucide-react";
+import { useUsers } from "@/hooks/useUsers";
 
 export default function ListUser() {
+    const { data: users, isLoading, error } = useUsers();
   return (
     <SidebarProvider
       style={
@@ -33,6 +36,26 @@ export default function ListUser() {
               </section>
             </section>
           </header>
+          {/* Loading */}
+          {isLoading ? (
+            <section className="flex h-[400px] items-center justify-center rounded-lg border border-dashed">
+              <section className="flex flex-col items-center gap-2">
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                <span className="text-sm text-muted-foreground">
+                  Memuat data...
+                </span>
+              </section>
+            </section>
+          ) : error ? (
+            /* Error */
+            <section className="rounded-lg border border-red-200 bg-red-50 p-6 text-center">
+              <XCircle className="mx-auto mb-2 h-10 w-10 text-red-600" />
+              <p className="font-medium text-red-900">Gagal memuat data user</p>
+              <p className="text-sm text-red-700">{error}</p>
+            </section>
+          ) : (
+            
+          )}
         </section>
       </SidebarInset>
     </SidebarProvider>
