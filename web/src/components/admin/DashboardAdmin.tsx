@@ -69,6 +69,13 @@ export default function DashboardAdmin() {
         type: "ditemukan" as const,
       })
     );
+
+       const lostItems: RecentItem[] = (lostReports || []).map(
+      (item: LostReport) => ({
+        ...item,
+        type: "hilang" as const,
+      })
+    );
 }
 
 }
