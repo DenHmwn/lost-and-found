@@ -1,14 +1,19 @@
-'use client';
-import React from 'react'
-import { SidebarInset, SidebarProvider } from '../ui/sidebar';
-import { SiteHeader } from '../SiteHeader';
-import { AppSidebarUser } from '../AppSidebarUser';
-import { IconUsers } from '@tabler/icons-react';
-import { useUsers } from '@/hooks/useUsers';
-import { Loader2 } from 'lucide-react';
+"use client";
+import React from "react";
+import { SidebarInset, SidebarProvider } from "../ui/sidebar";
+import { SiteHeader } from "../SiteHeader";
+import { AppSidebarUser } from "../AppSidebarUser";
+import { IconUsers } from "@tabler/icons-react";
+import { useUsers } from "@/hooks/useUsers";
+import { Loader2, XCircle } from "lucide-react";
+import { Users } from "@/types/users";
 
 export default function ListAdmin() {
   const { data: users, isLoading, error } = useUsers();
+
+  // filter hanya admin
+  const admin = users?.filter((user: Users) => user.role === "ADMIN") || [];
+
   return (
     <SidebarProvider
       style={
@@ -22,7 +27,7 @@ export default function ListAdmin() {
       <SidebarInset>
         <SiteHeader />
         <section className="flex flex-1 flex-col gap-6 p-6">
-           {/* Header */}
+          {/* Header */}
           <header className="space-y-2">
             <section className="flex items-center gap-2">
               <section className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
@@ -46,8 +51,25 @@ export default function ListAdmin() {
                 </span>
               </section>
             </section>
-          ) : null}
-          </section>
+          ) : error ? (
+            /* Error */
+            <section className="rounded-lg border border-red-200 bg-red-50 p-6 text-center">
+              <XCircle className="mx-auto mb-2 h-10 w-10 text-red-600" />
+              <p className="font-medium text-red-900">Gagal memuat data user</p>
+              <p className="text-sm text-red-700">{error}</p>
+            </section>
+          ) : (
+            /* Table */
+            <section className="rounded-lg border bg-card shadow-sm">
+              <section className="border-b bg-muted/50 px-6 py-4">
+                <h2 className="font-semibold">Daftar User</h2>
+                <p className="text-sm text-muted-foreground">
+                  Total {users.length} user
+                </p>
+              </section>
+            </section>
+          )}
+        </section>
       </SidebarInset>
     </SidebarProvider>
   );
