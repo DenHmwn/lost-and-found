@@ -37,6 +37,11 @@ export default function DashboardAdmin() {
       ).length || 0;
 
       const today = new Date().toDateString();
+      const lostToday =
+      lostReports?.filter((item: LostReport | undefined) => {
+        const date = item?.createdAt || item?.createdAt;
+        return date ? new Date(date).toDateString() === today : false;
+      }).length || 0;
    }
 
 
