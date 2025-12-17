@@ -25,7 +25,8 @@ export default function DashboardAdmin() {
   }
     const { data: foundReports, isLoading: loadingFound } = useFoundReports();
     const { data: lostReports, isLoading: loadingLost } = useLostReports();
-    const { data: users, isLoading: loadingUsers } = useUsers();
+
+      const { data: users, isLoading: loadingUsers } = useUsers();
 
    const stats = useMemo(() => {
     const totalLost = lostReports?.length || 0;
