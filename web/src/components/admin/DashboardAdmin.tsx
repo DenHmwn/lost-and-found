@@ -35,6 +35,8 @@ export default function DashboardAdmin() {
       foundReports?.filter(
         (item : FoundReport | undefined) => item?.statusReport === "Done" || item?.statusReport === "Closed"
       ).length || 0;
+
+      const today = new Date().toDateString();
    }
 
 
