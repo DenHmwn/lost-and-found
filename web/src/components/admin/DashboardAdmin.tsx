@@ -172,6 +172,7 @@ export default function DashboardAdmin() {
     >
         <AppSidebarAdmin variant="inset" />
         <SidebarInset>
+        <SiteHeader />
 
 
 
