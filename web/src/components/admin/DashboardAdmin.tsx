@@ -30,6 +30,11 @@ export default function DashboardAdmin() {
    const stats = useMemo(() => {
     const totalLost = lostReports?.length || 0;
     const totalUsers = users?.length || 0;
+
+     const claimed =
+      foundReports?.filter(
+        (item : FoundReport | undefined) => item?.statusReport === "Done" || item?.statusReport === "Closed"
+      ).length || 0;
    }
 
 
