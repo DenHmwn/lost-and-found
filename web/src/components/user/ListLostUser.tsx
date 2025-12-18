@@ -74,15 +74,15 @@ export default function ListLostUser() {
   }) => {
     const variants = {
       Done: {
-        color: "bg-blue-50 text-blue-700 border-blue-200",
+        color: "bg-green-50 text-green-700 border-green-200",
         text: "Selesai",
       },
       OnProgress: {
-        color: "bg-orange-50 text-orange-700 border-orange-200",
+        color: "bg-yellow-50 text-yellow-600 border-yellow-200",
         text: "Dalam Proses",
       },
       Closed: {
-        color: "bg-gray-50 text-gray-700 border-gray-200",
+        color: "bg-red-50 text-red-700 border-red-200",
         text: "Ditutup",
       },
     };
