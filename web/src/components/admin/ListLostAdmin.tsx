@@ -141,7 +141,9 @@ export default function ListLostAdmin() {
     }
   };
 
- const [updatingLostStatus, setUpdatingLostStatus] = useState<number | null>(null);
+  const [updatingLostStatus, setUpdatingLostStatus] = useState<number | null>(
+    null
+  );
 
   // --- FUNGSI UPDATE STATUS REPORT (Done/Closed) ---
   const handleUpdateLostStatusReport = async (
@@ -332,7 +334,7 @@ export default function ListLostAdmin() {
                             Pelapor
                           </TableHead>
                           <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                            Status
+                            Status Laporan
                           </TableHead>
                           <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
                             Status Laporan
@@ -427,13 +429,37 @@ export default function ListLostAdmin() {
                               <TableCell className="px-6 py-4 text-center">
                                 {report.status === "PENDING" ? (
                                   <section className="flex justify-center gap-2">
-                                    <Button className="inline-flex items-center gap-1 rounded-md bg-green-600 px-3 py-1 text-xs font-medium text-white hover:bg-green-700 transition">
-                                      <CheckCircle2 className="h-4 w-4" />
+                                    {/* TOMBOL TERIMA / APPROVE */}
+                                    <Button
+                                      onClick={() =>
+                                        handleApprove(Number(report.id))
+                                      }
+                                      disabled={updatingLostStatus === report.id}
+                                      className="inline-flex items-center gap-1 rounded-md bg-green-600 px-3 py-1 text-xs font-medium text-white hover:bg-green-700 transition disabled:opacity-50"
+                                    >
+                                      {updatingLostStatus === report.id ? (
+                                        <Loader2 className="h-4 w-4 animate-spin" />
+                                      ) : (
+                                        <CheckCircle2 className="h-4 w-4" />
+                                      )}
                                       Terima
                                     </Button>
 
-                                    <Button className="inline-flex items-center gap-1 rounded-md bg-red-600 px-3 py-1 text-xs font-medium text-white hover:bg-red-700 transition">
-                                      <XCircle className="h-4 w-4" />
+                                    {/* TOMBOL TOLAK / REJECT */}
+                                    <Button
+                                      onClick={() =>
+                                        handleReject(Number(report.id))
+                                      }
+                                      disabled={
+                                        updatingLostStatus === report.id
+                                      }
+                                      className="inline-flex items-center gap-1 rounded-md bg-red-600 px-3 py-1 text-xs font-medium text-white hover:bg-red-700 transition disabled:opacity-50"
+                                    >
+                                      {updatingLostStatus === report.id ? (
+                                        <Loader2 className="h-4 w-4 animate-spin" />
+                                      ) : (
+                                        <XCircle className="h-4 w-4" />
+                                      )}
                                       Tolak
                                     </Button>
                                   </section>
