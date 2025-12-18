@@ -429,7 +429,6 @@ export default function ListLostAdmin() {
                               <TableCell className="px-6 py-4 text-center">
                                 {report.status === "PENDING" ? (
                                   <section className="flex justify-center gap-2">
-                                    {/* TOMBOL TERIMA / APPROVE */}
                                     <Button
                                       onClick={() =>
                                         handleApprove(Number(report.id))
@@ -444,8 +443,6 @@ export default function ListLostAdmin() {
                                       )}
                                       Terima
                                     </Button>
-
-                                    {/* TOMBOL TOLAK / REJECT */}
                                     <Button
                                       onClick={() =>
                                         handleReject(Number(report.id))
