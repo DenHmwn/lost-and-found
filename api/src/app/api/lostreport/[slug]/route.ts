@@ -93,8 +93,9 @@ export async function PUT(
         { status: 400 }
       );
     }
-    // Validasi input
-    if (
+
+    // Validasi input 
+    /* if (
       !data.namaBarang ||
       !data.deskripsi ||
       !data.lokasiHilang ||
@@ -107,7 +108,34 @@ export async function PUT(
         },
         { status: 400 }
       );
+    } 
+    */
+
+    // Cek request
+    const isEditingItem =
+      data.namaBarang !== undefined ||
+      data.deskripsi !== undefined ||
+      data.lokasiHilang !== undefined;
+
+    // JIKA sedang edit item, cek semua field
+    if (isEditingItem) {
+      if (
+        !data.namaBarang ||
+        !data.deskripsi ||
+        !data.lokasiHilang
+        // userId cek nanti secara terpisah
+      ) {
+        return NextResponse.json(
+          {
+            success: false,
+            message:
+              "Data tidak lengkap. Pastikan semua field terisi saat mengedit barang.",
+          },
+          { status: 400 }
+        );
+      }
     }
+
     // Validasi status jika ada
     if (data.status && !Object.values(LostStatus).includes(data.status)) {
       return NextResponse.json(
@@ -119,7 +147,7 @@ export async function PUT(
         { status: 400 }
       );
     }
-    //  Validasi statusReport jika ada
+    // Validasi statusReport jika ada
     if (
       data.statusReport &&
       !Object.values(StatusReport).includes(data.statusReport)
@@ -147,7 +175,7 @@ export async function PUT(
         { status: 404 }
       );
     }
-    // Validasi userId ada atau tidak
+    /*
     const userExists = await prisma.user.findUnique({
       where: { id: Number(data.userId) },
     });
@@ -161,7 +189,21 @@ export async function PUT(
         { status: 404 }
       );
     }
-    // Update laporan
+    */
+    // Hanya cek user jika `data.userId` dikirim oleh frontend
+    if (data.userId) {
+      const userExists = await prisma.user.findUnique({
+        where: { id: Number(data.userId) },
+      });
+
+      if (!userExists) {
+        return NextResponse.json(
+          { success: false, message: "User tidak ditemukan" },
+          { status: 404 }
+        );
+      }
+    }
+    /*
     const updatedReport = await prisma.lostReport.update({
       where: { id },
       data: {
@@ -171,6 +213,39 @@ export async function PUT(
         status: data.status || existingRecord.status,
         statusReport: data.statusReport || existingRecord.statusReport,
         userId: Number(data.userId),
+      },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            notelp: true,
+          },
+        },
+      },
+    });
+    */
+    // Menggunakan ternary operator: Jika data baru dikirim -> Pakai data baru. Jika tidak -> Pakai data lama.
+    const updatedReport = await prisma.lostReport.update({
+      where: { id },
+      data: {
+        namaBarang: data.namaBarang
+          ? data.namaBarang.trim()
+          : existingRecord.namaBarang,
+        deskripsi: data.deskripsi
+          ? data.deskripsi.trim()
+          : existingRecord.deskripsi,
+        lokasiHilang: data.lokasiHilang
+          ? data.lokasiHilang.trim()
+          : existingRecord.lokasiHilang,
+
+        // Status & Report tetap logika lama (atau existing)
+        status: data.status || existingRecord.status,
+        statusReport: data.statusReport || existingRecord.statusReport,
+
+        // UserId update hanya jika ada, jika tidak pakai yang lama
+        userId: data.userId ? Number(data.userId) : existingRecord.userId,
       },
       include: {
         // include data user
