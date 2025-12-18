@@ -8,3 +8,7 @@
       minute: "2-digit",
     });
   };
+
+  export const filternotelpon = (value: string) => {
+    return value.replace(/[^0-9]/g, "");
+  };
