@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { api } from "@/lib/axios";
+import { filternotelpon } from "@/lib/scripts";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -137,9 +138,15 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
                 type="tel"
                 required
                 placeholder="081234567890"
+                maxLength={13}
+                minLength={12}
                 value={form.notelp}
-                onChange={handleChange}
+                onChange={(event) => {
+                  const result = filternotelpon(event.target.value);
+                  setForm((prev) => ({ ...prev, notelp: result }));
+                }}
               />
+              <FieldDescription>Minimanal 12 angka. </FieldDescription>
             </Field>
             <Field>
               <FieldLabel htmlFor="password">Password</FieldLabel>
