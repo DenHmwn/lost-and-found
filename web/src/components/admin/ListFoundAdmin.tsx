@@ -24,7 +24,9 @@ import {
 } from "@/components/ui/table";
 import { AppSidebarAdmin } from "@/components/AppSidebarAdmin";
 import { formatDate } from "@/lib/scripts";
-
+import { api } from "@/lib/axios";
+import { useState } from "react";
+import { Button } from "../ui/button";
 
 export default function ListFoundAdmin() {
   // Fetch data menggunakan custom hook
@@ -38,30 +40,25 @@ export default function ListFoundAdmin() {
   }) => {
     const variants = {
       Done: {
-        color: "bg-blue-50 text-blue-700 border-blue-200",
+        color: "bg-green-50 text-green-700 border-green-200",
         text: "Selesai",
-        icon: CheckCircle2,
       },
       OnProgress: {
-        color: "bg-orange-50 text-orange-700 border-orange-200",
+        color: "bg-yellow-50 text-yellow-600 border-yellow-200",
         text: "Dalam Proses",
-        icon: Clock,
       },
       Closed: {
-        color: "bg-gray-50 text-gray-700 border-gray-200",
+        color: "bg-red-50 text-red-700 border-red-200",
         text: "Ditutup",
-        icon: XCircle,
       },
     };
 
     const variant = variants[status];
-    const Icon = variant.icon;
 
     return (
       <span
         className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-1 text-xs font-medium ${variant.color}`}
       >
-        <Icon className="h-3.5 w-3.5" />
         {variant.text}
       </span>
     );
@@ -87,6 +84,28 @@ export default function ListFoundAdmin() {
   };
 
   const stats = getStats();
+
+  // buat state untuk id yang sedang di update
+  const [updatingReport, setUpdatingReport] = useState<number | null>(null);
+
+  // Fungsi untuk update statusReport
+  const handleUpdateStatusReport = async (
+    id: number,
+    newStatus: "Done" | "Closed"
+  ) => {
+    setUpdatingReport(id);
+    try {
+      const res = await api.put(`/foundreport/${id}`, {
+        statusReport: newStatus,
+      });
+      window.location.reload();
+    } catch (error) {
+      console.error("Error updating status report:", error);
+      alert("Gagal mengubah status laporan");
+    } finally {
+      setUpdatingReport(null);
+    }
+  };
 
   return (
     <SidebarProvider
@@ -226,7 +245,7 @@ export default function ListFoundAdmin() {
                             Admin/Pelapor
                           </TableHead>
                           <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                            Status
+                            Kondisi Laporan
                           </TableHead>
                           <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
                             Tanggal
@@ -312,6 +331,63 @@ export default function ListFoundAdmin() {
                                   <span className="text-xs">
                                     {formatDate(report.createdAt)}
                                   </span>
+                                </section>
+                              </TableCell>
+                              <TableCell className="px-6 py-4 text-center">
+                                <section className="flex justify-center gap-2">
+                                  <Button
+                                    onClick={() =>
+                                      handleUpdateStatusReport(
+                                        Number(report.id),
+                                        "Done"
+                                      )
+                                    }
+                                    disabled={
+                                      updatingReport === report.id ||
+                                      report.statusReport === "Done"
+                                    }
+                                    className={`inline-flex items-center gap-1 rounded-md px-3 py-1 text-xs font-medium text-white transition
+                                      ${
+                                        report.statusReport === "Done"
+                                          ? "bg-green-600 cursor-not-allowed"
+                                          : "bg-green-600 hover:bg-green-700"
+                                      }
+                                    `}
+                                  >
+                                    {updatingReport === report.id ? (
+                                      <Loader2 className="h-4 w-4 animate-spin" />
+                                    ) : (
+                                      <CheckCircle2 className="h-4 w-4" />
+                                    )}
+                                    Done
+                                  </Button>
+
+                                  <Button
+                                    onClick={() =>
+                                      handleUpdateStatusReport(
+                                        Number(report.id),
+                                        "Closed"
+                                      )
+                                    }
+                                    disabled={
+                                      updatingReport === report.id ||
+                                      report.statusReport === "Closed"
+                                    }
+                                    className={`inline-flex items-center gap-1 rounded-md px-3 py-1 text-xs font-medium text-white transition
+                                      ${
+                                        report.statusReport === "Closed"
+                                          ? "bg-red-300 cursor-not-allowed"
+                                          : "bg-red-600 hover:bg-red-700"
+                                      }
+                                    `}
+                                  >
+                                    {updatingReport === report.id ? (
+                                      <Loader2 className="h-4 w-4 animate-spin" />
+                                    ) : (
+                                      <XCircle className="h-4 w-4" />
+                                    )}
+                                    Closed
+                                  </Button>
                                 </section>
                               </TableCell>
                             </TableRow>

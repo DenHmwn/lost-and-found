@@ -145,7 +145,7 @@ export default function ListLostAdmin() {
     null
   );
 
-  // --- FUNGSI UPDATE STATUS REPORT (Done/Closed) ---
+  // buat fungsi uodate lost status report
   const handleUpdateLostStatusReport = async (
     id: number,
     newStatus: "Done" | "Closed"
@@ -164,7 +164,7 @@ export default function ListLostAdmin() {
     }
   };
 
-  // --- FUNGSI BARU: APPROVE ---
+  // buat fungsi aprove
   const handleApprove = async (id: number) => {
     setUpdatingLostStatus(id);
     try {
@@ -180,7 +180,7 @@ export default function ListLostAdmin() {
     }
   };
 
-  // --- FUNGSI BARU: REJECT ---
+  // buat fungsi reject
   const handleReject = async (id: number) => {
     setUpdatingLostStatus(id);
     try {
@@ -429,7 +429,6 @@ export default function ListLostAdmin() {
                               <TableCell className="px-6 py-4 text-center">
                                 {report.status === "PENDING" ? (
                                   <section className="flex justify-center gap-2">
-                                    {/* TOMBOL TERIMA / APPROVE */}
                                     <Button
                                       onClick={() =>
                                         handleApprove(Number(report.id))
@@ -444,8 +443,6 @@ export default function ListLostAdmin() {
                                       )}
                                       Terima
                                     </Button>
-
-                                    {/* TOMBOL TOLAK / REJECT */}
                                     <Button
                                       onClick={() =>
                                         handleReject(Number(report.id))
@@ -485,7 +482,7 @@ export default function ListLostAdmin() {
                                     className={`inline-flex items-center gap-1 rounded-md px-3 py-1 text-xs font-medium text-white transition
                                       ${
                                         report.statusReport === "Done"
-                                          ? "bg-green-300 cursor-not-allowed"
+                                          ? "bg-green-600 cursor-not-allowed"
                                           : "bg-green-600 hover:bg-green-700"
                                       }
                                     `}

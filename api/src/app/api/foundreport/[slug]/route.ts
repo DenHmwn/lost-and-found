@@ -107,20 +107,46 @@ export async function PUT(
     }
 
     // Validasi input required
-    if (
-      !data.namaBarang ||
-      !data.deskripsi ||
-      !data.lokasiTemu ||
-      !data.adminId
-    ) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Data tidak lengkap. Pastikan semua field terisi.",
-        },
-        { status: 400 }
-      );
+    // if (
+    //   !data.namaBarang ||
+    //   !data.deskripsi ||
+    //   !data.lokasiTemu ||
+    //   !data.adminId
+    // ) {
+    //   return NextResponse.json(
+    //     {
+    //       success: false,
+    //       message: "Data tidak lengkap. Pastikan semua field terisi.",
+    //     },
+    //     { status: 400 }
+    //   );
+    // }
+
+    // Cek request apakah bertujuan mengedit detail barang
+    const isEditingItem =
+      data.namaBarang !== undefined ||
+      data.deskripsi !== undefined ||
+      data.lokasiTemu !== undefined;
+
+    // jika sedang edit item, cek apakah semua field terisi
+    if (isEditingItem) {
+      if (
+        !data.namaBarang ||
+        !data.deskripsi ||
+        !data.lokasiTemu
+        // adminId cek secara terpisah
+      ) {
+        return NextResponse.json(
+          {
+            success: false,
+            message:
+              "Data tidak lengkap. Pastikan semua field terisi saat mengedit barang.",
+          },
+          { status: 400 }
+        );
+      }
     }
+
     // Cek apakah record ada
     const existingRecord = await prisma.foundReport.findUnique({
       where: { id },
@@ -137,27 +163,47 @@ export async function PUT(
     }
 
     // Validasi admin ada atau tidaknya dan adalah ADMIN role
-    const adminExists = await prisma.user.findUnique({
-      where: { id: Number(data.adminId) },
-    });
-    if (!adminExists) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Admin tidak ditemukan",
-        },
-        { status: 404 }
-      );
+    // const adminExists = await prisma.user.findUnique({
+    //   where: { id: Number(data.adminId) },
+    // });
+    // if (!adminExists) {
+    //   return NextResponse.json(
+    //     {
+    //       success: false,
+    //       message: "Admin tidak ditemukan",
+    //     },
+    //     { status: 404 }
+    //   );
+    // }
+    // if (adminExists.role !== "ADMIN") {
+    //   return NextResponse.json(
+    //     {
+    //       success: false,
+    //       message: "User bukan admin",
+    //     },
+    //     { status: 403 }
+    //   );
+    // }
+
+    // Hanya cek admin jika data adminId dikirim oleh frontend
+    if (data.adminId) {
+      const adminExists = await prisma.user.findUnique({
+        where: { id: Number(data.adminId) },
+      });
+      if (!adminExists) {
+        return NextResponse.json(
+          { success: false, message: "Admin tidak ditemukan" },
+          { status: 404 }
+        );
+      }
+      if (adminExists.role !== "ADMIN") {
+        return NextResponse.json(
+          { success: false, message: "User bukan admin" },
+          { status: 403 }
+        );
+      }
     }
-    if (adminExists.role !== "ADMIN") {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "User bukan admin",
-        },
-        { status: 403 }
-      );
-    }
+
     // Validasi statusReport jika dikirim
     if (
       data.statusReport &&
@@ -205,16 +251,31 @@ export async function PUT(
         }
       }
     }
-    // Update data
+    // Update data pake ternary operator
     const updatedReport = await prisma.foundReport.update({
       where: { id },
       data: {
-        namaBarang: data.namaBarang.trim(),
-        deskripsi: data.deskripsi.trim(),
-        lokasiTemu: data.lokasiTemu.trim(),
-        adminId: Number(data.adminId),
-        // Update lostReportId (bisa null jika ingin unlink)
-        lostReportId: data.lostReportId ? Number(data.lostReportId) : null,
+        namaBarang: data.namaBarang
+          ? data.namaBarang.trim()
+          : existingRecord.namaBarang,
+        deskripsi: data.deskripsi
+          ? data.deskripsi.trim()
+          : existingRecord.deskripsi,
+        lokasiTemu: data.lokasiTemu
+          ? data.lokasiTemu.trim()
+          : existingRecord.lokasiTemu,
+
+        // Update Admin ID (pakai baru jika ada, jika tidak pakai lama)
+        adminId: data.adminId ? Number(data.adminId) : existingRecord.adminId,
+
+        // Update lostReportId (bisa null jika ingin unlink, atau pakai lama jika undefined)
+        lostReportId:
+          data.lostReportId !== undefined
+            ? data.lostReportId
+              ? Number(data.lostReportId)
+              : null
+            : existingRecord.lostReportId,
+
         // Update statusReport jika dikirim, jika tidak pakai yang lama
         statusReport: data.statusReport || existingRecord.statusReport,
       },
