@@ -19,12 +19,14 @@ import {
 } from "lucide-react";
 import { useMemo } from "react";
 import { Button } from "../ui/button";
+import { useRouter } from "next/navigation";
 
 export default function DashboardAdmin() {
   interface RecentItem extends Partial<FoundReport & LostReport> {
     type: "hilang" | "ditemukan";
     itemName: string;
   }
+  const router = useRouter();
   const { data: foundReports, isLoading: loadingFound } = useFoundReports();
   const { data: lostReports, isLoading: loadingLost } = useLostReports();
   const { data: users, isLoading: loadingUsers } = useUsers();
@@ -372,10 +374,12 @@ export default function DashboardAdmin() {
                         Aksi Cepat
                       </h3>
                       <section className="space-y-3">
-                        <Button className="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-3 px-4 rounded-lg transition-colors">
-                          Lihat Semua Laporan
+                        <Button className="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-3 px-4 rounded-lg transition-colors"
+                        onClick={() => router.push("/homepage/admin/found")}>
+                          Lihat Laporan Temuan
                         </Button>
-                        <Button className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-3 px-4 rounded-lg transition-colors">
+                        <Button className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-3 px-4 rounded-lg transition-colors"
+                        onClick={() => router.push("/homepage/user/list-user")}>
                           Kelola User
                         </Button>
                       </section>
