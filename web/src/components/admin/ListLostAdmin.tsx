@@ -24,6 +24,8 @@ import {
 } from "@/components/ui/table";
 import { AppSidebarAdmin } from "@/components/AppSidebarAdmin";
 import { formatDate } from "@/lib/scripts";
+import { Button } from "../ui/button";
+import { Toggle } from "../ui/toggle";
 
 export default function ListLostAdmin() {
   // Fetch data menggunakan custom hook
@@ -115,6 +117,7 @@ export default function ListLostAdmin() {
   };
 
   const stats = getStats();
+
 
   return (
     <SidebarProvider
@@ -262,13 +265,19 @@ export default function ListLostAdmin() {
                           <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
                             Tanggal
                           </TableHead>
+                          <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                            Aksi status
+                          </TableHead>
+                          <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                            Aksi laporan
+                          </TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody className="sectionide-y sectionide-border">
                         {lostReports.length === 0 ? (
                           <TableRow>
                             <TableCell
-                              colSpan={6}
+                              colSpan={8}
                               className="px-6 py-16 text-center"
                             >
                               <Package className="mx-auto h-12 w-12 text-muted-foreground/50" />
@@ -338,6 +347,35 @@ export default function ListLostAdmin() {
                                   <span className="text-xs">
                                     {formatDate(report.createdAt)}
                                   </span>
+                                </section>
+                              </TableCell>
+                              <TableCell className="px-6 py-4 text-center">
+                                {report.status === "PENDING" ? (
+                                  <section className="flex justify-center gap-2">
+                                    <Button className="inline-flex items-center gap-1 rounded-md bg-green-600 px-3 py-1 text-xs font-medium text-white hover:bg-green-700 transition">
+                                      <CheckCircle2 className="h-4 w-4" />
+                                      Terima
+                                    </Button>
+
+                                    <Button className="inline-flex items-center gap-1 rounded-md bg-red-600 px-3 py-1 text-xs font-medium text-white hover:bg-red-700 transition">
+                                      <XCircle className="h-4 w-4" />
+                                      Tolak
+                                    </Button>
+                                  </section>
+                                ) : (
+                                  <span className="text-xs text-muted-foreground">
+                                    —
+                                  </span>
+                                )}
+                              </TableCell>
+                              <TableCell className="px-6 py-4">
+                                <section className="flex items-center gap-2 text-sm text-muted-foreground">
+                                  <Toggle
+                                    aria-label=" Toogle checklist"
+                                    className="data-[state=on]:bg-green-500 data-[state=on]:text-white hover:bg-gray-200 px-8 border border-gray-400"
+                                  >
+                                    Done
+                                  </Toggle>
                                 </section>
                               </TableCell>
                             </TableRow>
