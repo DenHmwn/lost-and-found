@@ -482,7 +482,7 @@ export default function ListLostAdmin() {
                                     className={`inline-flex items-center gap-1 rounded-md px-3 py-1 text-xs font-medium text-white transition
                                       ${
                                         report.statusReport === "Done"
-                                          ? "bg-green-300 cursor-not-allowed"
+                                          ? "bg-green-600 cursor-not-allowed"
                                           : "bg-green-600 hover:bg-green-700"
                                       }
                                     `}
