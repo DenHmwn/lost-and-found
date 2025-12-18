@@ -145,7 +145,7 @@ export default function ListLostAdmin() {
     null
   );
 
-  // --- FUNGSI UPDATE STATUS REPORT (Done/Closed) ---
+  // buat fungsi uodate lost status report
   const handleUpdateLostStatusReport = async (
     id: number,
     newStatus: "Done" | "Closed"
@@ -164,7 +164,7 @@ export default function ListLostAdmin() {
     }
   };
 
-  // --- FUNGSI BARU: APPROVE ---
+  // buat fungsi aprove
   const handleApprove = async (id: number) => {
     setUpdatingLostStatus(id);
     try {
@@ -180,7 +180,7 @@ export default function ListLostAdmin() {
     }
   };
 
-  // --- FUNGSI BARU: REJECT ---
+  // buat fungsi reject
   const handleReject = async (id: number) => {
     setUpdatingLostStatus(id);
     try {
