@@ -158,12 +158,12 @@ export default function DashboardUser() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+      <section className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <section className="text-center">
+          <section className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></section>
           <p className="text-gray-600">Memuat dashboard...</p>
-        </div>
-      </div>
+        </section>
+      </section>
     );
   }
 
@@ -362,11 +362,11 @@ export default function DashboardUser() {
                       </p>
                     </section>
                    { /* Quick Actions */}
-                    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                    <section className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                       <h3 className="text-lg font-semibold text-gray-900 mb-4">
                         Aksi Cepat
                       </h3>
-                      <div className="space-y-3">
+                      <section className="space-y-3">
                         <Button className="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-3 px-4 rounded-lg transition-colors"
                         onClick={() => router.push("/homepage/user/lost")}>
                           Lihat Laporan Hilang
@@ -375,8 +375,8 @@ export default function DashboardUser() {
                         onClick={() => router.push("/homepage/user/list-admin")}>
                           Lihat Admin
                         </Button>
-                      </div>
-                    </div>
+                      </section>
+                    </section>
                   </section>
                 </section>
               </section>
