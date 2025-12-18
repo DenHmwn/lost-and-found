@@ -29,6 +29,14 @@ export default function DashboardUser() {
                       Selamat datang kembali
                     </p>
                   </div>
+                  <div className="text-sm text-gray-500">
+                    {new Date().toLocaleDateString("id-ID", {
+                      weekday: "long",
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}
+                  </div>
                 </div>
               </div>
             </div>
