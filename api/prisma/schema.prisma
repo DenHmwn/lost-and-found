@@ -43,6 +43,8 @@ model FoundReport {
   createdAt    DateTime     @default(now())
   admin        User         @relation(fields: [adminId], references: [id])
   adminId      Int
+  tanggalTemu     DateTime?
+  waktuTemu       String?
   lostReport   LostReport?  @relation("LostFoundRelation", fields: [lostReportId], references: [id])
   lostReportId Int?         @unique
 }
