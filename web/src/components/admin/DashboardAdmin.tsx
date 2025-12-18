@@ -379,7 +379,7 @@ export default function DashboardAdmin() {
                           Lihat Laporan Temuan
                         </Button>
                         <Button className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-3 px-4 rounded-lg transition-colors"
-                        onClick={() => router.push("/homepage/user/list-user")}>
+                        onClick={() => router.push("/homepage/admin/list-user")}>
                           Kelola User
                         </Button>
                       </section>
