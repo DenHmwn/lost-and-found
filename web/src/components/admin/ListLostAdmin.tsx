@@ -120,14 +120,14 @@ export default function ListLostAdmin() {
 
   const stats = getStats();
   // buat state untuk id yang sedang di update
-  const [updatingStatus, setUpdatingStatus] = useState<number | null>(null);
+  const [updatingReport, setUpdatingReport] = useState<number | null>(null);
 
   // Fungsi untuk update statusReport
   const handleUpdateStatusReport = async (
     id: number,
     newStatus: "Done" | "Closed"
   ) => {
-    setUpdatingStatus(id);
+    setUpdatingReport(id);
     try {
       const res = await api.put(`/lostreport/${id}`, {
         statusReport: newStatus,
@@ -137,54 +137,62 @@ export default function ListLostAdmin() {
       console.error("Error updating status report:", error);
       alert("Gagal mengubah status laporan");
     } finally {
-      setUpdatingStatus(null);
+      setUpdatingReport(null);
     }
   };
 
-  // aksi
-  // const handleApprove = async (id: string) => {
-  //   try {
-  //     const res = await fetch(`http://localhost:3001/api/lostreport/${id}`, {
-  //       method: "PUT",
-  //       credentials: "include",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({
-  //         status: "APPROVED",
-  //       }),
-  //     });
+ const [updatingLostStatus, setUpdatingLostStatus] = useState<number | null>(null);
 
-  //     if (!res.ok) {
-  //       throw new Error("Approve gagal");
-  //     }
+  // --- FUNGSI UPDATE STATUS REPORT (Done/Closed) ---
+  const handleUpdateLostStatusReport = async (
+    id: number,
+    newStatus: "Done" | "Closed"
+  ) => {
+    setUpdatingLostStatus(id);
+    try {
+      await api.put(`/lostreport/${id}`, {
+        statusReport: newStatus,
+      });
+      window.location.reload();
+    } catch (error) {
+      console.error("Error updating status report:", error);
+      alert("Gagal mengubah status laporan");
+    } finally {
+      setUpdatingLostStatus(null);
+    }
+  };
 
-  //     window.location.reload();
-  //     console.log(handleApprove);
-  //   } catch (error) {
-  //     console.error("Gagal menyetujui laporan", error);
-  //   }
-  // };
+  // --- FUNGSI BARU: APPROVE ---
+  const handleApprove = async (id: number) => {
+    setUpdatingLostStatus(id);
+    try {
+      await api.put(`/lostreport/${id}`, {
+        status: "APPROVED",
+      });
+      window.location.reload();
+    } catch (error) {
+      console.error("Gagal menyetujui laporan", error);
+      alert("Gagal menyetujui laporan");
+    } finally {
+      setUpdatingLostStatus(null);
+    }
+  };
 
-  // const handleReject = async (id: string) => {
-  //   try {
-  //     await fetch(`http://localhost:3001/api/lostreport/${id}`, {
-  //       method: "PUT",
-  //       credentials: "include",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({
-  //         status: "REJECTED",
-  //       }),
-  //     });
-
-  //     // window.location.reload();
-  //     console.log(handleReject);
-  //   } catch (error) {
-  //     console.error("Gagal menolak laporan", error);
-  //   }
-  // };
+  // --- FUNGSI BARU: REJECT ---
+  const handleReject = async (id: number) => {
+    setUpdatingLostStatus(id);
+    try {
+      await api.put(`/lostreport/${id}`, {
+        status: "REJECTED",
+      });
+      window.location.reload();
+    } catch (error) {
+      console.error("Gagal menolak laporan", error);
+      alert("Gagal menolak laporan");
+    } finally {
+      setUpdatingLostStatus(null);
+    }
+  };
 
   return (
     <SidebarProvider
@@ -445,7 +453,7 @@ export default function ListLostAdmin() {
                                       )
                                     }
                                     disabled={
-                                      updatingStatus === report.id ||
+                                      updatingReport === report.id ||
                                       report.statusReport === "Done"
                                     }
                                     className={`inline-flex items-center gap-1 rounded-md px-3 py-1 text-xs font-medium text-white transition
@@ -456,7 +464,7 @@ export default function ListLostAdmin() {
                                       }
                                     `}
                                   >
-                                    {updatingStatus === report.id ? (
+                                    {updatingReport === report.id ? (
                                       <Loader2 className="h-4 w-4 animate-spin" />
                                     ) : (
                                       <CheckCircle2 className="h-4 w-4" />
@@ -472,7 +480,7 @@ export default function ListLostAdmin() {
                                       )
                                     }
                                     disabled={
-                                      updatingStatus === report.id ||
+                                      updatingReport === report.id ||
                                       report.statusReport === "Closed"
                                     }
                                     className={`inline-flex items-center gap-1 rounded-md px-3 py-1 text-xs font-medium text-white transition
@@ -483,7 +491,7 @@ export default function ListLostAdmin() {
                                       }
                                     `}
                                   >
-                                    {updatingStatus === report.id ? (
+                                    {updatingReport === report.id ? (
                                       <Loader2 className="h-4 w-4 animate-spin" />
                                     ) : (
                                       <XCircle className="h-4 w-4" />
