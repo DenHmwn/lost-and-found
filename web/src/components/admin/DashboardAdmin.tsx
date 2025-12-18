@@ -1,7 +1,13 @@
-'use client';
+"use client";
 import { AppSidebarAdmin } from "@/components/AppSidebarAdmin";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { useFoundReports } from "@/hooks/useFoundReport";
+import { useLostReports } from "@/hooks/useLostReport";
+import { useUsers } from "@/hooks/useUsers";
+import { FoundReport } from "@/types/FoundReport";
+import { LostReport } from "@/types/LostReport";
+import { Users } from "@/types/users";
 import {
   AlertCircle,
   CheckCircle,
@@ -9,37 +15,36 @@ import {
   Package,
   Search,
   TrendingUp,
-  Users,
+  User,
 } from "lucide-react";
 import { useMemo } from "react";
-import { useFoundReports } from "@/hooks/useFoundReport";
-import { useLostReports } from "@/hooks/useLostReport";
-import { useUsers } from "@/hooks/useUsers";
-import { FoundReport } from "@/types/FoundReport";
-import { LostReport } from "@/types/LostReport";
 
 export default function DashboardAdmin() {
-     interface RecentItem extends Partial<FoundReport & LostReport> {
+  interface RecentItem extends Partial<FoundReport & LostReport> {
     type: "hilang" | "ditemukan";
     itemName: string;
   }
-    const { data: foundReports, isLoading: loadingFound } = useFoundReports();
-    const { data: lostReports, isLoading: loadingLost } = useLostReports();
+  const { data: foundReports, isLoading: loadingFound } = useFoundReports();
+  const { data: lostReports, isLoading: loadingLost } = useLostReports();
+  const { data: users, isLoading: loadingUsers } = useUsers();
 
-      const { data: users, isLoading: loadingUsers } = useUsers();
-
-   const stats = useMemo(() => {
+  // Calculate statistics
+  const stats = useMemo(() => {
     const totalLost = lostReports?.length || 0;
     const totalFound = foundReports?.length || 0;
-    const totalUsers = users?.length || 0;
+    const totalUsers =
+      users?.filter((admin: Users) => admin.role === "ADMIN").length || 0;
 
-     const claimed =
+    // Count claimed/returned items
+    const claimed =
       foundReports?.filter(
-        (item : FoundReport | undefined) => item?.statusReport === "Done" || item?.statusReport === "Closed"
+        (item: FoundReport | undefined) =>
+          item?.statusReport === "Done" || item?.statusReport === "Closed"
       ).length || 0;
 
-      const today = new Date().toDateString();
-      const lostToday =
+    // Calculate items from today
+    const today = new Date().toDateString();
+    const lostToday =
       lostReports?.filter((item: LostReport | undefined) => {
         const date = item?.createdAt || item?.createdAt;
         return date ? new Date(date).toDateString() === today : false;
@@ -51,7 +56,7 @@ export default function DashboardAdmin() {
         return date ? new Date(date).toDateString() === today : false;
       }).length || 0;
 
-      return {
+    return {
       totalLost,
       totalFound,
       claimed,
@@ -59,10 +64,10 @@ export default function DashboardAdmin() {
       lostToday,
       foundToday,
     };
+  }, [foundReports, lostReports, users]);
 
-   }, [foundReports, lostReports, users]);
-
-    const recentItems = useMemo(() => {
+  // Get recent items (last 5)
+  const recentItems = useMemo(() => {
     if (!foundReports && !lostReports) return [];
 
     const foundItems: RecentItem[] = (foundReports || []).map(
@@ -72,7 +77,7 @@ export default function DashboardAdmin() {
       })
     );
 
-       const lostItems: RecentItem[] = (lostReports || []).map(
+    const lostItems: RecentItem[] = (lostReports || []).map(
       (item: LostReport) => ({
         ...item,
         type: "hilang" as const,
@@ -88,14 +93,15 @@ export default function DashboardAdmin() {
         return dateB.getTime() - dateA.getTime();
       })
       .slice(0, 5);
-}, [foundReports, lostReports]);
+  }, [foundReports, lostReports]);
 
-
-    const successRate = useMemo(() => {
+  // Calculate success rate
+  const successRate = useMemo(() => {
     if (!foundReports || foundReports.length === 0) return 0;
     return Math.round((stats.claimed / stats.totalFound) * 100);
   }, [stats.claimed, stats.totalFound, foundReports]);
 
+  // Format time ago
   const formatTimeAgo = (date: string): string => {
     const now = new Date();
     const past = new Date(date);
@@ -144,7 +150,7 @@ export default function DashboardAdmin() {
       title: "Total User",
       value: stats.totalUsers,
       change: "Pengguna aktif",
-      icon: Users,
+      icon: User,
       color: "bg-purple-500",
       lightBg: "bg-purple-50",
       textColor: "text-purple-600",
@@ -152,19 +158,17 @@ export default function DashboardAdmin() {
   ];
 
   if (isLoading) {
-
-      return (
+    return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-         <p className="text-gray-600">Memuat dashboard...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+          <p className="text-gray-600">Memuat dashboard...</p>
         </div>
       </div>
-        );
-    }
-
-    return (
-         <SidebarProvider
+    );
+  }
+  return (
+    <SidebarProvider
       style={
         {
           "--sidebar-width": "calc(var(--spacing) * 72)",
@@ -172,15 +176,14 @@ export default function DashboardAdmin() {
         } as React.CSSProperties
       }
     >
-        <AppSidebarAdmin variant="inset" />
-        <SidebarInset>
+      <AppSidebarAdmin variant="inset" />
+      <SidebarInset>
         <SiteHeader />
-         <section className="flex flex-1 flex-col">
+        <section className="flex flex-1 flex-col">
           <section className="@container/main flex flex-1 flex-col gap-2">
             <div className="min-h-screen bg-gray-50">
-            
-            {/* Header */}
-             <div className="bg-white border-b border-gray-200 px-6 py-4">
+              {/* Header */}
+              <div className="bg-white border-b border-gray-200 px-6 py-4">
                 <div className="flex items-center justify-between">
                   <div>
                     <h1 className="text-2xl font-bold text-gray-900">
@@ -190,7 +193,7 @@ export default function DashboardAdmin() {
                       Selamat datang kembali
                     </p>
                   </div>
-                <div className="text-sm text-gray-500">
+                  <div className="text-sm text-gray-500">
                     {new Date().toLocaleDateString("id-ID", {
                       weekday: "long",
                       year: "numeric",
@@ -201,10 +204,11 @@ export default function DashboardAdmin() {
                 </div>
               </div>
 
-            {/* Main Content */}
-            <div className="p-6">
+              {/* Main Content */}
+              <div className="p-6">
+                {/* Stats Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-                    {statsConfig.map((stat, index) => {
+                  {statsConfig.map((stat, index) => {
                     const Icon = stat.icon;
                     return (
                       <div
@@ -229,15 +233,16 @@ export default function DashboardAdmin() {
                   })}
                 </div>
 
-            {/* Recent Activity */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {/* Recent Activity */}
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                  {/* Recent Items List */}
                   <div className="lg:col-span-2 bg-white rounded-lg shadow-sm border border-gray-200">
                     <div className="p-6 border-b border-gray-200">
                       <h2 className="text-lg font-semibold text-gray-900">
                         Aktivitas Terbaru
                       </h2>
                     </div>
-                      <div className="divide-y divide-gray-200">
+                    <div className="divide-y divide-gray-200">
                       {recentItems.length === 0 ? (
                         <div className="p-8 text-center">
                           <AlertCircle className="w-12 h-12 text-gray-400 mx-auto mb-3" />
@@ -315,10 +320,11 @@ export default function DashboardAdmin() {
                       )}
                     </div>
                   </div>
-                
-            {/* Quick Stats */}
-             <div className="space-y-6">
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+
+                  {/* Quick Stats */}
+                  <div className="space-y-6">
+                    {/* Success Rate */}
+                    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                       <h3 className="text-lg font-semibold text-gray-900 mb-4">
                         Tingkat Keberhasilan
                       </h3>
@@ -358,10 +364,9 @@ export default function DashboardAdmin() {
                         dikembalikan
                       </p>
                     </div>
-            
-            
-                 {/* Quick Actions */}
-                 <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+
+                    {/* Quick Actions */}
+                    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                       <h3 className="text-lg font-semibold text-gray-900 mb-4">
                         Aksi Cepat
                       </h3>
@@ -373,8 +378,8 @@ export default function DashboardAdmin() {
                           Kelola User
                         </button>
                       </div>
-                    </div>   
                     </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -383,4 +388,4 @@ export default function DashboardAdmin() {
       </SidebarInset>
     </SidebarProvider>
   );
-}        
+}

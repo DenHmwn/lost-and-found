@@ -45,7 +45,7 @@ export function LoginForm({
 
     try {
       const { data } = await api.post("/auth/login", { email, password });
-
+      console.log("Login response:", data);
       if (data.success) {
         // Simpan token di localStorage (untuk Bearer token)
         localStorage.setItem("accessToken", data.accessToken);
