@@ -1,5 +1,13 @@
-'use client';
-import { CheckCircle, Package, Search, TrendingUp, User } from "lucide-react";
+"use client";
+import {
+  AlertCircle,
+  CheckCircle,
+  Clock,
+  Package,
+  Search,
+  TrendingUp,
+  User,
+} from "lucide-react";
 import { AppSidebarUser } from "../AppSidebarUser";
 import { SiteHeader } from "../SiteHeader";
 import { SidebarInset, SidebarProvider } from "../ui/sidebar";
@@ -12,6 +20,10 @@ import { useMemo } from "react";
 import { Users } from "@/types/users";
 
 export default function DashboardUser() {
+  interface RecentItem extends Partial<FoundReport & LostReport> {
+    type: "hilang" | "ditemukan";
+    itemName: string;
+  }
   const { data: foundReports, isLoading: loadingFound } = useFoundReports();
   const { data: lostReports, isLoading: loadingLost } = useLostReports();
   const { data: users, isLoading: loadingUsers } = useUsers();
@@ -94,6 +106,49 @@ export default function DashboardUser() {
       textColor: "text-purple-600",
     },
   ];
+
+  const recentItems = useMemo(() => {
+    if (!foundReports && !lostReports) return [];
+
+    const foundItems: RecentItem[] = (foundReports || []).map(
+      (item: FoundReport) => ({
+        ...item,
+        type: "ditemukan" as const,
+      })
+    );
+
+    const lostItems: RecentItem[] = (lostReports || []).map(
+      (item: LostReport) => ({
+        ...item,
+        type: "hilang" as const,
+      })
+    );
+
+    const allItems = [...foundItems, ...lostItems];
+
+    return allItems
+      .sort((a, b) => {
+        const dateA = new Date(a.createdAt || 0);
+        const dateB = new Date(b.createdAt || 0);
+        return dateB.getTime() - dateA.getTime();
+      })
+      .slice(0, 5);
+  }, [foundReports, lostReports]);
+  // Format time ago
+  const formatTimeAgo = (date: string): string => {
+    const now = new Date();
+    const past = new Date(date);
+    const diffMs = now.getTime() - past.getTime();
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+    const diffDays = Math.floor(diffMs / 86400000);
+
+    if (diffMins < 60) return `${diffMins} menit sebelum`;
+    if (diffHours < 24) return `${diffHours} jam sebelum`;
+    if (diffDays === 1) return "1 hari sebelum";
+    return `${diffDays} hari lalu`;
+  };
+
   return (
     <SidebarProvider
       style={
@@ -157,6 +212,94 @@ export default function DashboardUser() {
                       </section>
                     );
                   })}
+                </section>
+                {/* Recent Activity */}
+                <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                  {/* Recent Items List */}
+                  <section className="lg:col-span-2 bg-white rounded-lg shadow-sm border border-gray-200">
+                    <section className="p-6 border-b border-gray-200">
+                      <h2 className="text-lg font-semibold text-gray-900">
+                        Aktivitas Terbaru
+                      </h2>
+                    </section>
+                    <section className="divide-y divide-gray-200">
+                      {recentItems.length === 0 ? (
+                        <section className="p-8 text-center">
+                          <AlertCircle className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+                          <p className="text-gray-500">Belum ada aktivitas</p>
+                        </section>
+                      ) : (
+                        recentItems.map((item, index) => (
+                          <section
+                            key={index}
+                            className="p-6 hover:bg-gray-50 transition-colors"
+                          >
+                            <section className="flex items-center justify-between">
+                              <section className="flex items-center gap-4">
+                                <section
+                                  className={`p-2 rounded-lg ${
+                                    item.type === "hilang"
+                                      ? "bg-red-50"
+                                      : "bg-blue-50"
+                                  }`}
+                                >
+                                  {item.type === "hilang" ? (
+                                    <Search className="w-5 h-5 text-red-600" />
+                                  ) : (
+                                    <Package className="w-5 h-5 text-blue-600" />
+                                  )}
+                                </section>
+                                <section>
+                                  <p className="font-medium text-gray-900">
+                                    {item.itemName || "Barang"}
+                                  </p>
+                                  <section className="flex items-center gap-2 mt-1">
+                                    <span
+                                      className={`text-xs px-2 py-1 rounded-full ${
+                                        item.type === "hilang"
+                                          ? "bg-red-100 text-red-700"
+                                          : "bg-blue-100 text-blue-700"
+                                      }`}
+                                    >
+                                      {item.type === "hilang"
+                                        ? "Barang Hilang"
+                                        : "Barang Ditemukan"}
+                                    </span>
+                                    {item.status && (
+                                      <span
+                                        className={`text-xs px-2 py-1 rounded-full ${
+                                          item.status === "PENDING"
+                                            ? "bg-yellow-100 text-yellow-700"
+                                            : item.status === "APPROVED" ||
+                                              item.status === "REJECTED"
+                                            ? "bg-green-100 text-green-700"
+                                            : "bg-gray-100 text-gray-700"
+                                        }`}
+                                      >
+                                        {item.status === "PENDING"
+                                          ? "PENDING"
+                                          : item.status === "APPROVED"
+                                          ? "Diklaim"
+                                          : item.status === "REJECTED"
+                                          ? "Dikembalikan"
+                                          : item.status}
+                                      </span>
+                                    )}
+                                  </section>
+                                </section>
+                              </section>
+                              <section className="flex items-center gap-2 text-gray-500 text-sm">
+                                <Clock className="w-4 h-4" />
+                                {formatTimeAgo(
+                                  item.createdAt || item.createdAt || ""
+                                )}
+                              </section>
+                            </section>
+                          </section>
+                        ))
+                      )}
+                    </section>
+                  </section>
                 </section>
               </section>
             </section>
