@@ -18,12 +18,15 @@ import {
   User,
 } from "lucide-react";
 import { useMemo } from "react";
+import { Button } from "../ui/button";
+import { useRouter } from "next/navigation";
 
 export default function DashboardAdmin() {
   interface RecentItem extends Partial<FoundReport & LostReport> {
     type: "hilang" | "ditemukan";
     itemName: string;
   }
+  const router = useRouter();
   const { data: foundReports, isLoading: loadingFound } = useFoundReports();
   const { data: lostReports, isLoading: loadingLost } = useLostReports();
   const { data: users, isLoading: loadingUsers } = useUsers();
@@ -159,12 +162,12 @@ export default function DashboardAdmin() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+      <section className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <section className="text-center">
+          <section className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></section>
           <p className="text-gray-600">Memuat dashboard...</p>
-        </div>
-      </div>
+        </section>
+      </section>
     );
   }
   return (
@@ -181,46 +184,46 @@ export default function DashboardAdmin() {
         <SiteHeader />
         <section className="flex flex-1 flex-col">
           <section className="@container/main flex flex-1 flex-col gap-2">
-            <div className="min-h-screen bg-gray-50">
+            <section className="min-h-screen bg-gray-50">
               {/* Header */}
-              <div className="bg-white border-b border-gray-200 px-6 py-4">
-                <div className="flex items-center justify-between">
-                  <div>
+              <section className="bg-white border-b border-gray-200 px-6 py-4">
+                <section className="flex items-center justify-between">
+                  <section>
                     <h1 className="text-2xl font-bold text-gray-900">
                       Dashboard
                     </h1>
                     <p className="text-sm text-gray-500 mt-1">
                       Selamat datang kembali
                     </p>
-                  </div>
-                  <div className="text-sm text-gray-500">
+                  </section>
+                  <section className="text-sm text-gray-500">
                     {new Date().toLocaleDateString("id-ID", {
                       weekday: "long",
                       year: "numeric",
                       month: "long",
                       day: "numeric",
                     })}
-                  </div>
-                </div>
-              </div>
+                  </section>
+                </section>
+              </section>
 
               {/* Main Content */}
-              <div className="p-6">
+              <section className="p-6">
                 {/* Stats Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+                <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
                   {statsConfig.map((stat, index) => {
                     const Icon = stat.icon;
                     return (
-                      <div
+                      <section
                         key={index}
                         className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow"
                       >
-                        <div className="flex items-center justify-between mb-4">
-                          <div className={`${stat.lightBg} p-3 rounded-lg`}>
+                        <section className="flex items-center justify-between mb-4">
+                          <section className={`${stat.lightBg} p-3 rounded-lg`}>
                             <Icon className={`w-6 h-6 ${stat.textColor}`} />
-                          </div>
+                          </section>
                           <TrendingUp className="w-4 h-4 text-green-500" />
-                        </div>
+                        </section>
                         <h3 className="text-gray-600 text-sm font-medium mb-1">
                           {stat.title}
                         </h3>
@@ -228,35 +231,35 @@ export default function DashboardAdmin() {
                           {stat.value}
                         </p>
                         <p className="text-xs text-gray-500">{stat.change}</p>
-                      </div>
+                      </section>
                     );
                   })}
-                </div>
+                </section>
 
                 {/* Recent Activity */}
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                   {/* Recent Items List */}
-                  <div className="lg:col-span-2 bg-white rounded-lg shadow-sm border border-gray-200">
-                    <div className="p-6 border-b border-gray-200">
+                  <section className="lg:col-span-2 bg-white rounded-lg shadow-sm border border-gray-200">
+                    <section className="p-6 border-b border-gray-200">
                       <h2 className="text-lg font-semibold text-gray-900">
                         Aktivitas Terbaru
                       </h2>
-                    </div>
-                    <div className="divide-y divide-gray-200">
+                    </section>
+                    <section className="divide-y divide-gray-200">
                       {recentItems.length === 0 ? (
-                        <div className="p-8 text-center">
+                        <section className="p-8 text-center">
                           <AlertCircle className="w-12 h-12 text-gray-400 mx-auto mb-3" />
                           <p className="text-gray-500">Belum ada aktivitas</p>
-                        </div>
+                        </section>
                       ) : (
                         recentItems.map((item, index) => (
-                          <div
+                          <section
                             key={index}
                             className="p-6 hover:bg-gray-50 transition-colors"
                           >
-                            <div className="flex items-center justify-between">
-                              <div className="flex items-center gap-4">
-                                <div
+                            <section className="flex items-center justify-between">
+                              <section className="flex items-center gap-4">
+                                <section
                                   className={`p-2 rounded-lg ${
                                     item.type === "hilang"
                                       ? "bg-red-50"
@@ -268,12 +271,12 @@ export default function DashboardAdmin() {
                                   ) : (
                                     <Package className="w-5 h-5 text-blue-600" />
                                   )}
-                                </div>
-                                <div>
+                                </section>
+                                <section>
                                   <p className="font-medium text-gray-900">
                                     {item.itemName || "Barang"}
                                   </p>
-                                  <div className="flex items-center gap-2 mt-1">
+                                  <section className="flex items-center gap-2 mt-1">
                                     <span
                                       className={`text-xs px-2 py-1 rounded-full ${
                                         item.type === "hilang"
@@ -305,31 +308,31 @@ export default function DashboardAdmin() {
                                           : item.status}
                                       </span>
                                     )}
-                                  </div>
-                                </div>
-                              </div>
-                              <div className="flex items-center gap-2 text-gray-500 text-sm">
+                                  </section>
+                                </section>
+                              </section>
+                              <section className="flex items-center gap-2 text-gray-500 text-sm">
                                 <Clock className="w-4 h-4" />
                                 {formatTimeAgo(
                                   item.createdAt || item.createdAt || ""
                                 )}
-                              </div>
-                            </div>
-                          </div>
+                              </section>
+                            </section>
+                          </section>
                         ))
                       )}
-                    </div>
-                  </div>
+                    </section>
+                  </section>
 
                   {/* Quick Stats */}
-                  <div className="space-y-6">
+                  <section className="space-y-6">
                     {/* Success Rate */}
-                    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                    <section className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                       <h3 className="text-lg font-semibold text-gray-900 mb-4">
                         Tingkat Keberhasilan
                       </h3>
-                      <div className="flex items-center justify-center">
-                        <div className="relative w-32 h-32">
+                      <section className="flex items-center justify-center">
+                        <section className="relative w-32 h-32">
                           <svg className="w-32 h-32 transform -rotate-90">
                             <circle
                               cx="64"
@@ -352,37 +355,39 @@ export default function DashboardAdmin() {
                               strokeLinecap="round"
                             />
                           </svg>
-                          <div className="absolute inset-0 flex items-center justify-center">
+                          <section className="absolute inset-0 flex items-center justify-center">
                             <span className="text-3xl font-bold text-gray-900">
                               {successRate}%
                             </span>
-                          </div>
-                        </div>
-                      </div>
+                          </section>
+                        </section>
+                      </section>
                       <p className="text-center text-sm text-gray-600 mt-4">
                         {stats.claimed} dari {stats.totalFound} barang berhasil
                         dikembalikan
                       </p>
-                    </div>
+                    </section>
 
                     {/* Quick Actions */}
-                    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                    <section className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                       <h3 className="text-lg font-semibold text-gray-900 mb-4">
                         Aksi Cepat
                       </h3>
-                      <div className="space-y-3">
-                        <button className="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-3 px-4 rounded-lg transition-colors">
-                          Lihat Semua Laporan
-                        </button>
-                        <button className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-3 px-4 rounded-lg transition-colors">
+                      <section className="space-y-3">
+                        <Button className="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-3 px-4 rounded-lg transition-colors"
+                        onClick={() => router.push("/homepage/admin/found")}>
+                          Lihat Laporan Temuan
+                        </Button>
+                        <Button className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-3 px-4 rounded-lg transition-colors"
+                        onClick={() => router.push("/homepage/user/list-user")}>
                           Kelola User
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+                        </Button>
+                      </section>
+                    </section>
+                  </section>
+                </section>
+              </section>
+            </section>
           </section>
         </section>
       </SidebarInset>
