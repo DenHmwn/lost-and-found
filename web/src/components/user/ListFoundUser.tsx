@@ -37,30 +37,25 @@ export default function ListFoundUser() {
   }) => {
     const variants = {
       Done: {
-        color: "bg-blue-50 text-blue-700 border-blue-200",
+        color: "bg-green-50 text-green-700 border-green-200",
         text: "Selesai",
-        icon: CheckCircle2,
       },
       OnProgress: {
-        color: "bg-orange-50 text-orange-700 border-orange-200",
+        color: "bg-yellow-50 text-yellow-600 border-yellow-200",
         text: "Dalam Proses",
-        icon: Clock,
       },
       Closed: {
-        color: "bg-gray-50 text-gray-700 border-gray-200",
+        color: "bg-red-50 text-red-700 border-red-200",
         text: "Ditutup",
-        icon: XCircle,
       },
     };
 
     const variant = variants[status];
-    const Icon = variant.icon;
 
     return (
       <span
         className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-1 text-xs font-medium ${variant.color}`}
       >
-        <Icon className="h-3.5 w-3.5" />
         {variant.text}
       </span>
     );
