@@ -26,6 +26,8 @@ import { AppSidebarAdmin } from "@/components/AppSidebarAdmin";
 import { formatDate } from "@/lib/scripts";
 import { Button } from "../ui/button";
 import { Toggle } from "../ui/toggle";
+import { useState } from "react";
+import { api } from "@/lib/axios";
 
 export default function ListLostAdmin() {
   // Fetch data menggunakan custom hook
@@ -76,15 +78,15 @@ export default function ListLostAdmin() {
   }) => {
     const variants = {
       Done: {
-        color: "bg-blue-50 text-blue-700 border-blue-200",
+        color: "bg-green-50 text-green-700 border-green-200",
         text: "Selesai",
       },
       OnProgress: {
-        color: "bg-orange-50 text-orange-700 border-orange-200",
+        color: "bg-yellow-50 text-yellow-600 border-yellow-200",
         text: "Dalam Proses",
       },
       Closed: {
-        color: "bg-gray-50 text-gray-700 border-gray-200",
+        color: "bg-red-50 text-red-700 border-red-200",
         text: "Ditutup",
       },
     };
@@ -117,7 +119,72 @@ export default function ListLostAdmin() {
   };
 
   const stats = getStats();
+  // buat state untuk id yang sedang di update
+  const [updatingStatus, setUpdatingStatus] = useState<number | null>(null);
 
+  // Fungsi untuk update statusReport
+  const handleUpdateStatusReport = async (
+    id: number,
+    newStatus: "Done" | "Closed"
+  ) => {
+    setUpdatingStatus(id);
+    try {
+      const res = await api.put(`/lostreport/${id}`, {
+        statusReport: newStatus,
+      });
+      window.location.reload();
+    } catch (error) {
+      console.error("Error updating status report:", error);
+      alert("Gagal mengubah status laporan");
+    } finally {
+      setUpdatingStatus(null);
+    }
+  };
+
+  // aksi
+  // const handleApprove = async (id: string) => {
+  //   try {
+  //     const res = await fetch(`http://localhost:3001/api/lostreport/${id}`, {
+  //       method: "PUT",
+  //       credentials: "include",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({
+  //         status: "APPROVED",
+  //       }),
+  //     });
+
+  //     if (!res.ok) {
+  //       throw new Error("Approve gagal");
+  //     }
+
+  //     window.location.reload();
+  //     console.log(handleApprove);
+  //   } catch (error) {
+  //     console.error("Gagal menyetujui laporan", error);
+  //   }
+  // };
+
+  // const handleReject = async (id: string) => {
+  //   try {
+  //     await fetch(`http://localhost:3001/api/lostreport/${id}`, {
+  //       method: "PUT",
+  //       credentials: "include",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({
+  //         status: "REJECTED",
+  //       }),
+  //     });
+
+  //     // window.location.reload();
+  //     console.log(handleReject);
+  //   } catch (error) {
+  //     console.error("Gagal menolak laporan", error);
+  //   }
+  // };
 
   return (
     <SidebarProvider
@@ -368,14 +435,61 @@ export default function ListLostAdmin() {
                                   </span>
                                 )}
                               </TableCell>
-                              <TableCell className="px-6 py-4">
-                                <section className="flex items-center gap-2 text-sm text-muted-foreground">
-                                  <Toggle
-                                    aria-label=" Toogle checklist"
-                                    className="data-[state=on]:bg-green-500 data-[state=on]:text-white hover:bg-gray-200 px-8 border border-gray-400"
+                              <TableCell className="px-6 py-4 text-center">
+                                <section className="flex justify-center gap-2">
+                                  <Button
+                                    onClick={() =>
+                                      handleUpdateStatusReport(
+                                        Number(report.id),
+                                        "Done"
+                                      )
+                                    }
+                                    disabled={
+                                      updatingStatus === report.id ||
+                                      report.statusReport === "Done"
+                                    }
+                                    className={`inline-flex items-center gap-1 rounded-md px-3 py-1 text-xs font-medium text-white transition
+                                      ${
+                                        report.statusReport === "Done"
+                                          ? "bg-green-300 cursor-not-allowed"
+                                          : "bg-green-600 hover:bg-green-700"
+                                      }
+                                    `}
                                   >
+                                    {updatingStatus === report.id ? (
+                                      <Loader2 className="h-4 w-4 animate-spin" />
+                                    ) : (
+                                      <CheckCircle2 className="h-4 w-4" />
+                                    )}
                                     Done
-                                  </Toggle>
+                                  </Button>
+
+                                  <Button
+                                    onClick={() =>
+                                      handleUpdateStatusReport(
+                                        Number(report.id),
+                                        "Closed"
+                                      )
+                                    }
+                                    disabled={
+                                      updatingStatus === report.id ||
+                                      report.statusReport === "Closed"
+                                    }
+                                    className={`inline-flex items-center gap-1 rounded-md px-3 py-1 text-xs font-medium text-white transition
+                                      ${
+                                        report.statusReport === "Closed"
+                                          ? "bg-red-300 cursor-not-allowed"
+                                          : "bg-red-600 hover:bg-red-700"
+                                      }
+                                    `}
+                                  >
+                                    {updatingStatus === report.id ? (
+                                      <Loader2 className="h-4 w-4 animate-spin" />
+                                    ) : (
+                                      <XCircle className="h-4 w-4" />
+                                    )}
+                                    Closed
+                                  </Button>
                                 </section>
                               </TableCell>
                             </TableRow>
