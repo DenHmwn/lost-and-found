@@ -61,10 +61,10 @@ export async function GET() {
 export async function POST(req: Request) {
     try {
   const data = await req.json();
-  const { namaBarang, deskripsi, lokasiTemu, adminId, lostReportId } = data;
+  const { namaBarang, deskripsi, lokasiTemu, adminId, lostReportId, tanggal, waktu } = data;
 
   // validasi input data
-  if (!namaBarang || !deskripsi || !lokasiTemu || !adminId) {
+  if (!namaBarang || !deskripsi || !lokasiTemu || !adminId || !tanggal || !waktu) {
     return NextResponse.json(
       {
         success: false,
@@ -100,6 +100,15 @@ export async function POST(req: Request) {
       { status: 403 }
     );
   }
+
+  // Validasi dan parsing tanggal
+    const tanggalTemu = new Date(tanggal);
+    if (isNaN(tanggalTemu.getTime())) {
+      return NextResponse.json(
+        { success: false, message: "Format tanggal tidak valid." },
+        { status: 400 }
+      );
+    }
 
   // Validasi lostReportId jika ada
   if (lostReportId) {
@@ -140,7 +149,9 @@ export async function POST(req: Request) {
         deskripsi: deskripsi.trim(),
         lokasiTemu: lokasiTemu.trim(),
         adminId: Number(adminId),
-        lostReportId: lostReportId ? Number(lostReportId) : null
+        lostReportId: lostReportId ? Number(lostReportId) : null,
+        tanggalTemu,
+        waktuHilang: waktu.trim(),
       },
       include: {
         admin: {
