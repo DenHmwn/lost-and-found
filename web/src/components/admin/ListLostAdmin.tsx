@@ -26,6 +26,8 @@ import { AppSidebarAdmin } from "@/components/AppSidebarAdmin";
 import { formatDate } from "@/lib/scripts";
 import { Button } from "../ui/button";
 import { Toggle } from "../ui/toggle";
+import { useState } from "react";
+import { api } from "@/lib/axios";
 
 export default function ListLostAdmin() {
   // Fetch data menggunakan custom hook
@@ -76,15 +78,15 @@ export default function ListLostAdmin() {
   }) => {
     const variants = {
       Done: {
-        color: "bg-blue-50 text-blue-700 border-blue-200",
+        color: "bg-green-50 text-green-700 border-green-200",
         text: "Selesai",
       },
       OnProgress: {
-        color: "bg-orange-50 text-orange-700 border-orange-200",
+        color: "bg-yellow-50 text-yellow-600 border-yellow-200",
         text: "Dalam Proses",
       },
       Closed: {
-        color: "bg-gray-50 text-gray-700 border-gray-200",
+        color: "bg-red-50 text-red-700 border-red-200",
         text: "Ditutup",
       },
     };
@@ -117,7 +119,82 @@ export default function ListLostAdmin() {
   };
 
   const stats = getStats();
+  // buat state untuk id yang sedang di update
+  const [updatingReport, setUpdatingReport] = useState<number | null>(null);
 
+  // Fungsi untuk update statusReport
+  const handleUpdateStatusReport = async (
+    id: number,
+    newStatus: "Done" | "Closed"
+  ) => {
+    setUpdatingReport(id);
+    try {
+      const res = await api.put(`/lostreport/${id}`, {
+        statusReport: newStatus,
+      });
+      window.location.reload();
+    } catch (error) {
+      console.error("Error updating status report:", error);
+      alert("Gagal mengubah status laporan");
+    } finally {
+      setUpdatingReport(null);
+    }
+  };
+
+  const [updatingLostStatus, setUpdatingLostStatus] = useState<number | null>(
+    null
+  );
+
+  // --- FUNGSI UPDATE STATUS REPORT (Done/Closed) ---
+  const handleUpdateLostStatusReport = async (
+    id: number,
+    newStatus: "Done" | "Closed"
+  ) => {
+    setUpdatingLostStatus(id);
+    try {
+      await api.put(`/lostreport/${id}`, {
+        statusReport: newStatus,
+      });
+      window.location.reload();
+    } catch (error) {
+      console.error("Error updating status report:", error);
+      alert("Gagal mengubah status laporan");
+    } finally {
+      setUpdatingLostStatus(null);
+    }
+  };
+
+  // --- FUNGSI BARU: APPROVE ---
+  const handleApprove = async (id: number) => {
+    setUpdatingLostStatus(id);
+    try {
+      await api.put(`/lostreport/${id}`, {
+        status: "APPROVED",
+      });
+      window.location.reload();
+    } catch (error) {
+      console.error("Gagal menyetujui laporan", error);
+      alert("Gagal menyetujui laporan");
+    } finally {
+      setUpdatingLostStatus(null);
+    }
+  };
+
+  // --- FUNGSI BARU: REJECT ---
+  const handleReject = async (id: number) => {
+    setUpdatingLostStatus(id);
+    try {
+      await api.put(`/lostreport/${id}`, {
+        status: "REJECTED",
+      });
+      window.location.reload();
+    } catch (error) {
+      console.error("Gagal menolak laporan", error);
+      alert("Gagal menolak laporan");
+    } finally {
+      setUpdatingLostStatus(null);
+    }
+  };
 
   return (
     <SidebarProvider
@@ -257,10 +334,10 @@ export default function ListLostAdmin() {
                             Pelapor
                           </TableHead>
                           <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                            Status
+                            Status Laporan
                           </TableHead>
                           <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                            Status Laporan
+                            Kondisi Laporan
                           </TableHead>
                           <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
                             Tanggal
@@ -352,13 +429,37 @@ export default function ListLostAdmin() {
                               <TableCell className="px-6 py-4 text-center">
                                 {report.status === "PENDING" ? (
                                   <section className="flex justify-center gap-2">
-                                    <Button className="inline-flex items-center gap-1 rounded-md bg-green-600 px-3 py-1 text-xs font-medium text-white hover:bg-green-700 transition">
-                                      <CheckCircle2 className="h-4 w-4" />
+                                    {/* TOMBOL TERIMA / APPROVE */}
+                                    <Button
+                                      onClick={() =>
+                                        handleApprove(Number(report.id))
+                                      }
+                                      disabled={updatingLostStatus === report.id}
+                                      className="inline-flex items-center gap-1 rounded-md bg-green-600 px-3 py-1 text-xs font-medium text-white hover:bg-green-700 transition disabled:opacity-50"
+                                    >
+                                      {updatingLostStatus === report.id ? (
+                                        <Loader2 className="h-4 w-4 animate-spin" />
+                                      ) : (
+                                        <CheckCircle2 className="h-4 w-4" />
+                                      )}
                                       Terima
                                     </Button>
 
-                                    <Button className="inline-flex items-center gap-1 rounded-md bg-red-600 px-3 py-1 text-xs font-medium text-white hover:bg-red-700 transition">
-                                      <XCircle className="h-4 w-4" />
+                                    {/* TOMBOL TOLAK / REJECT */}
+                                    <Button
+                                      onClick={() =>
+                                        handleReject(Number(report.id))
+                                      }
+                                      disabled={
+                                        updatingLostStatus === report.id
+                                      }
+                                      className="inline-flex items-center gap-1 rounded-md bg-red-600 px-3 py-1 text-xs font-medium text-white hover:bg-red-700 transition disabled:opacity-50"
+                                    >
+                                      {updatingLostStatus === report.id ? (
+                                        <Loader2 className="h-4 w-4 animate-spin" />
+                                      ) : (
+                                        <XCircle className="h-4 w-4" />
+                                      )}
                                       Tolak
                                     </Button>
                                   </section>
@@ -368,14 +469,61 @@ export default function ListLostAdmin() {
                                   </span>
                                 )}
                               </TableCell>
-                              <TableCell className="px-6 py-4">
-                                <section className="flex items-center gap-2 text-sm text-muted-foreground">
-                                  <Toggle
-                                    aria-label=" Toogle checklist"
-                                    className="data-[state=on]:bg-green-500 data-[state=on]:text-white hover:bg-gray-200 px-8 border border-gray-400"
+                              <TableCell className="px-6 py-4 text-center">
+                                <section className="flex justify-center gap-2">
+                                  <Button
+                                    onClick={() =>
+                                      handleUpdateStatusReport(
+                                        Number(report.id),
+                                        "Done"
+                                      )
+                                    }
+                                    disabled={
+                                      updatingReport === report.id ||
+                                      report.statusReport === "Done"
+                                    }
+                                    className={`inline-flex items-center gap-1 rounded-md px-3 py-1 text-xs font-medium text-white transition
+                                      ${
+                                        report.statusReport === "Done"
+                                          ? "bg-green-300 cursor-not-allowed"
+                                          : "bg-green-600 hover:bg-green-700"
+                                      }
+                                    `}
                                   >
+                                    {updatingReport === report.id ? (
+                                      <Loader2 className="h-4 w-4 animate-spin" />
+                                    ) : (
+                                      <CheckCircle2 className="h-4 w-4" />
+                                    )}
                                     Done
-                                  </Toggle>
+                                  </Button>
+
+                                  <Button
+                                    onClick={() =>
+                                      handleUpdateStatusReport(
+                                        Number(report.id),
+                                        "Closed"
+                                      )
+                                    }
+                                    disabled={
+                                      updatingReport === report.id ||
+                                      report.statusReport === "Closed"
+                                    }
+                                    className={`inline-flex items-center gap-1 rounded-md px-3 py-1 text-xs font-medium text-white transition
+                                      ${
+                                        report.statusReport === "Closed"
+                                          ? "bg-red-300 cursor-not-allowed"
+                                          : "bg-red-600 hover:bg-red-700"
+                                      }
+                                    `}
+                                  >
+                                    {updatingReport === report.id ? (
+                                      <Loader2 className="h-4 w-4 animate-spin" />
+                                    ) : (
+                                      <XCircle className="h-4 w-4" />
+                                    )}
+                                    Closed
+                                  </Button>
                                 </section>
                               </TableCell>
                             </TableRow>
