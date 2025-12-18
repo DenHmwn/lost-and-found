@@ -35,9 +35,9 @@ export async function POST(req: Request) {
     }
 
     // Validasi panjang no telepon
-    if (notelp.length > 15) {
+    if (notelp.length > 13) {
       return NextResponse.json(
-        { success: false, message: "No telepon maksimal 15 karakter" },
+        { success: false, message: "No telepon maksimal 13 karakter" },
         { status: 400 }
       );
     }
