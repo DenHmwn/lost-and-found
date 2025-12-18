@@ -116,6 +116,7 @@ export default function ListLostAdmin() {
 
   const stats = getStats();
 
+
   return (
     <SidebarProvider
       style={
@@ -269,6 +270,7 @@ export default function ListLostAdmin() {
                           <TableRow>
                             <TableCell
                               colSpan={6}
+                              colSpan={7}
                               className="px-6 py-16 text-center"
                             >
                               <Package className="mx-auto h-12 w-12 text-muted-foreground/50" />
@@ -339,6 +341,27 @@ export default function ListLostAdmin() {
                                     {formatDate(report.createdAt)}
                                   </span>
                                 </section>
+                              </TableCell>
+                              <TableCell className="px-6 py-4 text-center">
+                                {report.status === "PENDING" ? (
+                                  <section className="flex justify-center gap-2">
+                                    <Button className="inline-flex items-center gap-1 rounded-md bg-green-600 px-3 py-1 text-xs font-medium text-white hover:bg-green-700 transition"
+                                    >
+                                      <CheckCircle2 className="h-4 w-4" />
+                                      Terima
+                                    </Button>
+
+                                    <Button className="inline-flex items-center gap-1 rounded-md bg-red-600 px-3 py-1 text-xs font-medium text-white hover:bg-red-700 transition"
+                                    >
+                                      <XCircle className="h-4 w-4" />
+                                      Tolak
+                                    </Button>
+                                  </section>
+                                ) : (
+                                  <span className="text-xs text-muted-foreground">
+                                    —
+                                  </span>
+                                )}
                               </TableCell>
                             </TableRow>
                           ))
