@@ -68,6 +68,9 @@ export default function DashboardUser() {
     if (!foundReports || foundReports.length === 0) return 0;
     return Math.round((stats.claimed / stats.totalFound) * 100);
   }, [stats.claimed, stats.totalFound, foundReports]);
+
+  const isLoading = loadingFound || loadingLost || loadingUsers;
+
   const statsConfig = [
     {
       title: "Total Barang Hilang",
@@ -148,6 +151,17 @@ export default function DashboardUser() {
     if (diffDays === 1) return "1 hari sebelum";
     return `${diffDays} hari lalu`;
   };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+          <p className="text-gray-600">Memuat dashboard...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <SidebarProvider
