@@ -105,7 +105,26 @@ export async function PUT(
         { status: 400 }
       );
     }
+    // ambil data dari header
+    const headerId = request.headers.get("user-id");
+    const headerRole = request.headers.get("user-role");
 
+    if (!headerId) {
+      return NextResponse.json(
+        { success: false, message: "Terjadi kesalahan, silahkan login ulang" },
+        { status: 401 }
+      );
+    }
+
+    // Cek Role ADMIN
+    if (headerRole !== "ADMIN") {
+      return NextResponse.json(
+        { success: false, message: "Hanya Admin yang boleh mengedit." },
+        { status: 403 }
+      );
+    }
+
+    const currentAdminId = Number(headerId);
     // Validasi input required
     // if (
     //   !data.namaBarang ||
@@ -159,6 +178,18 @@ export async function PUT(
           message: "Data barang temuan tidak ditemukan",
         },
         { status: 404 }
+      );
+    }
+
+    // cek pemilik laporan
+    if (existingRecord.adminId !== currentAdminId) {
+      return NextResponse.json(
+        {
+          success: false,
+          message:
+            "Anda tidak memiliki izin untuk mengedit laporan Admin lain.",
+        },
+        { status: 403 }
       );
     }
 
@@ -264,9 +295,6 @@ export async function PUT(
         lokasiTemu: data.lokasiTemu
           ? data.lokasiTemu.trim()
           : existingRecord.lokasiTemu,
-
-        // Update Admin ID (pakai baru jika ada, jika tidak pakai lama)
-        adminId: data.adminId ? Number(data.adminId) : existingRecord.adminId,
 
         // Update lostReportId (bisa null jika ingin unlink, atau pakai lama jika undefined)
         lostReportId:
