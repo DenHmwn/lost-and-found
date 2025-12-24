@@ -94,7 +94,17 @@ export async function PUT(
       );
     }
 
-    // Validasi input 
+    const headerUserId = request.headers.get("user-id");
+    if (!headerUserId) {
+      return NextResponse.json(
+        { success: false, message: "Terjadi kesalahan, Silakan login ulang" },
+        { status: 401 }
+      );
+    }
+
+    const currentUserId = Number(headerUserId);
+
+    // Validasi input
     /* if (
       !data.namaBarang ||
       !data.deskripsi ||
@@ -123,7 +133,7 @@ export async function PUT(
         !data.namaBarang ||
         !data.deskripsi ||
         !data.lokasiHilang
-        // userId cek nanti secara terpisah
+        // userId cek secara terpisah
       ) {
         return NextResponse.json(
           {
@@ -156,7 +166,7 @@ export async function PUT(
         {
           success: false,
           message:
-            "StatusReport tidak valid. Gunakan: Done, OnProgress, atau Closed",
+            "Status Report tidak valid. Gunakan: Done, OnProgress, atau Closed",
         },
         { status: 400 }
       );
@@ -173,6 +183,17 @@ export async function PUT(
           message: "Data laporan tidak ditemukan",
         },
         { status: 404 }
+      );
+    }
+
+    // cek apakah user yang request pemilik laporan
+    if (existingRecord.userId !== currentUserId) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Anda tidak memiliki izin untuk mengedit laporan ini.",
+        },
+        { status: 403 }
       );
     }
     /*
@@ -245,7 +266,7 @@ export async function PUT(
         statusReport: data.statusReport || existingRecord.statusReport,
 
         // UserId update hanya jika ada, jika tidak pakai yang lama
-        userId: data.userId ? Number(data.userId) : existingRecord.userId,
+        // userId: data.userId ? Number(data.userId) : existingRecord.userId,
       },
       include: {
         // include data user
@@ -302,6 +323,18 @@ export async function DELETE(
         { status: 400 }
       );
     }
+    // ambil user dari header cookies
+    const headerUserId = request.headers.get("user-id");
+
+    if (!headerUserId) {
+      return NextResponse.json(
+        { success: false, message: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+
+    const currentUserId = Number(headerUserId);
+
     // Cek apakah data ada atau tidak
     const existingRecord = await prisma.lostReport.findUnique({
       where: { id },
@@ -316,6 +349,16 @@ export async function DELETE(
         { status: 404 }
       );
     }
+    if (existingRecord.userId !== currentUserId) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Anda tidak bisa menghapus laporan milik orang lain",
+        },
+        { status: 403 }
+      );
+    }
+
     // Delete data
     await prisma.lostReport.delete({
       where: { id },
