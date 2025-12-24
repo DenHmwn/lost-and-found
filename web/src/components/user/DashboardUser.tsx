@@ -20,6 +20,7 @@ import { useMemo } from "react";
 import { Users } from "@/types/users";
 import { useRouter } from "next/navigation";
 import { Button } from "../ui/button";
+import SkeletonDasboard from "../SkeletonDashboard";
 
 export default function DashboardUser() {
   interface RecentItem extends Partial<FoundReport & LostReport> {
@@ -158,12 +159,13 @@ export default function DashboardUser() {
 
   if (isLoading) {
     return (
-      <section className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <section className="text-center">
-          <section className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></section>
-          <p className="text-gray-600">Memuat dashboard...</p>
-        </section>
-      </section>
+      // <section className="min-h-screen bg-gray-50 flex items-center justify-center">
+      //   <section className="text-center">
+      //     <section className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></section>
+      //     <p className="text-gray-600">Memuat dashboard...</p>
+      //   </section>
+      // </section>
+      <SkeletonDasboard />
     );
   }
 
