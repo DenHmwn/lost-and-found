@@ -94,15 +94,15 @@ export async function PUT(
       );
     }
 
-    const headerUserId = request.headers.get("user-id");
-    if (!headerUserId) {
+    const headerId = request.headers.get("user-id");
+    if (!headerId) {
       return NextResponse.json(
         { success: false, message: "Terjadi kesalahan, Silakan login ulang" },
         { status: 401 }
       );
     }
 
-    const currentUserId = Number(headerUserId);
+    const currentUserId = Number(headerId);
 
     // Validasi input
     /* if (
@@ -324,16 +324,16 @@ export async function DELETE(
       );
     }
     // ambil user dari header cookies
-    const headerUserId = request.headers.get("user-id");
+    const headerId = request.headers.get("user-id");
 
-    if (!headerUserId) {
+    if (!headerId) {
       return NextResponse.json(
         { success: false, message: "Unauthorized" },
         { status: 401 }
       );
     }
 
-    const currentUserId = Number(headerUserId);
+    const currentUserId = Number(headerId);
 
     // Cek apakah data ada atau tidak
     const existingRecord = await prisma.lostReport.findUnique({
