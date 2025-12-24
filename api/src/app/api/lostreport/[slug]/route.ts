@@ -328,7 +328,7 @@ export async function DELETE(
 
     if (!headerId) {
       return NextResponse.json(
-        { success: false, message: "Unauthorized" },
+        { success: false, message: "Anda belum login, silahkan login" },
         { status: 401 }
       );
     }
