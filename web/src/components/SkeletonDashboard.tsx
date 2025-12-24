@@ -71,6 +71,13 @@ export default function SkeletonDasboard() {
             <section className="w-full">
               <Skeleton className="h-6 w-[180px]" />
             </section>
+            {/* Circle */}
+            <section className="relative flex items-center justify-center">
+              <Skeleton className="h-32 w-32 rounded-full" />
+            </section>
+            <Skeleton className="h-4 w-[250px]" />
+          </section>
+
         </section>
       </section>
     </section>
