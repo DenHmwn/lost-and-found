@@ -78,6 +78,12 @@ export default function SkeletonDasboard() {
             <Skeleton className="h-4 w-[250px]" />
           </section>
 
+          {/* Aksi Cepat */}
+          <section className="rounded-xl border bg-card shadow-sm p-6 space-y-4">
+            <Skeleton className="h-6 w-[120px] mb-4" />
+            <Skeleton className="h-10 w-full" />
+            <Skeleton className="h-10 w-full" />
+          </section>
         </section>
       </section>
     </section>
