@@ -94,7 +94,17 @@ export async function PUT(
       );
     }
 
-    // Validasi input 
+    const headerId = request.headers.get("user-id");
+    if (!headerId) {
+      return NextResponse.json(
+        { success: false, message: "Terjadi kesalahan, Silakan login ulang" },
+        { status: 401 }
+      );
+    }
+
+    const currentUserId = Number(headerId);
+
+    // Validasi input
     /* if (
       !data.namaBarang ||
       !data.deskripsi ||
@@ -123,7 +133,7 @@ export async function PUT(
         !data.namaBarang ||
         !data.deskripsi ||
         !data.lokasiHilang
-        // userId cek nanti secara terpisah
+        // userId cek secara terpisah
       ) {
         return NextResponse.json(
           {
@@ -156,7 +166,7 @@ export async function PUT(
         {
           success: false,
           message:
-            "StatusReport tidak valid. Gunakan: Done, OnProgress, atau Closed",
+            "Status Report tidak valid. Gunakan: Done, OnProgress, atau Closed",
         },
         { status: 400 }
       );
@@ -175,6 +185,17 @@ export async function PUT(
         { status: 404 }
       );
     }
+
+    // cek apakah user yang request pemilik laporan
+    if (existingRecord.userId !== currentUserId) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Anda tidak memiliki izin untuk mengedit laporan ini.",
+        },
+        { status: 403 }
+      );
+    }
     /*
     const userExists = await prisma.user.findUnique({
       where: { id: Number(data.userId) },
@@ -190,7 +211,7 @@ export async function PUT(
       );
     }
     */
-    // Hanya cek user jika `data.userId` dikirim oleh frontend
+    // cek user jika id user
     if (data.userId) {
       const userExists = await prisma.user.findUnique({
         where: { id: Number(data.userId) },
@@ -245,7 +266,7 @@ export async function PUT(
         statusReport: data.statusReport || existingRecord.statusReport,
 
         // UserId update hanya jika ada, jika tidak pakai yang lama
-        userId: data.userId ? Number(data.userId) : existingRecord.userId,
+        // userId: data.userId ? Number(data.userId) : existingRecord.userId,
       },
       include: {
         // include data user
@@ -302,6 +323,18 @@ export async function DELETE(
         { status: 400 }
       );
     }
+    // ambil user dari header cookies
+    const headerId = request.headers.get("user-id");
+
+    if (!headerId) {
+      return NextResponse.json(
+        { success: false, message: "Anda belum login, silahkan login" },
+        { status: 401 }
+      );
+    }
+
+    const currentUserId = Number(headerId);
+
     // Cek apakah data ada atau tidak
     const existingRecord = await prisma.lostReport.findUnique({
       where: { id },
@@ -316,6 +349,16 @@ export async function DELETE(
         { status: 404 }
       );
     }
+    if (existingRecord.userId !== currentUserId) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Anda tidak bisa menghapus laporan milik orang lain",
+        },
+        { status: 403 }
+      );
+    }
+
     // Delete data
     await prisma.lostReport.delete({
       where: { id },
