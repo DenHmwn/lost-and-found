@@ -54,11 +54,11 @@ export async function POST(req: Request) {
   try {
     const data = await req.json();
     const { namaBarang, deskripsi, lokasiHilang, tanggal, waktu } = data;
-    const headerUserId = req.headers.get("user-id");
-    const headerUserRole = req.headers.get("user-role");
+    const headerId = req.headers.get("user-id");
+    const headerRole = req.headers.get("user-role");
 
     // Validasi Auth
-    if (!headerUserId || !headerUserRole) {
+    if (!headerId || !headerRole) {
       return NextResponse.json(
         { success: false, message: "Unauthorized: User tidak dikenali." },
         { status: 401 }
@@ -88,7 +88,7 @@ export async function POST(req: Request) {
     //   );
     // }
 
-    if (headerUserRole !== "USER") {
+    if (headerRole !== "USER") {
       return NextResponse.json(
         { success: false, message: "Hanya user yang dapat membuat laporan." },
         { status: 403 }
@@ -110,7 +110,7 @@ export async function POST(req: Request) {
         namaBarang: namaBarang.trim(),
         deskripsi: deskripsi.trim(),
         lokasiHilang: lokasiHilang.trim(),
-        userId: Number(headerUserId),
+        userId: Number(headerId),
         status: LostStatus.PENDING,
         tanggalHilang,
         waktuHilang: waktu.trim(),
