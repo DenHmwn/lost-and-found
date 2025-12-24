@@ -53,10 +53,20 @@ export async function GET() {
 export async function POST(req: Request) {
   try {
     const data = await req.json();
-    const { namaBarang, deskripsi, lokasiHilang, userId, tanggal, waktu } = data;
+    const { namaBarang, deskripsi, lokasiHilang, tanggal, waktu } = data;
+    const headerUserId = req.headers.get("user-id");
+    const headerUserRole = req.headers.get("user-role");
+
+    // Validasi Auth
+    if (!headerUserId || !headerUserRole) {
+      return NextResponse.json(
+        { success: false, message: "Unauthorized: User tidak dikenali." },
+        { status: 401 }
+      );
+    }
 
     // Validasi semua field wajib
-    if (!namaBarang || !deskripsi || !lokasiHilang || !userId || !tanggal || !waktu) {
+    if (!namaBarang || !deskripsi || !lokasiHilang || !tanggal || !waktu) {
       return NextResponse.json(
         {
           success: false,
@@ -67,18 +77,18 @@ export async function POST(req: Request) {
     }
 
     // Validasi user
-    const user = await prisma.user.findUnique({
-      where: { id: Number(userId) },
-    });
+    // const user = await prisma.user.findUnique({
+    //   where: { id: Number(userId) },
+    // });
 
-    if (!user) {
-      return NextResponse.json(
-        { success: false, message: "User tidak ditemukan" },
-        { status: 404 }
-      );
-    }
+    // if (!user) {
+    //   return NextResponse.json(
+    //     { success: false, message: "User tidak ditemukan" },
+    //     { status: 404 }
+    //   );
+    // }
 
-    if (user.role !== "USER") {
+    if (headerUserRole !== "USER") {
       return NextResponse.json(
         { success: false, message: "Hanya user yang dapat membuat laporan." },
         { status: 403 }
@@ -100,7 +110,7 @@ export async function POST(req: Request) {
         namaBarang: namaBarang.trim(),
         deskripsi: deskripsi.trim(),
         lokasiHilang: lokasiHilang.trim(),
-        userId: Number(userId),
+        userId: Number(headerUserId),
         status: LostStatus.PENDING,
         tanggalHilang,
         waktuHilang: waktu.trim(),
