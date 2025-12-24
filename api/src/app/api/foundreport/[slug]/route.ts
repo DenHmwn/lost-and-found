@@ -375,6 +375,19 @@ export async function DELETE(
         { status: 400 }
       );
     }
+
+    const headerId = request.headers.get("user-id");
+    const headerRole = request.headers.get("user-role");
+
+    if (!headerId) {
+      return NextResponse.json(
+        { success: false, message: "Anda belum login, silahkan login" },
+        { status: 401 }
+      );
+    }
+
+    const currentAdminId = Number(headerId);
+
     // Cek apakah data nya ada
     const existingRecord = await prisma.foundReport.findUnique({
       where: { id },
@@ -389,6 +402,18 @@ export async function DELETE(
         { status: 404 }
       );
     }
+
+    // Validasi lapron kepemilikan admin
+    if (headerRole !== "ADMIN" || existingRecord.adminId !== currentAdminId) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Anda tidak berhak menghapus laporan ini.",
+        },
+        { status: 403 }
+      );
+    }
+
     // Delete data
     await prisma.foundReport.delete({
       where: { id },
