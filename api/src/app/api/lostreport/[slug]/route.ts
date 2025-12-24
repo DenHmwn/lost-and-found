@@ -211,7 +211,7 @@ export async function PUT(
       );
     }
     */
-    // Hanya cek user jika `data.userId` dikirim oleh frontend
+    // cek user jika id user
     if (data.userId) {
       const userExists = await prisma.user.findUnique({
         where: { id: Number(data.userId) },
