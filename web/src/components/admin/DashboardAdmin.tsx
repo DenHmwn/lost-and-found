@@ -150,7 +150,7 @@ export default function DashboardAdmin() {
       textColor: "text-green-600",
     },
     {
-      title: "Total User",
+      title: "Total Admin",
       value: stats.totalUsers,
       change: "Pengguna aktif",
       icon: User,
