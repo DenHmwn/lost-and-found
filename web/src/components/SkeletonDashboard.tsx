@@ -33,6 +33,8 @@ export default function SkeletonDasboard() {
         ))}
       </section>
 
+      {/* Content Split */}
+      <section className="grid gap-4 grid-cols-1 lg:grid-cols-7">
         {/* bagian kiri */}
         <section className="col-span-1 lg:col-span-4 space-y-4">
           <section className="rounded-xl border bg-card shadow-sm">
@@ -62,6 +64,15 @@ export default function SkeletonDasboard() {
           </section>
         </section>
 
+        {/* bagian kanan*/}
+        <section className="col-span-1 lg:col-span-3 space-y-4">
+          {/* Tingkat Keberhasilan */}
+          <section className="rounded-xl border bg-card shadow-sm p-6 flex flex-col items-center justify-center space-y-6">
+            <section className="w-full">
+              <Skeleton className="h-6 w-[180px]" />
+            </section>
+        </section>
+      </section>
     </section>
   );
 }
