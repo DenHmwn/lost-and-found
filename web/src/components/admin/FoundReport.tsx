@@ -21,11 +21,19 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { Textarea } from "@/components/ui/textarea";
 import { ChevronDownIcon, PackageSearchIcon } from "lucide-react";
 import React from "react";
+import { CustomButtonOutline, CustomButtonPrimary } from "../custom/CustomButtonPrimary";
+import { useRouter } from "next/navigation";
 
 export default function LaporanBarangTemu() {
   // State untuk calendar
   const [open, setOpen] = React.useState(false);
   const [date, setDate] = React.useState<Date>();
+
+  const router = useRouter();
+
+  const handleBatal = () => {
+    router.back();
+  };
 
   return (
     <SidebarProvider
@@ -135,8 +143,8 @@ export default function LaporanBarangTemu() {
                   </div>
                 </section>
                 <section className=" flex justify-end gap-5">
-                  <Button variant="outline">Batal</Button>
-                  <Button>Kirim Laporan</Button>
+                  <CustomButtonOutline label="Batal" onClick={handleBatal} />
+                  <CustomButtonPrimary label="Kirim" onClick={() => {console.log("Kirim")}}/>
                 </section>
               </CardContent>
             </Card>
