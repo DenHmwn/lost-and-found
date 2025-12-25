@@ -7,6 +7,10 @@ import {
   CustomButtonOutline,
   CustomButtonPrimary,
 } from "./custom/CustomButtonPrimary";
+import {
+  CustomButtonListFound,
+  CustomButtonListLost,
+} from "./custom/CustomButtonList";
 
 export default function HomePageComponent() {
   const router = useRouter();
@@ -48,16 +52,8 @@ export default function HomePageComponent() {
           </p>
 
           <section className="flex flex-col sm:flex-row gap-3 justify-center pt-6">
-            <Link href="/login">
-              <Button className="h-12 px-8 bg-gray-900 text-white font-medium rounded-md hover:bg-gray-800 shadow-md hover:shadow-2xl">
-                Laporkan Barang Hilang
-              </Button>
-            </Link>
-            <Link href="/login">
-              <Button className="h-12 px-8 bg-white text-gray-900 font-medium rounded-md border border-gray-300 hover:bg-gray-200 shadow-md hover:shadow-2xl">
-                Lihat Barang Ditemukan
-              </Button>
-            </Link>
+            <CustomButtonListLost label="Laporkan Barang Hilang" />
+            <CustomButtonListFound label="Lihat Barang Ditemukan" />
           </section>
         </section>
 
