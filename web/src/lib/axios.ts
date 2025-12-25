@@ -11,6 +11,13 @@ export const api = axios.create({
 // Interceptor untuk mengambil token dari localStorage
 api.interceptors.request.use(
   (config) => {
+    // Cek token di localStorage
+    const token = localStorage.getItem("accessToken");
+    // console.log(token);
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+
     return config;
   },
   (error) => {
@@ -59,29 +66,27 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    // A. Jika request ke endpoint refresh token itu sendiri gagal (401/403)
-    // Berarti sesi benar-benar habis, paksa logout.
-    if (originalRequest.url.includes("/auth/refresh") && error.response) {
+    // Jika refresh token expired maka langsung logout
+    if (originalRequest.url.includes("/auth/refresh")) {
+      localStorage.removeItem("accessToken");
       window.location.href = "/login";
       return Promise.reject(error);
     }
 
-    // B. Jika Access Token Expired (401) dan belum pernah retry
+    // Jika access token expired maka coba refresh
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
       try {
-        // Panggil endpoint refresh.
-        // Backend akan memperbarui Cookie access_token secara otomatis lewat header 'Set-Cookie'.
-        // Kita TIDAK PERLU mengambil data.accessToken atau menyimpannya manual.
-        await api.get("/auth/refresh");
+        const { data } = await api.get("/auth/refresh");
 
-        // Retry request awal.
-        // Karena cookie sudah diperbarui browser, request ini akan otomatis membawa token baru.
+        localStorage.setItem("accessToken", data.accessToken);
+        originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
+
         return api(originalRequest);
-        
       } catch (refreshError) {
-        // Jika refresh gagal (misal refresh token juga expired)
+        // Redirect ke login jika refresh token juga expired
+        localStorage.removeItem("accessToken");
         window.location.href = "/login";
         return Promise.reject(refreshError);
       }
@@ -94,15 +99,25 @@ api.interceptors.response.use(
 // Fungsi untuk logout
 export async function logout() {
   try {
-    // Panggil API Logout (Backend akan menghapus cookie dengan Set-Cookie expired)
-    await api.post("/auth/logout");
-    
-    // Redirect ke login
+    await api.post("/auth/logout", {}, { withCredentials: true });
+
+    // Hapus token di localStorage
+    localStorage.removeItem("accessToken");
+
+    // Redirect paksa ke login
     window.location.href = "/login";
   } catch (err) {
     console.error("Logout gagal:", err);
-    // Tetap redirect meski API error agar user tidak terjebak
-    window.location.href = "/login";
   }
 }
 
+// Interceptor untuk handle 401 error
+api.interceptors.response.use(
+  res => res,
+  error => {
+    if (error.response?.status === 401) {
+      window.location.href = "/login";
+    }
+    return Promise.reject(error);
+  }
+);
