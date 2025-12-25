@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import React from "react";
 import {
   CustomButtonOutline,
+  CustomButtonPrimary,
 } from "./custom/CustomButtonPrimary";
 
 export default function HomePageComponent() {
@@ -13,6 +14,9 @@ export default function HomePageComponent() {
     router.push("/login");
   };
 
+  const handleSignup = () => {
+    router.push("/signup");
+  };
   return (
     <section className="min-h-screen bg-gray-300/70">
       {/* Header */}
@@ -23,7 +27,8 @@ export default function HomePageComponent() {
               XYZ Lost & Found
             </section>
             <section className="flex space-x-3">
-              <CustomButtonOutline onClick={handleLogin} label="login" />
+              <CustomButtonOutline onClick={handleLogin} label="Login" />
+              <CustomButtonPrimary onClick={handleSignup} label="Register" />
             </section>
           </section>
         </section>
