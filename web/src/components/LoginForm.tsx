@@ -48,7 +48,7 @@ export function LoginForm({
       console.log("Login response:", data);
       if (data.success) {
         // Simpan token di localStorage (untuk Bearer token)
-        localStorage.setItem("accessToken", data.accessToken);
+        // localStorage.setItem("accessToken", data.accessToken);
 
         const role = data.user?.role;
 
