@@ -67,3 +67,48 @@ export function CustomButtonListLost({
   );
 }
 
+export function CustomButtonListFound({
+  label,
+  className,
+}: CustomButtonActionProps) {
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleClick = async () => {
+    setIsLoading(true);
+
+    try {
+      // get user info dari header
+      const response = await api.get("/user/me");
+
+    //  get role
+      const Role = response.data?.data?.role;
+
+      // console.log("role terdeteksi:", userRole);
+
+      // redirect based on role
+      const destination = roleRedirectFound[Role];
+
+      // console.log("Redirecting to:", destination);
+      router.push(destination);
+    } catch (error) {
+      console.log("error:", error);
+      router.push("/login");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <Button
+      onClick={handleClick}
+      disabled={isLoading}
+      className={cn(
+        "h-15 px-8 bg-white text-gray-900 font-medium rounded-md border border-gray-300 hover:bg-gray-200 shadow-md hover:shadow-2xl",
+        className
+      )}
+    >
+      {isLoading ? "Memuat..." : label}
+    </Button>
+  );
+}
