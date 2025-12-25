@@ -54,9 +54,9 @@ export function LoginForm({
 
         // Redirect berdasarkan role
         if (role === "ADMIN") {
-          router.push("/homepage/admin/dashboard");
+          router.replace("/homepage/admin/dashboard");
         } else if (role === "USER") {
-          router.push("/homepage/user/dashboard");
+          router.replace("/homepage/user/dashboard");
         }
         // Redirect ke dashboard
         // router.push("/homepage/user/dashboard");
