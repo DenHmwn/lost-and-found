@@ -1,6 +1,7 @@
 import { jwtVerify } from "jose";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { SECRET } from "./lib/secret";
 
 // Helper function untuk set CORS headers
 function setCorsHeaders(response: NextResponse) {
@@ -57,7 +58,7 @@ export async function middleware(req: NextRequest) {
   const authHeader = req.headers.get("authorization");
   const tokenFromHeader = authHeader?.split(" ")[1];
   const cookieToken = req.cookies.get("accessToken")?.value;
-  const token = tokenFromHeader || cookieToken;
+  const token = cookieToken || tokenFromHeader;
   if (!token) {
   const res = NextResponse.json(
     { success: false, message: "Token tidak ada", authenticated: false },
@@ -66,27 +67,10 @@ export async function middleware(req: NextRequest) {
   return setCorsHeaders(res);
 }
 
-  // const bearerToken = authHeader?.split(" ")[1];
-  // const cookieToken = req.cookies.get("accessToken")?.value;
-
-
-  // Jika token tidak ada
-  // if (!tokenFromHeader) {
-  //   const response = NextResponse.json(
-  //     {
-  //       success: false,
-  //       message: "Akses ditolak: Token tidak ada",
-  //       authenticated: false,
-  //     },
-  //     { status: 401 }
-  //   );
-  //   return setCorsHeaders(response);
-  // }
-
   // Verifikasi token
   try {
-    const secret = new TextEncoder().encode(process.env.JWT_SECRET!);
-    const { payload } = await jwtVerify(token, secret);
+    // const secret = new TextEncoder().encode(process.env.JWT_SECRET!)
+    const { payload } = await jwtVerify(token, SECRET);
 
     // Buat request header untuk user info
     const requestHeaders = new Headers(req.headers);
