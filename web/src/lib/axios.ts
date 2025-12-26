@@ -41,5 +41,7 @@ export async function logout() {
     await api.post("/auth/logout");
   } catch (err) {
     console.error("Logout gagal:", err);
+  } finally {
+    window.location.href = "/login";
   }
 }
