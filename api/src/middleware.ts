@@ -60,12 +60,12 @@ export async function middleware(req: NextRequest) {
   const cookieToken = req.cookies.get("accessToken")?.value;
   const token = cookieToken;
   if (!token) {
-  const res = NextResponse.json(
-    { success: false, message: "Token tidak ada", authenticated: false },
-    { status: 401 }
-  );
-  return setCorsHeaders(res);
-}
+    const res = NextResponse.json(
+      { success: false, message: "Token tidak ada", authenticated: false },
+      { status: 401 }
+    );
+    return setCorsHeaders(res);
+  }
 
   // Verifikasi token
   try {
