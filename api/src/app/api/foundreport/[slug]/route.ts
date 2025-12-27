@@ -320,7 +320,6 @@ export async function DELETE(
 
     const currentAdminId = Number(headerId);
 
-    // cek apakah data nya ada
     const existingRecord = await prisma.foundReport.findUnique({
       where: { id },
     });
@@ -335,7 +334,6 @@ export async function DELETE(
       );
     }
 
-    // Validasi lapron kepemilikan admin
     if (headerRole !== "ADMIN" || existingRecord.adminId !== currentAdminId) {
       return NextResponse.json(
         {
@@ -346,11 +344,10 @@ export async function DELETE(
       );
     }
 
-    // Delete data
     await prisma.foundReport.delete({
       where: { id },
     });
-    // response success
+
     return NextResponse.json(
       {
         success: true,
@@ -358,7 +355,6 @@ export async function DELETE(
       },
       { status: 200 }
     );
-    // response error
   } catch (error) {
     console.error("Error deleting found report:", error);
     return NextResponse.json(
