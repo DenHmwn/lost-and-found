@@ -1,4 +1,5 @@
 import prisma from "@/lib/prisma";
+import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 // buat fungsi GET
@@ -63,18 +64,13 @@ export async function GET() {
 export async function POST(req: Request) {
   try {
     const data = await req.json();
-    const {
-      namaBarang,
-      deskripsi,
-      lokasiTemu,
-      lostReportId,
-      tanggal,
-      waktu,
-    } = data;
+    const { namaBarang, deskripsi, lokasiTemu, lostReportId, tanggal, waktu } =
+      data;
 
     // ambil id admin dari header cookies
-    const headerId = req.headers.get("user-id");
-    const headerUserRole = req.headers.get("user-role");
+    const cookieStore = await cookies();
+    const headerId = cookieStore.get("user-id")?.value;
+    const headerUserRole = cookieStore.get("user-role")?.value;
 
     // validasi auth
     if (!headerId || !headerUserRole) {
@@ -88,20 +84,15 @@ export async function POST(req: Request) {
       return NextResponse.json(
         {
           success: false,
-          message: "Akses Ditolak. Hanya ADMIN yang dapat membuat laporan temuan.",
+          message:
+            "Akses Ditolak. Hanya ADMIN yang dapat membuat laporan temuan.",
         },
         { status: 403 }
       );
     }
 
     // validasi input data
-    if (
-      !namaBarang ||
-      !deskripsi ||
-      !lokasiTemu ||
-      !tanggal ||
-      !waktu
-    ) {
+    if (!namaBarang || !deskripsi || !lokasiTemu || !tanggal || !waktu) {
       return NextResponse.json(
         {
           success: false,
@@ -111,32 +102,6 @@ export async function POST(req: Request) {
         { status: 400 }
       );
     }
-
-    //   validasi admin ada atau tidak
-    // const adminExists = await prisma.user.findUnique({
-    //   where: { id: Number(adminId) },
-    // });
-
-    // if (!adminExists) {
-    //   return NextResponse.json(
-    //     {
-    //       success: false,
-    //       message: "Admin tidak ditemukan",
-    //     },
-    //     { status: 404 }
-    //   );
-    // }
-
-    // if (adminExists.role !== "ADMIN") {
-    //   return NextResponse.json(
-    //     {
-    //       success: false,
-    //       message:
-    //         "Pengguna ini bukan admin. Hanya admin yang dapat membuat laporan barang temuan.",
-    //     },
-    //     { status: 403 }
-    //   );
-    // }
 
     // Validasi dan parsing tanggal
     const tanggalTemu = new Date(tanggal);
