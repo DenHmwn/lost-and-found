@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { LostStatus } from "@prisma/client";
 import prisma from "@/lib/prisma";
+import { cookies } from "next/headers";
 
 // GET semua laporan lost
 export async function GET() {
@@ -31,11 +32,8 @@ export async function GET() {
         message: "Berhasil mengambil data laporan",
         data: reports,
       },
-      {
-        status: 200,
-      }
+      { status: 200 }
     );
-    // response error
   } catch (error) {
     console.error("Error fetching lost reports:", error);
     return NextResponse.json(
@@ -54,8 +52,11 @@ export async function POST(req: Request) {
   try {
     const data = await req.json();
     const { namaBarang, deskripsi, lokasiHilang, tanggal, waktu } = data;
-    const headerId = req.headers.get("user-id");
-    const headerRole = req.headers.get("user-role");
+
+    // ambil data dari cookie
+    const cookieStore = await cookies();
+    const headerId = cookieStore.get("userId")?.value;
+    const headerRole = cookieStore.get("userRole")?.value;
 
     // Validasi Auth
     if (!headerId || !headerRole) {
@@ -75,18 +76,6 @@ export async function POST(req: Request) {
         { status: 400 }
       );
     }
-
-    // Validasi user
-    // const user = await prisma.user.findUnique({
-    //   where: { id: Number(userId) },
-    // });
-
-    // if (!user) {
-    //   return NextResponse.json(
-    //     { success: false, message: "User tidak ditemukan" },
-    //     { status: 404 }
-    //   );
-    // }
 
     if (headerRole !== "USER") {
       return NextResponse.json(
@@ -137,7 +126,6 @@ export async function POST(req: Request) {
     );
   } catch (error) {
     console.error("Error creating lost report:", error);
-
     return NextResponse.json(
       {
         success: false,
@@ -148,4 +136,3 @@ export async function POST(req: Request) {
     );
   }
 }
-
