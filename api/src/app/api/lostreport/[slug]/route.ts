@@ -1,6 +1,9 @@
 import prisma from "@/lib/prisma";
 import { LostStatus, StatusReport } from "@prisma/client";
 import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
+import { jwtVerify } from "jose";
+import { SECRET } from "@/lib/secret";
 
 // buat fungsi GET by id
 export async function GET(
@@ -8,9 +11,8 @@ export async function GET(
   { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
-    const { slug } = await params;
+    const { slug } = await params; // Validasi ID
 
-    // Validasi ID
     const id = Number(slug);
     if (isNaN(id)) {
       return NextResponse.json(
@@ -20,8 +22,7 @@ export async function GET(
         },
         { status: 400 }
       );
-    }
-    // laporan by id
+    } // laporan by id
     const report = await prisma.lostReport.findUnique({
       where: { id },
       include: {
@@ -34,12 +35,10 @@ export async function GET(
             notelp: true,
             role: true,
           },
-        },
-        // include barang temuan jika sudah dicocokkan
+        }, // include barang temuan jika sudah dicocokkan
         foundReport: true,
       },
-    });
-    // jika laporan tidak ditemukan
+    }); // jika laporan tidak ditemukan
     if (!report) {
       return NextResponse.json(
         {
@@ -48,8 +47,7 @@ export async function GET(
         },
         { status: 404 }
       );
-    }
-    // response success
+    } // response success
     return NextResponse.json(
       {
         success: true,
@@ -80,9 +78,8 @@ export async function PUT(
 ) {
   try {
     const { slug } = await params;
-    const data = await request.json();
+    const data = await request.json(); // Validasi ID
 
-    // Validasi ID
     const id = Number(slug);
     if (isNaN(id)) {
       return NextResponse.json(
@@ -94,47 +91,26 @@ export async function PUT(
       );
     }
 
-    const headerId = request.headers.get("user-id");
-    if (!headerId) {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("accessToken")?.value;
+    if (!token) {
       return NextResponse.json(
         { success: false, message: "Terjadi kesalahan, Silakan login ulang" },
         { status: 401 }
       );
     }
 
-    const currentUserId = Number(headerId);
-
-    // Validasi input
-    /* if (
-      !data.namaBarang ||
-      !data.deskripsi ||
-      !data.lokasiHilang ||
-      !data.userId
-    ) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Data tidak lengkap. Pastikan semua field terisi.",
-        },
-        { status: 400 }
-      );
-    } 
-    */
-
-    // Cek request
+    const { payload } = await jwtVerify(token, SECRET);
+    const currentUserId = Number(payload.id);
+    const currentUserRole = String(payload.role);
     const isEditingItem =
       data.namaBarang !== undefined ||
       data.deskripsi !== undefined ||
       data.lokasiHilang !== undefined;
-
     // JIKA sedang edit item, cek semua field
     if (isEditingItem) {
-      if (
-        !data.namaBarang ||
-        !data.deskripsi ||
-        !data.lokasiHilang
+      if (!data.namaBarang || !data.deskripsi || !data.lokasiHilang) {
         // userId cek secara terpisah
-      ) {
         return NextResponse.json(
           {
             success: false,
@@ -145,7 +121,6 @@ export async function PUT(
         );
       }
     }
-
     // Validasi status jika ada
     if (data.status && !Object.values(LostStatus).includes(data.status)) {
       return NextResponse.json(
@@ -185,9 +160,11 @@ export async function PUT(
         { status: 404 }
       );
     }
-
-    // cek apakah user yang request pemilik laporan
-    if (existingRecord.userId !== currentUserId) {
+    // cek apakah user yang request pemilik laporan atau admin
+    if (
+      existingRecord.userId !== currentUserId &&
+      currentUserRole !== "ADMIN"
+    ) {
       return NextResponse.json(
         {
           success: false,
@@ -196,21 +173,6 @@ export async function PUT(
         { status: 403 }
       );
     }
-    /*
-    const userExists = await prisma.user.findUnique({
-      where: { id: Number(data.userId) },
-    });
-
-    if (!userExists) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "User tidak ditemukan",
-        },
-        { status: 404 }
-      );
-    }
-    */
     // cek user jika id user
     if (data.userId) {
       const userExists = await prisma.user.findUnique({
@@ -224,30 +186,6 @@ export async function PUT(
         );
       }
     }
-    /*
-    const updatedReport = await prisma.lostReport.update({
-      where: { id },
-      data: {
-        namaBarang: data.namaBarang.trim(),
-        deskripsi: data.deskripsi.trim(),
-        lokasiHilang: data.lokasiHilang.trim(),
-        status: data.status || existingRecord.status,
-        statusReport: data.statusReport || existingRecord.statusReport,
-        userId: Number(data.userId),
-      },
-      include: {
-        user: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-            notelp: true,
-          },
-        },
-      },
-    });
-    */
-    // Menggunakan ternary operator: Jika data baru dikirim -> Pakai data baru. Jika tidak -> Pakai data lama.
     const updatedReport = await prisma.lostReport.update({
       where: { id },
       data: {
@@ -259,14 +197,10 @@ export async function PUT(
           : existingRecord.deskripsi,
         lokasiHilang: data.lokasiHilang
           ? data.lokasiHilang.trim()
-          : existingRecord.lokasiHilang,
+          : existingRecord.lokasiHilang, // Status & Report tetap logika lama (atau existing)
 
-        // Status & Report tetap logika lama (atau existing)
         status: data.status || existingRecord.status,
-        statusReport: data.statusReport || existingRecord.statusReport,
-
-        // UserId update hanya jika ada, jika tidak pakai yang lama
-        // userId: data.userId ? Number(data.userId) : existingRecord.userId,
+        statusReport: data.statusReport || existingRecord.statusReport, // UserId update hanya jika ada, jika tidak pakai yang lama // userId: data.userId ? Number(data.userId) : existingRecord.userId,
       },
       include: {
         // include data user
@@ -280,7 +214,6 @@ export async function PUT(
         },
       },
     });
-    // response success
     return NextResponse.json(
       {
         success: true,
@@ -312,7 +245,6 @@ export async function DELETE(
   try {
     const { slug } = await params;
 
-    // Validasi ID
     const id = Number(slug);
     if (isNaN(id)) {
       return NextResponse.json(
@@ -323,19 +255,22 @@ export async function DELETE(
         { status: 400 }
       );
     }
-    // ambil user dari header cookies
-    const headerId = request.headers.get("user-id");
 
-    if (!headerId) {
+    // ambil token dari cookie
+    const cookieStore = await cookies();
+    const token = cookieStore.get("accessToken")?.value;
+
+    if (!token) {
       return NextResponse.json(
         { success: false, message: "Anda belum login, silahkan login" },
         { status: 401 }
       );
     }
 
-    const currentUserId = Number(headerId);
+    const { payload } = await jwtVerify(token, SECRET);
+    const currentUserId = Number(payload.id);
+    const currentUserRole = String(payload.role);
 
-    // Cek apakah data ada atau tidak
     const existingRecord = await prisma.lostReport.findUnique({
       where: { id },
     });
@@ -349,7 +284,10 @@ export async function DELETE(
         { status: 404 }
       );
     }
-    if (existingRecord.userId !== currentUserId) {
+    if (
+      existingRecord.userId !== currentUserId &&
+      currentUserRole !== "ADMIN"
+    ) {
       return NextResponse.json(
         {
           success: false,
@@ -359,11 +297,10 @@ export async function DELETE(
       );
     }
 
-    // Delete data
+    // buat fungsi delete
     await prisma.lostReport.delete({
       where: { id },
     });
-    // response success
     return NextResponse.json(
       {
         success: true,
