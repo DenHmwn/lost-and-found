@@ -2,6 +2,8 @@ import prisma from "@/lib/prisma";
 import { StatusReport } from "@prisma/client";
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
+import { SECRET } from "@/lib/secret";
+import { jwtVerify } from "jose";
 
 // buat Fungsi GET
 export async function GET(
@@ -108,25 +110,26 @@ export async function PUT(
     }
     // ambil data dari header
     const cookieStore = await cookies();
-    const headerId = cookieStore.get("userId")?.value;
-    const headerRole = cookieStore.get("userRole")?.value;
+    const token = cookieStore.get("accessToken")?.value;
 
-    if (!headerId) {
+    if (!token) {
       return NextResponse.json(
-        { success: false, message: "Terjadi kesalahan, silahkan login ulang" },
+        { success: false, message: "Terjadi kesalahan, silakan login ulang" },
         { status: 401 }
       );
     }
 
+    const { payload } = await jwtVerify(token, SECRET);
+    const currentAdminId = Number(payload.id);
+    const currentRole = String(payload.role);
+
     // Cek Role ADMIN
-    if (headerRole !== "ADMIN") {
+    if (currentRole !== "ADMIN") {
       return NextResponse.json(
         { success: false, message: "Hanya Admin yang boleh mengedit." },
         { status: 403 }
       );
     }
-
-    const currentAdminId = Number(headerId);
 
     // Cek apakah record ada
     const existingRecord = await prisma.foundReport.findUnique({
