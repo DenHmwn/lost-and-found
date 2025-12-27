@@ -1,6 +1,7 @@
 import prisma from "@/lib/prisma";
 import { StatusReport } from "@prisma/client";
 import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
 
 // buat Fungsi GET
 export async function GET(
@@ -106,8 +107,9 @@ export async function PUT(
       );
     }
     // ambil data dari header
-    const headerId = request.headers.get("user-id");
-    const headerRole = request.headers.get("user-role");
+    const cookieStore = await cookies();
+    const headerId = cookieStore.get("userId")?.value;
+    const headerRole = cookieStore.get("userRole")?.value;
 
     if (!headerId) {
       return NextResponse.json(
@@ -125,46 +127,6 @@ export async function PUT(
     }
 
     const currentAdminId = Number(headerId);
-    // Validasi input required
-    // if (
-    //   !data.namaBarang ||
-    //   !data.deskripsi ||
-    //   !data.lokasiTemu ||
-    //   !data.adminId
-    // ) {
-    //   return NextResponse.json(
-    //     {
-    //       success: false,
-    //       message: "Data tidak lengkap. Pastikan semua field terisi.",
-    //     },
-    //     { status: 400 }
-    //   );
-    // }
-
-    // Cek request apakah bertujuan mengedit detail barang
-    const isEditingItem =
-      data.namaBarang !== undefined ||
-      data.deskripsi !== undefined ||
-      data.lokasiTemu !== undefined;
-
-    // jika sedang edit item, cek apakah semua field terisi
-    if (isEditingItem) {
-      if (
-        !data.namaBarang ||
-        !data.deskripsi ||
-        !data.lokasiTemu
-        // adminId cek secara terpisah
-      ) {
-        return NextResponse.json(
-          {
-            success: false,
-            message:
-              "Data tidak lengkap. Pastikan semua field terisi saat mengedit barang.",
-          },
-          { status: 400 }
-        );
-      }
-    }
 
     // Cek apakah record ada
     const existingRecord = await prisma.foundReport.findUnique({
@@ -194,29 +156,6 @@ export async function PUT(
     }
 
     // Validasi admin ada atau tidaknya dan adalah ADMIN role
-    // const adminExists = await prisma.user.findUnique({
-    //   where: { id: Number(data.adminId) },
-    // });
-    // if (!adminExists) {
-    //   return NextResponse.json(
-    //     {
-    //       success: false,
-    //       message: "Admin tidak ditemukan",
-    //     },
-    //     { status: 404 }
-    //   );
-    // }
-    // if (adminExists.role !== "ADMIN") {
-    //   return NextResponse.json(
-    //     {
-    //       success: false,
-    //       message: "User bukan admin",
-    //     },
-    //     { status: 403 }
-    //   );
-    // }
-
-    // Hanya cek admin jika data adminId dikirim oleh frontend
     if (data.adminId) {
       const adminExists = await prisma.user.findUnique({
         where: { id: Number(data.adminId) },
@@ -249,6 +188,7 @@ export async function PUT(
         { status: 400 }
       );
     }
+
     // Validasi lostReportId jika ada dan berubah
     if (data.lostReportId !== undefined && data.lostReportId !== null) {
       const lostReportExists = await prisma.lostReport.findUnique({
@@ -264,7 +204,7 @@ export async function PUT(
           { status: 404 }
         );
       }
-      // Cek apakah lostReport sudah memiliki foundReport lain
+
       if (existingRecord.lostReportId !== Number(data.lostReportId)) {
         const alreadyMatched = await prisma.foundReport.findUnique({
           where: { lostReportId: Number(data.lostReportId) },
@@ -282,7 +222,7 @@ export async function PUT(
         }
       }
     }
-    // Update data pake ternary operator
+
     const updatedReport = await prisma.foundReport.update({
       where: { id },
       data: {
@@ -295,20 +235,15 @@ export async function PUT(
         lokasiTemu: data.lokasiTemu
           ? data.lokasiTemu.trim()
           : existingRecord.lokasiTemu,
-
-        // Update lostReportId (bisa null jika ingin unlink, atau pakai lama jika undefined)
         lostReportId:
           data.lostReportId !== undefined
             ? data.lostReportId
               ? Number(data.lostReportId)
               : null
             : existingRecord.lostReportId,
-
-        // Update statusReport jika dikirim, jika tidak pakai yang lama
         statusReport: data.statusReport || existingRecord.statusReport,
       },
       include: {
-        // Return data admin (tanpa password)
         admin: {
           select: {
             id: true,
@@ -317,7 +252,6 @@ export async function PUT(
             notelp: true,
           },
         },
-        // Return data lostReport jika ada
         lostReport: {
           include: {
             user: {
@@ -332,18 +266,15 @@ export async function PUT(
         },
       },
     });
-    // response success
+
     return NextResponse.json(
       {
         success: true,
         message: "Data barang temuan berhasil diubah",
         data: updatedReport,
       },
-      {
-        status: 200,
-      }
+      { status: 200 }
     );
-    // response error
   } catch (error) {
     console.error("Error updating found report:", error);
     return NextResponse.json(
@@ -364,7 +295,7 @@ export async function DELETE(
 ) {
   try {
     const { slug } = await params;
-    // Validasi ID
+
     const id = Number(slug);
     if (isNaN(id)) {
       return NextResponse.json(
@@ -376,8 +307,9 @@ export async function DELETE(
       );
     }
 
-    const headerId = request.headers.get("user-id");
-    const headerRole = request.headers.get("user-role");
+    const cookieStore = await cookies();
+    const headerId = cookieStore.get("userId")?.value;
+    const headerRole = cookieStore.get("userRole")?.value;
 
     if (!headerId) {
       return NextResponse.json(
@@ -388,7 +320,7 @@ export async function DELETE(
 
     const currentAdminId = Number(headerId);
 
-    // Cek apakah data nya ada
+    // cek apakah data nya ada
     const existingRecord = await prisma.foundReport.findUnique({
       where: { id },
     });
@@ -424,9 +356,7 @@ export async function DELETE(
         success: true,
         message: "Data barang temuan berhasil dihapus",
       },
-      {
-        status: 200,
-      }
+      { status: 200 }
     );
     // response error
   } catch (error) {
