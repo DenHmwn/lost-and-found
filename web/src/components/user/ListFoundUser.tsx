@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/table";
 import { formatDate } from "@/lib/scripts";
 import { AppSidebarUser } from "../AppSidebarUser";
+import SkeletonListItem from "../SkeletonListItem";
 
 export default function ListFoundUser() {
   // Fetch data menggunakan custom hook
@@ -82,6 +83,8 @@ export default function ListFoundUser() {
 
   const stats = getStats();
 
+  if (isLoading) return <SkeletonListItem />;
+
   return (
     <SidebarProvider
       style={
@@ -113,16 +116,7 @@ export default function ListFoundUser() {
               </section>
             </header>
 
-            {isLoading ? (
-              <section className="flex h-[400px] items-center justify-center rounded-lg border border-dashed">
-                <section className="flex flex-col items-center gap-2">
-                  <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                  <span className="text-sm text-muted-foreground">
-                    Memuat data...
-                  </span>
-                </section>
-              </section>
-            ) : error ? (
+            {error ? (
               <section className="rounded-lg border border-red-200 bg-red-50 p-6 text-center">
                 <XCircle className="mx-auto h-10 w-10 text-red-600 mb-2" />
                 <p className="font-medium text-red-900">Gagal memuat data</p>
