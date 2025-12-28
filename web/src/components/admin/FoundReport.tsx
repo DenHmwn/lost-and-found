@@ -101,7 +101,7 @@ export default function LaporanBarangTemu() {
                   className="mb-5"
                 />
                 <section className="flex flex-col gap-4 mb-5">
-                  <div>
+                  <section>
                     <Label
                       htmlFor="date-picker"
                       className="mx-2 mb-1.5 text-base"
@@ -134,13 +134,13 @@ export default function LaporanBarangTemu() {
                         />
                       </PopoverContent>
                     </Popover>
-                  </div>
-                  <div>
+                  </section>
+                  <section>
                     <Label htmlFor="time-picker" className="px-1">
                       Waktu
                     </Label>
                     <Input type="time" id="time-picker" step="60" />
-                  </div>
+                  </section>
                 </section>
                 <section className=" flex justify-end gap-5">
                   <CustomButtonOutline label="Batal" onClick={handleBatal} />
