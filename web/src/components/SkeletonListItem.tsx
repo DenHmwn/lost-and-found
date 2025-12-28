@@ -28,6 +28,21 @@ export default function SkeletonListItem() {
           <section className="w-96 h-4 bg-gray-200 rounded" />
         </header>
 
+        {/* Stats Cards */}
+        <section className="grid grid-cols-4 gap-6 mb-8">
+          {[1, 2, 3, 4].map((i) => (
+            <section
+              key={i}
+              className="bg-white rounded-lg p-6 shadow-sm border border-gray-100"
+            >
+              <section className="flex justify-between items-start mb-4">
+                <section className="w-24 h-4 bg-gray-200 rounded" />
+                <section className="w-10 h-10 bg-gray-100 rounded-full" />
+              </section>
+              <section className="w-16 h-10 bg-gray-200 rounded" />
+            </section>
+          ))}
+        </section>
       </section>
     </section>
   );
