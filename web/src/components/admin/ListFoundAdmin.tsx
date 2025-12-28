@@ -27,6 +27,7 @@ import { formatDate } from "@/lib/scripts";
 import { api } from "@/lib/axios";
 import { useState } from "react";
 import { Button } from "../ui/button";
+import SkeletonListItem from "../SkeletonListItem";
 
 export default function ListFoundAdmin() {
   // Fetch data menggunakan custom hook
@@ -88,6 +89,10 @@ export default function ListFoundAdmin() {
   // buat state untuk id yang sedang di update
   const [updatingReport, setUpdatingReport] = useState<number | null>(null);
 
+  if (isLoading) {
+    return <SkeletonListItem />;
+  }
+
   // Fungsi untuk update statusReport
   const handleUpdateStatusReport = async (
     id: number,
@@ -138,16 +143,7 @@ export default function ListFoundAdmin() {
               </section>
             </header>
 
-            {isLoading ? (
-              <section className="flex h-[400px] items-center justify-center rounded-lg border border-dashed">
-                <section className="flex flex-col items-center gap-2">
-                  <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                  <span className="text-sm text-muted-foreground">
-                    Memuat data...
-                  </span>
-                </section>
-              </section>
-            ) : error ? (
+            {error ? (
               <section className="rounded-lg border border-red-200 bg-red-50 p-6 text-center">
                 <XCircle className="mx-auto h-10 w-10 text-red-600 mb-2" />
                 <p className="font-medium text-red-900">Gagal memuat data</p>

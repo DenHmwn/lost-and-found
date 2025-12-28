@@ -28,6 +28,7 @@ import { Button } from "../ui/button";
 import { Toggle } from "../ui/toggle";
 import { useState } from "react";
 import { api } from "@/lib/axios";
+import SkeletonListItem from "../SkeletonListItem";
 
 export default function ListLostAdmin() {
   // Fetch data menggunakan custom hook
@@ -196,6 +197,10 @@ export default function ListLostAdmin() {
     }
   };
 
+  if (isLoading) {
+    return <SkeletonListItem />;
+  }
+
   return (
     <SidebarProvider
       style={
@@ -227,16 +232,7 @@ export default function ListLostAdmin() {
               </section>
             </header>
 
-            {isLoading ? (
-              <section className="flex h-[400px] items-center justify-center rounded-lg border border-dashed">
-                <section className="flex flex-col items-center gap-2">
-                  <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                  <span className="text-sm text-muted-foreground">
-                    Memuat data...
-                  </span>
-                </section>
-              </section>
-            ) : error ? (
+            {error ? (
               <section className="rounded-lg border border-red-200 bg-red-50 p-6 text-center">
                 <XCircle className="mx-auto h-10 w-10 text-red-600 mb-2" />
                 <p className="font-medium text-red-900">Gagal memuat data</p>
@@ -433,7 +429,9 @@ export default function ListLostAdmin() {
                                       onClick={() =>
                                         handleApprove(Number(report.id))
                                       }
-                                      disabled={updatingLostStatus === report.id}
+                                      disabled={
+                                        updatingLostStatus === report.id
+                                      }
                                       className="inline-flex items-center gap-1 rounded-md bg-green-600 px-3 py-1 text-xs font-medium text-white hover:bg-green-700 transition disabled:opacity-50"
                                     >
                                       {updatingLostStatus === report.id ? (
