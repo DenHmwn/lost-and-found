@@ -16,11 +16,16 @@ import {
 } from "../ui/table";
 import { useUsers } from "@/hooks/useUsers";
 import { Users } from "@/types/users";
+import SkeletonMember from "../SkeletonListMember";
 
 export default function ListUser() {
   const { data: users, isLoading, error } = useUsers();
 
   const user = users?.filter((user: Users) => user.role === "USER") || [];
+
+  if (isLoading) {
+    return <SkeletonMember />;
+  }
 
   return (
     <SidebarProvider
@@ -51,17 +56,7 @@ export default function ListUser() {
             </section>
           </header>
 
-          {/* Loading */}
-          {isLoading ? (
-            <section className="flex h-[400px] items-center justify-center rounded-lg border border-dashed">
-              <section className="flex flex-col items-center gap-2">
-                <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                <span className="text-sm text-muted-foreground">
-                  Memuat data...
-                </span>
-              </section>
-            </section>
-          ) : error ? (
+          {error ? (
             /* Error */
             <section className="rounded-lg border border-red-200 bg-red-50 p-6 text-center">
               <XCircle className="mx-auto mb-2 h-10 w-10 text-red-600" />
