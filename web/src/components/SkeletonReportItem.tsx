@@ -10,6 +10,24 @@ export default function SkeletonReportItem() {
           <section className="w-32 h-6 bg-gray-200 rounded" />
         </section>
 
+        <section className="space-y-2">
+          {[1, 2, 3, 4, 5].map((i) => (
+            <section key={i} className="flex items-center gap-3 p-2">
+              <section className="w-5 h-5 bg-gray-200 rounded" />
+              <section className="w-36 h-4 bg-gray-200 rounded" />
+            </section>
+          ))}
+        </section>
+      </section>
+
+      {/* Main Content */}
+      <section className="ml-64 p-8">
+        {/* Header */}
+        <header className="mb-8">
+          <section className="w-64 h-8 bg-gray-200 rounded mb-2" />
+          <section className="w-96 h-4 bg-gray-200 rounded" />
+        </header>
+      </section>
     </section>
   );
 }
