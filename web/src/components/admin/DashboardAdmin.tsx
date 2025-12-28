@@ -20,7 +20,8 @@ import {
 import { useMemo } from "react";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
-import DashboardAdminSkeleton from "../SkeletonDashboard";
+import SekeletonDashboard from "../SkeletonDashboard";
+import SkeletonDasboard from "../SkeletonDashboard";
 
 export default function DashboardAdmin() {
   interface RecentItem extends Partial<FoundReport & LostReport> {
@@ -169,7 +170,7 @@ export default function DashboardAdmin() {
       //     <p className="text-gray-600">Memuat dashboard...</p>
       //   </section>
       // </section>
-      <DashboardAdminSkeleton />
+      <SkeletonDasboard />
     );
   }
   return (
