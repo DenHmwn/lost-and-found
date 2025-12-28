@@ -4,10 +4,20 @@ import { AppSidebarUser } from "@/components/AppSidebarUser";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { Textarea } from "@/components/ui/textarea";
 import { ChevronDownIcon, PackageSearchIcon } from "lucide-react";
@@ -22,13 +32,13 @@ export default function LostReport() {
   const [time, setTime] = useState("");
   const [open, setOpen] = useState(false);
 
-    const handleSubmit = async () => {
+  const handleSubmit = async () => {
     if (!namaBarang || !lokasiHilang || !deskripsi || !date || !time) {
       alert("Harap lengkapi semua data sebelum mengirim laporan.");
       return;
     }
 
-     try {
+    try {
       const userId = 2; // Sementara, ganti dengan ID user yang sedang login
       const payload = {
         namaBarang,
@@ -39,7 +49,7 @@ export default function LostReport() {
         waktu: time,
       };
 
-       const res = await fetch("/api/lostreport", {
+      const res = await fetch("/api/lostreport", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -99,85 +109,101 @@ export default function LostReport() {
             </header>
 
             {/* form laporan */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-center text-2xl font-bold">
-                  Laporan Hilang
-                </CardTitle>
-                <CardDescription className="text-center">
-                  Masukkan Data Barang Anda Disini
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Label className="mx-2 mb-1.5 text-base">Nama Barang</Label>
-                <Input
-                  value={namaBarang}
-                  onChange={(e) => setNamaBarang(e.target.value)}
-                  maxLength={20}
-                  placeholder="Masukkan Nama Barang"
-                  className="mb-5"
-                ></Input>
-                <Label className="mx-2 mb-1.5 text-base ">Lokasi Barang Terakhir Hilang</Label>
-                <Input
-                  value={lokasiHilang}
-                  onChange={(e) => setLokasiHilang(e.target.value)}
-                  maxLength={50}
-                  placeholder="Contoh: Gedung A, Ruang 1, Lantai 3"
-                  className="mb-5"
-                ></Input>
-                <Label className="mx-2 mb-1.5 text-base ">Deskripsi Barang</Label>
-                <Textarea
-                  value={deskripsi}
-                  onChange={(e) => setDeskripsi(e.target.value)}
-                  maxLength={250}
-                  placeholder="Masukkan Deskripsi Barang"
-                  className="mb-5"
-                />
-                <section className="flex flex-col gap-4 mb-5">
-                  <section>
-                    <Label htmlFor="date-picker" className="mx-2 mb-1.5 text-base">Tanggal
-                    </Label>
-                    <Popover open={open} onOpenChange={setOpen}>
-                      <PopoverTrigger asChild>
-                        <Button
-                          variant="outline"
-                          id="date-picker"
-                          className="w-32 justify-between font-normal">
-                          {date ? date.toLocaleDateString() : "Pilih tanggal"}
-                          <ChevronDownIcon />
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent
-                        className="w-auto overflow-hidden p-0"
-                        align="start"
+            <article>
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-center text-2xl font-bold">
+                    Laporan Hilang
+                  </CardTitle>
+                  <CardDescription className="text-center">
+                    Masukkan Data Barang Anda Disini
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Label className="mx-2 mb-1.5 text-base">Nama Barang</Label>
+                  <Input
+                    value={namaBarang}
+                    onChange={(e) => setNamaBarang(e.target.value)}
+                    maxLength={20}
+                    placeholder="Masukkan Nama Barang"
+                    className="mb-5"
+                  ></Input>
+                  <Label className="mx-2 mb-1.5 text-base ">
+                    Lokasi Barang Terakhir Hilang
+                  </Label>
+                  <Input
+                    value={lokasiHilang}
+                    onChange={(e) => setLokasiHilang(e.target.value)}
+                    maxLength={50}
+                    placeholder="Contoh: Gedung A, Ruang 1, Lantai 3"
+                    className="mb-5"
+                  ></Input>
+                  <Label className="mx-2 mb-1.5 text-base ">
+                    Deskripsi Barang
+                  </Label>
+                  <Textarea
+                    value={deskripsi}
+                    onChange={(e) => setDeskripsi(e.target.value)}
+                    maxLength={250}
+                    placeholder="Masukkan Deskripsi Barang"
+                    className="mb-5"
+                  />
+                  <section className="flex flex-col gap-4 mb-5">
+                    <section>
+                      <Label
+                        htmlFor="date-picker"
+                        className="mx-2 mb-1.5 text-base"
                       >
-                        <Calendar
-                          mode="single"
-                          selected={date}
-                          captionLayout="dropdown"
-                          onSelect={(date) => {
-                            setDate(date);
-                            setOpen(false);
-                          }}
-                        />
-                      </PopoverContent>
-                    </Popover>
+                        Tanggal
+                      </Label>
+                      <Popover open={open} onOpenChange={setOpen}>
+                        <PopoverTrigger asChild>
+                          <Button
+                            variant="outline"
+                            id="date-picker"
+                            className="w-32 justify-between font-normal"
+                          >
+                            {date ? date.toLocaleDateString() : "Pilih tanggal"}
+                            <ChevronDownIcon />
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent
+                          className="w-auto overflow-hidden p-0"
+                          align="start"
+                        >
+                          <Calendar
+                            mode="single"
+                            selected={date}
+                            captionLayout="dropdown"
+                            onSelect={(date) => {
+                              setDate(date);
+                              setOpen(false);
+                            }}
+                          />
+                        </PopoverContent>
+                      </Popover>
+                    </section>
+
+                    <section>
+                      <Label htmlFor="time-picker" className="px-1">
+                        Waktu
+                      </Label>
+                      <Input
+                        type="time"
+                        id="time-picker"
+                        step="60"
+                        onChange={(e) => setTime(e.target.value)}
+                      />
+                    </section>
                   </section>
 
-                  <section>
-                    <Label htmlFor="time-picker" className="px-1">
-                      Waktu
-                    </Label>
-                    <Input type="time" id="time-picker" step="60" onChange={(e) => setTime(e.target.value)} />
+                  <section className=" flex justify-end gap-5">
+                    <Button variant="outline">Batal</Button>
+                    <Button onClick={handleSubmit}>Kirim Laporan</Button>
                   </section>
-                </section>
-
-                <section className=" flex justify-end gap-5">
-                  <Button variant="outline">Batal</Button>
-                  <Button onClick={handleSubmit}>Kirim Laporan</Button>
-                </section>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            </article>
           </section>
         </section>
       </SidebarInset>
