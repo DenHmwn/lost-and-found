@@ -107,7 +107,6 @@ export default function DashboardAdmin() {
     return Math.round((stats.claimed / stats.totalFound) * 100);
   }, [stats.claimed, stats.totalFound, foundReports]);
 
-
   const isLoading = loadingFound || loadingLost || loadingUsers;
 
   const statsConfig = [
@@ -150,15 +149,7 @@ export default function DashboardAdmin() {
   ];
 
   if (isLoading) {
-    return (
-      // <section className="min-h-screen bg-gray-50 flex items-center justify-center">
-      //   <section className="text-center">
-      //     <section className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></section>
-      //     <p className="text-gray-600">Memuat dashboard...</p>
-      //   </section>
-      // </section>
-      <SkeletonDasboard />
-    );
+    return <SkeletonDasboard />;
   }
   return (
     <SidebarProvider
