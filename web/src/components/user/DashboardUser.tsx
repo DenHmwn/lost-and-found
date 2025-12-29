@@ -143,18 +143,9 @@ export default function DashboardUser() {
       })
       .slice(0, 5);
   }, [foundReports, lostReports]);
- 
 
   if (isLoading) {
-    return (
-      // <section className="min-h-screen bg-gray-50 flex items-center justify-center">
-      //   <section className="text-center">
-      //     <section className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></section>
-      //     <p className="text-gray-600">Memuat dashboard...</p>
-      //   </section>
-      // </section>
-      <SkeletonDasboard />
-    );
+    return <SkeletonDasboard />;
   }
 
   return (
