@@ -21,6 +21,7 @@ import { Users } from "@/types/users";
 import { useRouter } from "next/navigation";
 import { Button } from "../ui/button";
 import SkeletonDasboard from "../SkeletonDashboard";
+import { formatTimeAgo } from "@/lib/scripts";
 
 export default function DashboardUser() {
   interface RecentItem extends Partial<FoundReport & LostReport> {
@@ -142,31 +143,9 @@ export default function DashboardUser() {
       })
       .slice(0, 5);
   }, [foundReports, lostReports]);
-  // Format time ago
-  const formatTimeAgo = (date: string): string => {
-    const now = new Date();
-    const past = new Date(date);
-    const diffMs = now.getTime() - past.getTime();
-    const diffMins = Math.floor(diffMs / 60000);
-    const diffHours = Math.floor(diffMs / 3600000);
-    const diffDays = Math.floor(diffMs / 86400000);
-
-    if (diffMins < 60) return `${diffMins} menit sebelum`;
-    if (diffHours < 24) return `${diffHours} jam sebelum`;
-    if (diffDays === 1) return "1 hari sebelum";
-    return `${diffDays} hari lalu`;
-  };
 
   if (isLoading) {
-    return (
-      // <section className="min-h-screen bg-gray-50 flex items-center justify-center">
-      //   <section className="text-center">
-      //     <section className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></section>
-      //     <p className="text-gray-600">Memuat dashboard...</p>
-      //   </section>
-      // </section>
-      <SkeletonDasboard />
-    );
+    return <SkeletonDasboard />;
   }
 
   return (
