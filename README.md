@@ -35,15 +35,18 @@ Proyek ini merupakan **monorepo** yang terdiri dari:
 ## Teknologi yang Digunakan
 
 ### Backend (`/api`)
-- Node.js
+- Next.js
+- Node.js Runtime
 - TypeScript
 - REST API
-- (tambahkan sesuai implementasi: Express, Prisma, PostgreSQL, dsb.)
+- PostgreSQL
+- ORM Prisma
 
 ### Frontend (`/web`)
 - React / Next.js
 - TypeScript
-- CSS / Tailwind / dll
+- CSS / Tailwind
+- Shadecn
 
 ---
 
