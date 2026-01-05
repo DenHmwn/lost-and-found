@@ -20,7 +20,7 @@ Proyek ini merupakan **monorepo** yang terdiri dari:
 ---
 
 ## Struktur Folder
-
+```text
 /
 ├─ .vscode/ # Konfigurasi editor VSCode
 ├─ Dokumentasi/ # Dokumen pendukung project
@@ -29,7 +29,7 @@ Proyek ini merupakan **monorepo** yang terdiri dari:
 ├─ web/ # Frontend (client web)
 │ └─ src/ # Source code frontend
 └─ README.md # Dokumentasi utama project
-
+```
 ---
 
 ## Teknologi yang Digunakan
