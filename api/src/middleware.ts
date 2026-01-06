@@ -104,12 +104,17 @@ export const config = {
   matcher: [
     "/api/user",
     "/api/user/:path*",
+
+    "/api/lostreport",
     "/api/lostreport/:path*",
+
+    "/api/foundreport",
     "/api/foundreport/:path*",
+
     "/api/auth/login",
     "/api/auth/register",
     // "/api/auth/verify",
     "/api/auth/logout",
-    "/api/auth/refresh",
+    "/api/auth/refresh", 
   ],
 };
