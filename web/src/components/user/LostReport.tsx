@@ -13,6 +13,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { api } from "@/lib/axios";
 import { ChevronDownIcon, PackageSearchIcon } from "lucide-react";
 import React from "react";
+import { createDate, filterNamaBarang, formatDateReport } from "@/lib/scripts";
 
 export default function LostReport() {
   // State untuk calendar
@@ -30,13 +31,12 @@ export default function LostReport() {
     }
 
     try {
-      // const userId = 2; // Sementara, ganti dengan ID user yang sedang login
       const payload = {
         namaBarang,
         lokasiHilang,
         deskripsi,
         // userId,
-        tanggal: date.toISOString().split("T")[0],
+        tanggal : createDate(date!),
         waktu: time,
       };
 
@@ -107,8 +107,10 @@ export default function LostReport() {
                   <Label className="mx-2 mb-1.5 text-base">Nama Barang</Label>
                   <Input
                     value={namaBarang}
-                    onChange={(e) => setNamaBarang(e.target.value)}
-                    maxLength={20}
+                    onChange={(e) => {const result = filterNamaBarang(e.target.value);
+                      setNamaBarang(result);
+                    }}
+                    maxLength={20}  
                     placeholder="Masukkan Nama Barang"
                     className="mb-5"
                   ></Input>
@@ -147,7 +149,7 @@ export default function LostReport() {
                             id="date-picker"
                             className="w-32 justify-between font-normal"
                           >
-                            {date ? date.toLocaleDateString() : "Pilih tanggal"}
+                            {date ? formatDateReport(date) : "Pilih tanggal"}
                             <ChevronDownIcon />
                           </Button>
                         </PopoverTrigger>
