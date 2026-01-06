@@ -7,6 +7,8 @@ export interface LostReport {
   lokasiHilang: string;
   status: "PENDING" | "APPROVED" | "REJECTED";
   statusReport: "Done" | "OnProgress" | "Closed";
+  tanggalHilang: string;
+  waktuHilang: string;
   createdAt: string;
   user: Users;
 }
