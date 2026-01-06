@@ -36,8 +36,8 @@ export default function LostReport() {
         lokasiHilang: lokasiHilang.trim(),
         deskripsi: deskripsi.trim(),
         // userId,
-        tanggal : createDate(date!),
-        waktu: time,
+        tanggalHilang : createDate(date!),
+        waktuHilang: time,
       };
 
       const res = await api.post("/lostreport", payload);
