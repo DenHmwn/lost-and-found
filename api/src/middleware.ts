@@ -65,9 +65,6 @@ export async function middleware(req: NextRequest) {
     requestHeaders.set("userId", String(payload.id));
     requestHeaders.set("userName", String(payload.name));
     requestHeaders.set("userRole", String(payload.role));
-    requestHeaders.set("user-id", String(payload.id));
-    requestHeaders.set("user-name", String(payload.name));
-    requestHeaders.set("user-role", String(payload.role));
     requestHeaders.set("authenticated", "true");
 
     const response = NextResponse.next({
