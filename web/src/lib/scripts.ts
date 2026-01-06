@@ -27,3 +27,7 @@ export const formatTimeAgo = (date: string): string => {
   if (diffDays === 1) return "1 hari sebelum";
   return `${diffDays} hari lalu`;
 };
+
+export const filterNamaBarang = (value: string) => {
+  return value.replace(/[^a-zA-Z0-9&() ]/g, "");
+};
