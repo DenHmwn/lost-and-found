@@ -4,22 +4,13 @@ import { AppSidebarUser } from "@/components/AppSidebarUser";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import {Card, CardContent, CardDescription, CardHeader,CardTitle,} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Popover, PopoverContent,PopoverTrigger,} from "@/components/ui/popover";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { Textarea } from "@/components/ui/textarea";
+import { api } from "@/lib/axios";
 import { ChevronDownIcon, PackageSearchIcon } from "lucide-react";
 import React from "react";
 
@@ -39,40 +30,33 @@ export default function LostReport() {
     }
 
     try {
-      const userId = 2; // Sementara, ganti dengan ID user yang sedang login
+      // const userId = 2; // Sementara, ganti dengan ID user yang sedang login
       const payload = {
         namaBarang,
         lokasiHilang,
         deskripsi,
-        userId,
+        // userId,
         tanggal: date.toISOString().split("T")[0],
         waktu: time,
       };
 
-      const res = await fetch("/api/lostreport", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
+      const res = await api.post("/lostreport", payload);
+      console.log("POST /lostreport status:", res.status);
 
-      const result = await res.json();
 
-      if (res.ok) {
         alert("Laporan berhasil dikirim.");
-        // Reset form
         setNamaBarang("");
         setLokasiHilang("");
         setDeskripsi("");
         setDate(undefined);
         setTime("");
-      } else {
-        alert("Gagal mengirim laporan: " + result.message);
-      }
-    } catch (error) {
+    } catch (error: unknown) {
+      const message =
+        error && typeof error === "object" && "response" in error
+          ? "Gagal mengirim laporan: periksa kembali data atau login anda."
+          : "Terjadi kesalahan saat mengirim laporan.";
       console.error("Error:", error);
-      alert("Terjadi kesalahan saat mengirim laporan.");
+      alert(message);
     }
   };
 

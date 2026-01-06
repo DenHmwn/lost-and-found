@@ -47,33 +47,27 @@ export async function GET() {
   }
 }
 
+export const runtime = "nodejs";
 // POST pada lost report
 export async function POST(req: Request) {
   try {
     const data = await req.json();
     const { namaBarang, deskripsi, lokasiHilang, tanggal, waktu } = data;
 
-    // ambil data dari cookie
-    const cookieStore = await cookies();
-    const headerId = cookieStore.get("userId")?.value;
-    const headerRole = cookieStore.get("userRole")?.value;
+    const headerIdFromMw = req.headers.get("userId");
+    const headerRoleFromMw = req.headers.get("userRole");
 
-    // Validasi Auth
+    const cookieStore = await cookies();
+    const headerIdFromCookie = cookieStore.get("userId")?.value;
+    const headerRoleFromCookie = cookieStore.get("userRole")?.value;
+
+    const headerId = headerIdFromMw ?? headerIdFromCookie;
+    const headerRole = headerRoleFromMw ?? headerRoleFromCookie;
+
     if (!headerId || !headerRole) {
       return NextResponse.json(
         { success: false, message: "Unauthorized: User tidak dikenali." },
         { status: 401 }
-      );
-    }
-
-    // Validasi semua field wajib
-    if (!namaBarang || !deskripsi || !lokasiHilang || !tanggal || !waktu) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Data tidak lengkap. Pastikan semua field terisi.",
-        },
-        { status: 400 }
       );
     }
 
@@ -84,55 +78,54 @@ export async function POST(req: Request) {
       );
     }
 
-    // Validasi dan parsing tanggal
+    if (!namaBarang || !deskripsi || !lokasiHilang || !tanggal || !waktu) {
+      return NextResponse.json(
+        { success: false, message: "Data tidak lengkap. Pastikan semua field terisi." },
+        { status: 400 }
+      );
+    }
+
+    const userId = Number(headerId);
+    if (!Number.isFinite(userId)) {
+      return NextResponse.json(
+        { success: false, message: "User ID tidak valid." },
+        { status: 400 }
+      );
+    }
+
     const tanggalHilang = new Date(tanggal);
-    if (isNaN(tanggalHilang.getTime())) {
+    if (Number.isNaN(tanggalHilang.getTime())) {
       return NextResponse.json(
         { success: false, message: "Format tanggal tidak valid." },
         { status: 400 }
       );
     }
 
-    // Simpan ke database
     const report = await prisma.lostReport.create({
       data: {
-        namaBarang: namaBarang.trim(),
-        deskripsi: deskripsi.trim(),
-        lokasiHilang: lokasiHilang.trim(),
-        userId: Number(headerId),
+        namaBarang: String(namaBarang).trim(),
+        deskripsi: String(deskripsi).trim(),
+        lokasiHilang: String(lokasiHilang).trim(),
+        userId,
         status: LostStatus.PENDING,
         tanggalHilang,
-        waktuHilang: waktu.trim(),
+        waktuHilang: String(waktu).trim(),
       },
       include: {
-        user: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-            notelp: true,
-          },
-        },
+        user: { select: { id: true, name: true, email: true, notelp: true } },
       },
     });
 
     return NextResponse.json(
-      {
-        success: true,
-        message: "Laporan barang hilang berhasil dibuat.",
-        data: report,
-      },
+      { success: true, message: "Laporan barang hilang berhasil dibuat.", data: report },
       { status: 201 }
     );
-  } catch (error) {
-    console.error("Error creating lost report:", error);
+  } catch (error: unknown) {
+    const msg = error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
-      {
-        success: false,
-        message: "Gagal membuat laporan",
-        error: error instanceof Error ? error.message : "Unknown error",
-      },
+      { success: false, message: "Gagal membuat laporan", error: msg },
       { status: 500 }
     );
   }
 }
+
