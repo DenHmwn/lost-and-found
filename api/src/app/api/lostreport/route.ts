@@ -52,7 +52,7 @@ export const runtime = "nodejs";
 export async function POST(req: Request) {
   try {
     const data = await req.json();
-    const { namaBarang, deskripsi, lokasiHilang, tanggal, waktu } = data;
+    const { namaBarang, deskripsi, lokasiHilang, tanggalHilang, waktuHilang } = data;
 
     const headerIdFromMw = req.headers.get("userId");
     const headerRoleFromMw = req.headers.get("userRole");
@@ -78,7 +78,7 @@ export async function POST(req: Request) {
       );
     }
 
-    if (!namaBarang || !deskripsi || !lokasiHilang || !tanggal || !waktu) {
+    if (!namaBarang || !deskripsi || !lokasiHilang || !tanggalHilang || !waktuHilang) {
       return NextResponse.json(
         { success: false, message: "Data tidak lengkap. Pastikan semua field terisi." },
         { status: 400 }
@@ -93,8 +93,8 @@ export async function POST(req: Request) {
       );
     }
 
-    const tanggalHilang = new Date(tanggal);
-    if (Number.isNaN(tanggalHilang.getTime())) {
+    const formatTanggalHilang = new Date(tanggalHilang);
+    if (Number.isNaN(formatTanggalHilang.getTime())) {
       return NextResponse.json(
         { success: false, message: "Format tanggal tidak valid." },
         { status: 400 }
@@ -109,7 +109,7 @@ export async function POST(req: Request) {
         userId,
         status: LostStatus.PENDING,
         tanggalHilang,
-        waktuHilang: String(waktu).trim(),
+        waktuHilang: String(waktuHilang).trim(),
       },
       include: {
         user: { select: { id: true, name: true, email: true, notelp: true } },
