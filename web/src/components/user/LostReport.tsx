@@ -25,16 +25,16 @@ export default function LostReport() {
   const [open, setOpen] = useState(false);
 
   const handleSubmit = async () => {
-    if (!namaBarang || !lokasiHilang || !deskripsi || !date || !time) {
+    if (!namaBarang.trim() || !lokasiHilang.trim() || !deskripsi.trim() || !date || !time) {
       alert("Harap lengkapi semua data sebelum mengirim laporan.");
       return;
     }
 
     try {
       const payload = {
-        namaBarang,
-        lokasiHilang,
-        deskripsi,
+        namaBarang: namaBarang.trim(),
+        lokasiHilang: lokasiHilang.trim(),
+        deskripsi: deskripsi.trim(),
         // userId,
         tanggal : createDate(date!),
         waktu: time,
