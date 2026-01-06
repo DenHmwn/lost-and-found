@@ -68,7 +68,7 @@ npm run dev
 
 ### Menjalankan Frontend
 ```bash
-cd api
+cd web
 npm install
 npm run dev
 ```
