@@ -27,15 +27,7 @@ import { NavDocuments } from "@/components/NavDocuments";
 import { NavMain } from "@/components/NavMain";
 import { NavSecondary } from "@/components/NavSecondary";
 import { NavUser } from "@/components/NavUser";
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-} from "@/components/ui/sidebar";
+import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
 import Link from "next/link";
 import { NavAdmin } from "./NavAdmin";
 
@@ -43,7 +35,7 @@ const data = {
   admin: {
     name: "shadcn",
     email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
+    avatar: "/avatars/shadcn.svg",
   },
   navMain: [
     {
@@ -172,10 +164,7 @@ export function AppSidebarAdmin({ ...props }: React.ComponentProps<typeof Sideba
       <SidebarHeader className="bg-gray-200/70">
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton
-              asChild
-              className="data-[slot=sidebar-menu-button]:!p-1.5"
-            >
+            <SidebarMenuButton asChild className="data-[slot=sidebar-menu-button]:!p-1.5">
               <Link href="/homepage/admin/dashboard">
                 <IconBox />
                 <span className="text-base font-semibold">Lost & Found</span>

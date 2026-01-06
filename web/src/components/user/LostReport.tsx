@@ -4,10 +4,10 @@ import { AppSidebarUser } from "@/components/AppSidebarUser";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import {Card, CardContent, CardDescription, CardHeader,CardTitle,} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Popover, PopoverContent,PopoverTrigger,} from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { Textarea } from "@/components/ui/textarea";
 import { api } from "@/lib/axios";
@@ -43,18 +43,14 @@ export default function LostReport() {
       const res = await api.post("/lostreport", payload);
       console.log("POST /lostreport status:", res.status);
 
-
-        alert("Laporan berhasil dikirim.");
-        setNamaBarang("");
-        setLokasiHilang("");
-        setDeskripsi("");
-        setDate(undefined);
-        setTime("");
+      alert("Laporan berhasil dikirim.");
+      setNamaBarang("");
+      setLokasiHilang("");
+      setDeskripsi("");
+      setDate(undefined);
+      setTime("");
     } catch (error: unknown) {
-      const message =
-        error && typeof error === "object" && "response" in error
-          ? "Gagal mengirim laporan: periksa kembali data atau login anda."
-          : "Terjadi kesalahan saat mengirim laporan.";
+      const message = error && typeof error === "object" && "response" in error ? "Gagal mengirim laporan: periksa kembali data atau login anda." : "Terjadi kesalahan saat mengirim laporan.";
       console.error("Error:", error);
       alert(message);
     }
@@ -81,13 +77,8 @@ export default function LostReport() {
                   <PackageSearchIcon className="h-5 w-5 text-primary" />
                 </section>
                 <section>
-                  <h1 className="text-2xl font-bold tracking-tight">
-                    Buat Laporan Barang Hilang
-                  </h1>
-                  <p className="text-sm text-muted-foreground">
-                    Buat Laporan Untuk Barang Anda Yang Hilang Agar Dapat Masuk
-                    Ke Dalam List Barang Hilang
-                  </p>
+                  <h1 className="text-2xl font-bold tracking-tight">Buat Laporan Barang Hilang</h1>
+                  <p className="text-sm text-muted-foreground">Buat Laporan Untuk Barang Anda Yang Hilang Agar Dapat Masuk Ke Dalam List Barang Hilang</p>
                 </section>
               </section>
             </header>
@@ -96,12 +87,8 @@ export default function LostReport() {
             <article>
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-center text-2xl font-bold">
-                    Laporan Hilang
-                  </CardTitle>
-                  <CardDescription className="text-center">
-                    Masukkan Data Barang Anda Disini
-                  </CardDescription>
+                  <CardTitle className="text-center text-2xl font-bold">Laporan Hilang</CardTitle>
+                  <CardDescription className="text-center">Masukkan Data Barang Anda Disini</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <Label className="mx-2 mb-1.5 text-base">Nama Barang</Label>
@@ -136,10 +123,7 @@ export default function LostReport() {
                   />
                   <section className="flex flex-col gap-4 mb-5">
                     <section>
-                      <Label
-                        htmlFor="date-picker"
-                        className="mx-2 mb-1.5 text-base"
-                      >
+                      <Label htmlFor="date-picker" className="mx-2 mb-1.5 text-base">
                         Tanggal
                       </Label>
                       <Popover open={open} onOpenChange={setOpen}>
@@ -153,10 +137,7 @@ export default function LostReport() {
                             <ChevronDownIcon />
                           </Button>
                         </PopoverTrigger>
-                        <PopoverContent
-                          className="w-auto overflow-hidden p-0"
-                          align="start"
-                        >
+                        <PopoverContent className="w-auto overflow-hidden p-0" align="start">
                           <Calendar
                             mode="single"
                             selected={date}
@@ -175,12 +156,7 @@ export default function LostReport() {
                       <Label htmlFor="time-picker" className="px-1">
                         Waktu
                       </Label>
-                      <Input
-                        type="time"
-                        id="time-picker"
-                        step="60"
-                        onChange={(e) => setTime(e.target.value)}
-                      />
+                      <Input type="time" id="time-picker" step="60" onChange={(e) => setTime(e.target.value)} />
                     </section>
                   </section>
 

@@ -310,9 +310,10 @@ export async function DELETE(
       );
     }
 
-    const cookieStore = await cookies();
-    const headerId = cookieStore.get("userId")?.value;
-    const headerRole = cookieStore.get("userRole")?.value;
+    const headerId =
+      request.headers.get("user-id") ?? request.headers.get("userId");
+    const headerRole =
+      request.headers.get("user-role") ?? request.headers.get("userRole");
 
     if (!headerId) {
       return NextResponse.json(
