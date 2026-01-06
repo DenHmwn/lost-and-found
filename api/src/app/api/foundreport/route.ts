@@ -1,5 +1,6 @@
-import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { cookies } from "next/headers";
+import { NextResponse } from "next/server";
 
 // buat fungsi GET
 export async function GET() {
@@ -60,157 +61,142 @@ export async function GET() {
   }
 }
 // BUat fungsi POST
-export const runtime = "nodejs";
-
 export async function POST(req: Request) {
   try {
-    // pastikan request JSON
-    const contentType = req.headers.get("content-type") || "";
-    if (!contentType.includes("application/json")) {
-      return NextResponse.json({ success: false, message: "Request harus berupa JSON." }, { status: 415 });
-    }
-
     const data = await req.json();
+    const { namaBarang, deskripsi, lokasiTemu, lostReportId, tanggalTemu, waktuTemu } =
+      data;
 
-    const namaBarang = String(data?.namaBarang ?? data?.itemname ?? data?.itemName ?? "").trim();
-    const deskripsi = String(data?.deskripsi ?? data?.description ?? "").trim();
-    const lokasiTemu = String(data?.lokasiTemu ?? data?.meetingLocation ?? data?.["meeting location"] ?? data?.meeting_location ?? "").trim();
-    const tanggal = String(data?.tanggal ?? data?.meetingdate ?? data?.meetingDate ?? data?.["meeting date"] ?? data?.meeting_date ?? "").trim();
-    const waktu = String(data?.waktu ?? data?.meetingtime ?? data?.meetingTime ?? data?.["meeting time"] ?? data?.meeting_time ?? "").trim();
-
-    // lostReportId opsional
-    const lostReportIdRaw = data?.lostReportId;
-
-    // Ambil id admin & role dari header middleware
-    // (samakan dengan middleware kamu yang set: "userId" dan "userRole")
-    const headerId = req.headers.get("userId") || req.headers.get("user-id") || req.headers.get("user_id");
-
-    const headerUserRole = req.headers.get("userRole") || req.headers.get("user-role") || req.headers.get("user_role");
+    // ambil id admin dari header cookies
+    const cookieStore = await cookies();
+    const headerId = cookieStore.get("user-id")?.value;
+    const headerUserRole = cookieStore.get("user-role")?.value;
 
     // validasi auth
     if (!headerId || !headerUserRole) {
-      return NextResponse.json({ success: false, message: "Unauthorized: Silakan login ulang" }, { status: 401 });
+      return NextResponse.json(
+        { success: false, message: "Unauthorized: Silakan login ulang" },
+        { status: 401 }
+      );
     }
-
     // Validasi Role ADMIN
     if (headerUserRole !== "ADMIN") {
       return NextResponse.json(
         {
           success: false,
-          message: "Akses Ditolak. Hanya ADMIN yang dapat membuat laporan temuan.",
+          message:
+            "Akses Ditolak. Hanya ADMIN yang dapat membuat laporan temuan.",
         },
         { status: 403 }
       );
     }
 
-    // validasi input wajib
-    if (!namaBarang || !deskripsi || !lokasiTemu || !tanggal || !waktu) {
+    // validasi input data
+    if (!namaBarang || !deskripsi || !lokasiTemu || !tanggalTemu || !waktuTemu) {
       return NextResponse.json(
         {
           success: false,
-          message: "Data tidak lengkap. Pastikan nama barang, deskripsi, lokasi temuan, tanggal, dan waktu terisi.",
+          message:
+            "Data tidak lengkap. Pastikan nama barang, deskripsi, lokasi temuan, dan admin ID terisi.",
         },
         { status: 400 }
       );
     }
 
-    // validasi adminId harus angka
-    const adminId = Number(headerId);
-    if (!Number.isFinite(adminId)) {
-      return NextResponse.json({ success: false, message: "Admin ID tidak valid (bukan angka)." }, { status: 400 });
-    }
-
-    // Pastikan admin ada di database dan rolenya ADMIN
-    const admin = await prisma.user.findUnique({
-      where: { id: adminId },
-      select: { id: true, role: true },
-    });
-    if (!admin) {
-      return NextResponse.json({ success: false, message: "Admin tidak ditemukan. Silakan login ulang." }, { status: 401 });
-    }
-    if (admin.role !== "ADMIN") {
-      return NextResponse.json({ success: false, message: "Akses Ditolak. Hanya ADMIN yang dapat membuat laporan temuan." }, { status: 403 });
-    }
-
-    // Validasi format waktu (HH:mm)
-    const timeOk = /^([01]\d|2[0-3]):[0-5]\d$/.test(waktu);
-    if (!timeOk) {
-      return NextResponse.json({ success: false, message: "Format waktu tidak valid. Gunakan HH:mm" }, { status: 400 });
-    }
-
     // Validasi dan parsing tanggal
-    const tanggalTemu = new Date(tanggal);
-    if (Number.isNaN(tanggalTemu.getTime())) {
-      return NextResponse.json({ success: false, message: "Format tanggal tidak valid." }, { status: 400 });
+    const formatTanggalTemu = new Date(tanggalTemu);
+    if (isNaN(formatTanggalTemu.getTime())) {
+      return NextResponse.json(
+        { success: false, message: "Format tanggal tidak valid." },
+        { status: 400 }
+      );
     }
 
-    // Normalisasi lostReportId (optional)
-    let lostReportId: number | null = null;
-    if (lostReportIdRaw !== undefined && lostReportIdRaw !== null && lostReportIdRaw !== "") {
-      const parsed = Number(lostReportIdRaw);
-      if (!Number.isFinite(parsed)) {
-        return NextResponse.json({ success: false, message: "lostReportId tidak valid (bukan angka)." }, { status: 400 });
-      }
-      lostReportId = parsed;
-
-      // cek lostReport exists
+    // Validasi lostReportId jika ada
+    if (lostReportId) {
       const lostReportExists = await prisma.lostReport.findUnique({
-        where: { id: lostReportId },
+        where: { id: Number(lostReportId) },
       });
 
       if (!lostReportExists) {
-        return NextResponse.json({ success: false, message: "Laporan barang hilang tidak ditemukan" }, { status: 404 });
+        return NextResponse.json(
+          {
+            success: false,
+            message: "Laporan barang hilang tidak ditemukan",
+          },
+          { status: 404 }
+        );
       }
-
-      // cek apakah lostReport sudah punya pasangan foundReport
-      //  gunakan findFirst agar tidak error jika lostReportId tidak UNIQUE di schema
+      // Cek apakah lostReport sudah memiliki foundReport
       const alreadyMatched = await prisma.foundReport.findUnique({
-        where: { lostReportId },
-        select: { id: true },
+        where: { lostReportId: Number(lostReportId) },
       });
 
       if (alreadyMatched) {
         return NextResponse.json(
           {
             success: false,
-            message: "Laporan barang hilang ini sudah memiliki pasangan barang temuan",
+            message:
+              "Laporan barang hilang ini sudah memiliki pasangan barang temuan",
           },
           { status: 409 }
         );
       }
     }
 
-    // create report
-    const report = await prisma.foundReport.
-    create({
+    //   create report
+    const report = await prisma.foundReport.create({
       data: {
-        namaBarang,
-        deskripsi,
-        lokasiTemu,
-        adminId,
-        lostReportId, // null jika tidak ada
+        namaBarang: namaBarang.trim(),
+        deskripsi: deskripsi.trim(),
+        lokasiTemu: lokasiTemu.trim(),
+        adminId: Number(headerId),
+        lostReportId: lostReportId ? Number(lostReportId) : null,
         tanggalTemu,
-        waktuTemu: waktu,
+        waktuTemu: waktuTemu.trim(),
       },
       include: {
         admin: {
-          select: { id: true, name: true, email: true, notelp: true },
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            notelp: true,
+          },
         },
-        lostReport: lostReportId
-          ? {
-              include: {
-                user: { select: { id: true, name: true, email: true, notelp: true } },
+        lostReport: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+                notelp: true,
               },
-            }
-          : false,
+            },
+          },
+        },
       },
     });
-
-    return NextResponse.json({ success: true, message: "Laporan barang temuan berhasil dibuat", data: report }, { status: 201 });
-  } catch (error: unknown) {
+    // Response Success
+    return NextResponse.json(
+      {
+        success: true,
+        message: "Laporan barang temuan berhasil dibuat",
+        data: report,
+      },
+      { status: 201 }
+    );
+    // response error
+  } catch (error) {
     console.error("Error creating found report:", error);
-    const msg = error instanceof Error ? error.message : "Unknown error";
-
-    return NextResponse.json({ success: false, message: "Gagal membuat laporan barang temuan", error: msg }, { status: 500 });
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Gagal membuat laporan barang temuan",
+        error: error instanceof Error ? error.message : "Unknown error",
+      },
+      { status: 500 }
+    );
   }
 }
