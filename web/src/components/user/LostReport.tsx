@@ -13,6 +13,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { api } from "@/lib/axios";
 import { ChevronDownIcon, PackageSearchIcon } from "lucide-react";
 import React from "react";
+import { createDate, filterNamaBarang, formatDateReport } from "@/lib/scripts";
 
 export default function LostReport() {
   // State untuk calendar
@@ -24,20 +25,19 @@ export default function LostReport() {
   const [open, setOpen] = useState(false);
 
   const handleSubmit = async () => {
-    if (!namaBarang || !lokasiHilang || !deskripsi || !date || !time) {
+    if (!namaBarang.trim() || !lokasiHilang.trim() || !deskripsi.trim() || !date || !time) {
       alert("Harap lengkapi semua data sebelum mengirim laporan.");
       return;
     }
 
     try {
-      // const userId = 2;
       const payload = {
-        namaBarang,
-        lokasiHilang,
-        deskripsi,
+        namaBarang: namaBarang.trim(),
+        lokasiHilang: lokasiHilang.trim(),
+        deskripsi: deskripsi.trim(),
         // userId,
-        tanggal: date.toISOString().split("T")[0],
-        waktu: time,
+        tanggalHilang : createDate(date!),
+        waktuHilang: time,
       };
 
       const res = await api.post("/lostreport", payload);
@@ -92,11 +92,35 @@ export default function LostReport() {
                 </CardHeader>
                 <CardContent>
                   <Label className="mx-2 mb-1.5 text-base">Nama Barang</Label>
-                  <Input value={namaBarang} onChange={(e) => setNamaBarang(e.target.value)} maxLength={20} placeholder="Masukkan Nama Barang" className="mb-5"></Input>
-                  <Label className="mx-2 mb-1.5 text-base ">Lokasi Barang Terakhir Hilang</Label>
-                  <Input value={lokasiHilang} onChange={(e) => setLokasiHilang(e.target.value)} maxLength={50} placeholder="Contoh: Gedung A, Ruang 1, Lantai 3" className="mb-5"></Input>
-                  <Label className="mx-2 mb-1.5 text-base ">Deskripsi Barang</Label>
-                  <Textarea value={deskripsi} onChange={(e) => setDeskripsi(e.target.value)} maxLength={250} placeholder="Masukkan Deskripsi Barang" className="mb-5" />
+                  <Input
+                    value={namaBarang}
+                    onChange={(e) => {const result = filterNamaBarang(e.target.value);
+                      setNamaBarang(result);
+                    }}
+                    maxLength={20}  
+                    placeholder="Masukkan Nama Barang"
+                    className="mb-5"
+                  ></Input>
+                  <Label className="mx-2 mb-1.5 text-base ">
+                    Lokasi Barang Terakhir Hilang
+                  </Label>
+                  <Input
+                    value={lokasiHilang}
+                    onChange={(e) => setLokasiHilang(e.target.value)}
+                    maxLength={50}
+                    placeholder="Contoh: Gedung A, Ruang 1, Lantai 3"
+                    className="mb-5"
+                  ></Input>
+                  <Label className="mx-2 mb-1.5 text-base ">
+                    Deskripsi Barang
+                  </Label>
+                  <Textarea
+                    value={deskripsi}
+                    onChange={(e) => setDeskripsi(e.target.value)}
+                    maxLength={250}
+                    placeholder="Masukkan Deskripsi Barang"
+                    className="mb-5"
+                  />
                   <section className="flex flex-col gap-4 mb-5">
                     <section>
                       <Label htmlFor="date-picker" className="mx-2 mb-1.5 text-base">
@@ -104,8 +128,12 @@ export default function LostReport() {
                       </Label>
                       <Popover open={open} onOpenChange={setOpen}>
                         <PopoverTrigger asChild>
-                          <Button variant="outline" id="date-picker" className="w-32 justify-between font-normal">
-                            {date ? date.toLocaleDateString() : "Pilih tanggal"}
+                          <Button
+                            variant="outline"
+                            id="date-picker"
+                            className="w-32 justify-between font-normal"
+                          >
+                            {date ? formatDateReport(date) : "Pilih tanggal"}
                             <ChevronDownIcon />
                           </Button>
                         </PopoverTrigger>
@@ -114,6 +142,7 @@ export default function LostReport() {
                             mode="single"
                             selected={date}
                             captionLayout="dropdown"
+                            disabled={{after : new Date()}}
                             onSelect={(date) => {
                               setDate(date);
                               setOpen(false);

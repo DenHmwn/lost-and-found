@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { api } from "@/lib/axios";
-import { filternotelpon } from "@/lib/scripts";
+import { filterNotelp } from "@/lib/scripts";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -142,7 +142,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
                 minLength={12}
                 value={form.notelp}
                 onChange={(event) => {
-                  const result = filternotelpon(event.target.value);
+                  const result = filterNotelp(event.target.value);
                   setForm((prev) => ({ ...prev, notelp: result }));
                 }}
               />
