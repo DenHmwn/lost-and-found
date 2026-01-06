@@ -20,9 +20,9 @@ export const formatDateReport = (date: Date) => {
 
 export const createDate = (date: Date) => {
   if (!date) return "";
-  return `${date.getFullYear()}-${formatDateZero(date.getMonth() + 1)}-${formatDateZero(
-    date.getDate()
-  )}`;
+  return `${date.getFullYear()}-${formatDateZero(
+    date.getMonth() + 1
+  )}-${formatDateZero(date.getDate())}`;
 };
 
 export const filterNotelp = (value: string) => {
@@ -46,4 +46,8 @@ export const formatTimeAgo = (date: string): string => {
 
 export const filterNamaBarang = (value: string) => {
   return value.replace(/[^a-zA-Z0-9&() ]/g, "");
+};
+
+export const filterLokasi = (value: string) => {
+  return value.replace(/[^a-zA-Z0-9\s.,()\-/#&]/g, "");
 };

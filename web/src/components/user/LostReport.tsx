@@ -13,7 +13,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { api } from "@/lib/axios";
 import { ChevronDownIcon, PackageSearchIcon } from "lucide-react";
 import React from "react";
-import { createDate, filterNamaBarang, formatDateReport } from "@/lib/scripts";
+import { createDate, filterLokasi, filterNamaBarang, formatDateReport } from "@/lib/scripts";
 
 export default function LostReport() {
   // State untuk calendar
@@ -106,7 +106,9 @@ export default function LostReport() {
                   </Label>
                   <Input
                     value={lokasiHilang}
-                    onChange={(e) => setLokasiHilang(e.target.value)}
+                    onChange={(e) => {const result = filterLokasi(e.target.value);
+                      setLokasiHilang(result);
+                    }}
                     maxLength={50}
                     placeholder="Contoh: Gedung A, Ruang 1, Lantai 3"
                     className="mb-5"
