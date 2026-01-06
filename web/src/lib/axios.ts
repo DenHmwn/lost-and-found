@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosHeaders } from "axios";
 
 export const api = axios.create({
   baseURL: "http://localhost:3001/api",
@@ -7,6 +7,24 @@ export const api = axios.create({
   },
   withCredentials: true,
 });
+
+const getAccessToken = () => {
+  if (typeof window === "undefined") {
+    return null;
+  }
+  return window.localStorage.getItem("accessToken");
+};
+
+api.interceptors.request.use((config) => {
+  const token = getAccessToken();
+  if (token) {
+    const headers = AxiosHeaders.from(config.headers);
+    headers.set("Authorization", `Bearer ${token}`);
+    config.headers = headers;
+  }
+  return config;
+});
+
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
@@ -23,7 +41,15 @@ api.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        await api.get("/auth/refresh");
+        const refreshResponse = await api.get("/auth/refresh");
+        const newToken =
+          refreshResponse?.data?.accessToken &&
+          typeof refreshResponse.data.accessToken === "string"
+            ? refreshResponse.data.accessToken
+            : null;
+        if (newToken && typeof window !== "undefined") {
+          window.localStorage.setItem("accessToken", newToken);
+        }
         return api(originalRequest);
       } catch (refreshError) {
         window.location.href = "/login";
@@ -42,6 +68,9 @@ export async function logout() {
   } catch (err) {
     console.error("Logout gagal:", err);
   } finally {
+    if (typeof window !== "undefined") {
+      window.localStorage.removeItem("accessToken");
+    }
     window.location.href = "/login";
   }
 }

@@ -2,26 +2,10 @@
 
 import { SiteHeader } from "@/components/SiteHeader";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import {
-  Loader2,
-  Clock,
-  CheckCircle2,
-  XCircle,
-  Package,
-  MapPin,
-  User,
-  Calendar,
-} from "lucide-react";
+import { Loader2, Clock, CheckCircle2, XCircle, Package, MapPin, User, Calendar } from "lucide-react";
 import { useLostReports } from "@/hooks/useLostReport";
 import { LostReport } from "@/types/LostReport";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { AppSidebarAdmin } from "@/components/AppSidebarAdmin";
 import { formatDate } from "@/lib/scripts";
 import { Button } from "../ui/button";
@@ -35,11 +19,7 @@ export default function ListLostAdmin() {
   const { data: lostReports = [], error, isLoading } = useLostReports();
 
   // Status Badge Component
-  const StatusBadge = ({
-    status,
-  }: {
-    status: "PENDING" | "APPROVED" | "REJECTED";
-  }) => {
+  const StatusBadge = ({ status }: { status: "PENDING" | "APPROVED" | "REJECTED" }) => {
     const variants = {
       PENDING: {
         color: "bg-yellow-50 text-yellow-700 border-yellow-200",
@@ -62,9 +42,7 @@ export default function ListLostAdmin() {
     const Icon = variant.icon;
 
     return (
-      <span
-        className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-1 text-xs font-medium ${variant.color}`}
-      >
+      <span className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-1 text-xs font-medium ${variant.color}`}>
         <Icon className="h-3.5 w-3.5" />
         {variant.text}
       </span>
@@ -72,11 +50,7 @@ export default function ListLostAdmin() {
   };
 
   // Status Report Badge
-  const StatusReportBadge = ({
-    status,
-  }: {
-    status: "Done" | "OnProgress" | "Closed";
-  }) => {
+  const StatusReportBadge = ({ status }: { status: "Done" | "OnProgress" | "Closed" }) => {
     const variants = {
       Done: {
         color: "bg-green-50 text-green-700 border-green-200",
@@ -94,27 +68,15 @@ export default function ListLostAdmin() {
 
     const variant = variants[status];
 
-    return (
-      <span
-        className={`inline-flex items-center rounded-lg border px-3 py-1 text-xs font-medium ${variant.color}`}
-      >
-        {variant.text}
-      </span>
-    );
+    return <span className={`inline-flex items-center rounded-lg border px-3 py-1 text-xs font-medium ${variant.color}`}>{variant.text}</span>;
   };
 
   // Stats Cards
   const getStats = () => {
     const total = lostReports.length;
-    const pending = lostReports.filter(
-      (r: LostReport) => r.status === "PENDING"
-    ).length;
-    const approved = lostReports.filter(
-      (r: LostReport) => r.status === "APPROVED"
-    ).length;
-    const onProgress = lostReports.filter(
-      (r: LostReport) => r.statusReport === "OnProgress"
-    ).length;
+    const pending = lostReports.filter((r: LostReport) => r.status === "PENDING").length;
+    const approved = lostReports.filter((r: LostReport) => r.status === "APPROVED").length;
+    const onProgress = lostReports.filter((r: LostReport) => r.statusReport === "OnProgress").length;
 
     return { total, pending, approved, onProgress };
   };
@@ -124,10 +86,7 @@ export default function ListLostAdmin() {
   const [updatingReport, setUpdatingReport] = useState<number | null>(null);
 
   // Fungsi untuk update statusReport
-  const handleUpdateStatusReport = async (
-    id: number,
-    newStatus: "Done" | "Closed"
-  ) => {
+  const handleUpdateStatusReport = async (id: number, newStatus: "Done" | "Closed") => {
     setUpdatingReport(id);
     try {
       const res = await api.put(`/lostreport/${id}`, {
@@ -142,15 +101,10 @@ export default function ListLostAdmin() {
     }
   };
 
-  const [updatingLostStatus, setUpdatingLostStatus] = useState<number | null>(
-    null
-  );
+  const [updatingLostStatus, setUpdatingLostStatus] = useState<number | null>(null);
 
   // buat fungsi uodate lost status report
-  const handleUpdateLostStatusReport = async (
-    id: number,
-    newStatus: "Done" | "Closed"
-  ) => {
+  const handleUpdateLostStatusReport = async (id: number, newStatus: "Done" | "Closed") => {
     setUpdatingLostStatus(id);
     try {
       await api.put(`/lostreport/${id}`, {
@@ -222,12 +176,8 @@ export default function ListLostAdmin() {
                   <Package className="h-5 w-5 text-primary" />
                 </section>
                 <section>
-                  <h1 className="text-2xl font-bold tracking-tight">
-                    Barang Hilang
-                  </h1>
-                  <p className="text-sm text-muted-foreground">
-                    Kelola dan pantau semua laporan barang hilang
-                  </p>
+                  <h1 className="text-2xl font-bold tracking-tight">Barang Hilang</h1>
+                  <p className="text-sm text-muted-foreground">Kelola dan pantau semua laporan barang hilang</p>
                 </section>
               </section>
             </header>
@@ -236,9 +186,7 @@ export default function ListLostAdmin() {
               <section className="rounded-lg border border-red-200 bg-red-50 p-6 text-center">
                 <XCircle className="mx-auto h-10 w-10 text-red-600 mb-2" />
                 <p className="font-medium text-red-900">Gagal memuat data</p>
-                <p className="text-sm text-red-700 mt-1">
-                  Silakan coba refresh halaman atau hubungi administrator
-                </p>
+                <p className="text-sm text-red-700 mt-1">Silakan coba refresh halaman atau hubungi administrator</p>
               </section>
             ) : (
               <article>
@@ -247,9 +195,7 @@ export default function ListLostAdmin() {
                   <section className="rounded-lg border bg-card p-6 shadow-sm">
                     <section className="flex items-center justify-between">
                       <section>
-                        <p className="text-sm font-medium text-muted-foreground">
-                          Total Laporan
-                        </p>
+                        <p className="text-sm font-medium text-muted-foreground">Total Laporan</p>
                         <p className="mt-2 text-3xl font-bold">{stats.total}</p>
                       </section>
                       <section className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100">
@@ -261,12 +207,8 @@ export default function ListLostAdmin() {
                   <section className="rounded-lg border bg-card p-6 shadow-sm">
                     <section className="flex items-center justify-between">
                       <section>
-                        <p className="text-sm font-medium text-muted-foreground">
-                          Menunggu Approval
-                        </p>
-                        <p className="mt-2 text-3xl font-bold">
-                          {stats.pending}
-                        </p>
+                        <p className="text-sm font-medium text-muted-foreground">Menunggu Approval</p>
+                        <p className="mt-2 text-3xl font-bold">{stats.pending}</p>
                       </section>
                       <section className="flex h-12 w-12 items-center justify-center rounded-lg bg-yellow-100">
                         <Clock className="h-6 w-6 text-yellow-600" />
@@ -277,12 +219,8 @@ export default function ListLostAdmin() {
                   <section className="rounded-lg border bg-card p-6 shadow-sm">
                     <section className="flex items-center justify-between">
                       <section>
-                        <p className="text-sm font-medium text-muted-foreground">
-                          Disetujui
-                        </p>
-                        <p className="mt-2 text-3xl font-bold">
-                          {stats.approved}
-                        </p>
+                        <p className="text-sm font-medium text-muted-foreground">Disetujui</p>
+                        <p className="mt-2 text-3xl font-bold">{stats.approved}</p>
                       </section>
                       <section className="flex h-12 w-12 items-center justify-center rounded-lg bg-green-100">
                         <CheckCircle2 className="h-6 w-6 text-green-600" />
@@ -293,12 +231,8 @@ export default function ListLostAdmin() {
                   <section className="rounded-lg border bg-card p-6 shadow-sm">
                     <section className="flex items-center justify-between">
                       <section>
-                        <p className="text-sm font-medium text-muted-foreground">
-                          Dalam Proses
-                        </p>
-                        <p className="mt-2 text-3xl font-bold">
-                          {stats.onProgress}
-                        </p>
+                        <p className="text-sm font-medium text-muted-foreground">Dalam Proses</p>
+                        <p className="mt-2 text-3xl font-bold">{stats.onProgress}</p>
                       </section>
                       <section className="flex h-12 w-12 items-center justify-center rounded-lg bg-orange-100">
                         <Loader2 className="h-6 w-6 text-orange-600" />
@@ -311,84 +245,50 @@ export default function ListLostAdmin() {
                 <section className="rounded-lg border bg-card shadow-sm">
                   <section className="border-b bg-muted/50 px-6 py-4">
                     <h2 className="font-semibold">Daftar Laporan</h2>
-                    <p className="text-sm text-muted-foreground">
-                      Total {lostReports.length} laporan barang hilang
-                    </p>
+                    <p className="text-sm text-muted-foreground">Total {lostReports.length} laporan barang hilang</p>
                   </section>
 
                   <section className="overflow-x-auto">
                     <Table className="w-full">
                       <TableHeader>
                         <TableRow className="border-b bg-muted/30">
-                          <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                            Info Barang
-                          </TableHead>
-                          <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                            Lokasi
-                          </TableHead>
-                          <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                            Pelapor
-                          </TableHead>
-                          <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                            Status Laporan
-                          </TableHead>
-                          <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                            Kondisi Laporan
-                          </TableHead>
-                          <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                            Tanggal
-                          </TableHead>
-                          <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                            Aksi status
-                          </TableHead>
-                          <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                            Aksi laporan
-                          </TableHead>
+                          <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">Info Barang</TableHead>
+                          <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">Lokasi</TableHead>
+                          <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">Pelapor</TableHead>
+                          <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">Status Laporan</TableHead>
+                          <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">Kondisi Laporan</TableHead>
+                          <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">Tanggal</TableHead>
+                          <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">Aksi status</TableHead>
+                          <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">Aksi laporan</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody className="sectionide-y sectionide-border">
                         {lostReports.length === 0 ? (
                           <TableRow>
-                            <TableCell
-                              colSpan={8}
-                              className="px-6 py-16 text-center"
-                            >
+                            <TableCell colSpan={8} className="px-6 py-16 text-center">
                               <Package className="mx-auto h-12 w-12 text-muted-foreground/50" />
-                              <p className="mt-4 font-medium text-muted-foreground">
-                                Belum ada laporan
-                              </p>
-                              <p className="text-sm text-muted-foreground">
-                                Laporan barang hilang akan muncul di sini
-                              </p>
+                              <p className="mt-4 font-medium text-muted-foreground">Belum ada laporan</p>
+                              <p className="text-sm text-muted-foreground">Laporan barang hilang akan muncul di sini</p>
                             </TableCell>
                           </TableRow>
                         ) : (
                           lostReports.map((report: LostReport) => (
-                            <TableRow
-                              key={report.id}
-                              className="transition-colors hover:bg-muted/50"
-                            >
+                            <TableRow key={report.id} className="transition-colors hover:bg-muted/50">
                               <TableCell className="px-6 py-4">
                                 <section className="flex items-start gap-3">
                                   <section className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
                                     <Package className="h-5 w-5 text-primary" />
                                   </section>
                                   <section className="min-w-0 flex-1">
-                                    <p className="font-medium text-sm">
-                                      {report.namaBarang}
-                                    </p>
-                                    <p className="text-xs text-muted-foreground line-clamp-2 mt-0.5">
-                                      {report.deskripsi}
-                                    </p>
+                                    <p className="font-medium text-sm">{report.namaBarang}</p>
+                                    <p className="text-xs text-muted-foreground line-clamp-2 mt-0.5">{report.deskripsi}</p>
                                   </section>
                                 </section>
                               </TableCell>
                               <TableCell className="px-6 py-4">
                                 <section className="flex items-center gap-2">
                                   <MapPin className="h-4 w-4 text-muted-foreground" />
-                                  <span className="text-sm">
-                                    {report.lokasiHilang}
-                                  </span>
+                                  <span className="text-sm">{report.lokasiHilang}</span>
                                 </section>
                               </TableCell>
                               <TableCell className="px-6 py-4">
@@ -397,12 +297,8 @@ export default function ListLostAdmin() {
                                     <User className="h-4 w-4 text-primary" />
                                   </section>
                                   <section>
-                                    <p className="text-sm font-medium">
-                                      {report.user.name}
-                                    </p>
-                                    <p className="text-xs text-muted-foreground">
-                                      {report.user.notelp}
-                                    </p>
+                                    <p className="text-sm font-medium">{report.user.name}</p>
+                                    <p className="text-xs text-muted-foreground">{report.user.notelp}</p>
                                   </section>
                                 </section>
                               </TableCell>
@@ -410,113 +306,59 @@ export default function ListLostAdmin() {
                                 <StatusBadge status={report.status} />
                               </TableCell>
                               <TableCell className="px-6 py-4">
-                                <StatusReportBadge
-                                  status={report.statusReport}
-                                />
+                                <StatusReportBadge status={report.statusReport} />
                               </TableCell>
                               <TableCell className="px-6 py-4">
                                 <section className="flex items-center gap-2 text-sm text-muted-foreground">
                                   <Calendar className="h-4 w-4" />
-                                  <span className="text-xs">
-                                    {formatDate(report.createdAt)}
-                                  </span>
+                                  <span className="text-xs">{formatDate(report.createdAt)}</span>
                                 </section>
                               </TableCell>
                               <TableCell className="px-6 py-4 text-center">
                                 {report.status === "PENDING" ? (
                                   <section className="flex justify-center gap-2">
                                     <Button
-                                      onClick={() =>
-                                        handleApprove(Number(report.id))
-                                      }
-                                      disabled={
-                                        updatingLostStatus === report.id
-                                      }
+                                      onClick={() => handleApprove(Number(report.id))}
+                                      disabled={updatingLostStatus === report.id}
                                       className="inline-flex items-center gap-1 rounded-md bg-green-600 px-3 py-1 text-xs font-medium text-white hover:bg-green-700 transition disabled:opacity-50"
                                     >
-                                      {updatingLostStatus === report.id ? (
-                                        <Loader2 className="h-4 w-4 animate-spin" />
-                                      ) : (
-                                        <CheckCircle2 className="h-4 w-4" />
-                                      )}
+                                      {updatingLostStatus === report.id ? <Loader2 className="h-4 w-4 animate-spin" /> : <CheckCircle2 className="h-4 w-4" />}
                                       Terima
                                     </Button>
                                     <Button
-                                      onClick={() =>
-                                        handleReject(Number(report.id))
-                                      }
-                                      disabled={
-                                        updatingLostStatus === report.id
-                                      }
+                                      onClick={() => handleReject(Number(report.id))}
+                                      disabled={updatingLostStatus === report.id}
                                       className="inline-flex items-center gap-1 rounded-md bg-red-600 px-3 py-1 text-xs font-medium text-white hover:bg-red-700 transition disabled:opacity-50"
                                     >
-                                      {updatingLostStatus === report.id ? (
-                                        <Loader2 className="h-4 w-4 animate-spin" />
-                                      ) : (
-                                        <XCircle className="h-4 w-4" />
-                                      )}
+                                      {updatingLostStatus === report.id ? <Loader2 className="h-4 w-4 animate-spin" /> : <XCircle className="h-4 w-4" />}
                                       Tolak
                                     </Button>
                                   </section>
                                 ) : (
-                                  <span className="text-xs text-muted-foreground">
-                                    —
-                                  </span>
+                                  <span className="text-xs text-muted-foreground">—</span>
                                 )}
                               </TableCell>
                               <TableCell className="px-6 py-4 text-center">
                                 <section className="flex justify-center gap-2">
                                   <Button
-                                    onClick={() =>
-                                      handleUpdateStatusReport(
-                                        Number(report.id),
-                                        "Done"
-                                      )
-                                    }
-                                    disabled={
-                                      updatingReport === report.id ||
-                                      report.statusReport === "Done"
-                                    }
+                                    onClick={() => handleUpdateStatusReport(Number(report.id), "Done")}
+                                    disabled={updatingReport === report.id || report.statusReport === "Done"}
                                     className={`inline-flex items-center gap-1 rounded-md px-3 py-1 text-xs font-medium text-white transition
-                                      ${
-                                        report.statusReport === "Done"
-                                          ? "bg-green-600 cursor-not-allowed"
-                                          : "bg-green-600 hover:bg-green-700"
-                                      }
+                                      ${report.statusReport === "Done" ? "bg-green-600 cursor-not-allowed" : "bg-green-600 hover:bg-green-700"}
                                     `}
                                   >
-                                    {updatingReport === report.id ? (
-                                      <Loader2 className="h-4 w-4 animate-spin" />
-                                    ) : (
-                                      <CheckCircle2 className="h-4 w-4" />
-                                    )}
+                                    {updatingReport === report.id ? <Loader2 className="h-4 w-4 animate-spin" /> : <CheckCircle2 className="h-4 w-4" />}
                                     Done
                                   </Button>
 
                                   <Button
-                                    onClick={() =>
-                                      handleUpdateStatusReport(
-                                        Number(report.id),
-                                        "Closed"
-                                      )
-                                    }
-                                    disabled={
-                                      updatingReport === report.id ||
-                                      report.statusReport === "Closed"
-                                    }
+                                    onClick={() => handleUpdateStatusReport(Number(report.id), "Closed")}
+                                    disabled={updatingReport === report.id || report.statusReport === "Closed"}
                                     className={`inline-flex items-center gap-1 rounded-md px-3 py-1 text-xs font-medium text-white transition
-                                      ${
-                                        report.statusReport === "Closed"
-                                          ? "bg-red-300 cursor-not-allowed"
-                                          : "bg-red-600 hover:bg-red-700"
-                                      }
+                                      ${report.statusReport === "Closed" ? "bg-red-300 cursor-not-allowed" : "bg-red-600 hover:bg-red-700"}
                                     `}
                                   >
-                                    {updatingReport === report.id ? (
-                                      <Loader2 className="h-4 w-4 animate-spin" />
-                                    ) : (
-                                      <XCircle className="h-4 w-4" />
-                                    )}
+                                    {updatingReport === report.id ? <Loader2 className="h-4 w-4 animate-spin" /> : <XCircle className="h-4 w-4" />}
                                     Closed
                                   </Button>
                                 </section>
