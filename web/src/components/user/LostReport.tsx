@@ -161,6 +161,7 @@ export default function LostReport() {
                             mode="single"
                             selected={date}
                             captionLayout="dropdown"
+                            disabled={{after : new Date()}}
                             onSelect={(date) => {
                               setDate(date);
                               setOpen(false);
