@@ -64,7 +64,7 @@ export async function GET() {
 export async function POST(req: Request) {
   try {
     const data = await req.json();
-    const { namaBarang, deskripsi, lokasiTemu, lostReportId, tanggalTemu, waktuTemu } =
+    const { namaBarang, deskripsi, lokasiTemu, lostReportId, tanggal, waktu } =
       data;
 
     // ambil id admin dari header cookies
@@ -92,7 +92,7 @@ export async function POST(req: Request) {
     }
 
     // validasi input data
-    if (!namaBarang || !deskripsi || !lokasiTemu || !tanggalTemu || !waktuTemu) {
+    if (!namaBarang || !deskripsi || !lokasiTemu || !tanggal || !waktu) {
       return NextResponse.json(
         {
           success: false,
@@ -104,8 +104,8 @@ export async function POST(req: Request) {
     }
 
     // Validasi dan parsing tanggal
-    const formatTanggalTemu = new Date(tanggalTemu);
-    if (isNaN(formatTanggalTemu.getTime())) {
+    const tanggalTemu = new Date(tanggal);
+    if (isNaN(tanggalTemu.getTime())) {
       return NextResponse.json(
         { success: false, message: "Format tanggal tidak valid." },
         { status: 400 }
@@ -153,7 +153,7 @@ export async function POST(req: Request) {
         adminId: Number(headerId),
         lostReportId: lostReportId ? Number(lostReportId) : null,
         tanggalTemu,
-        waktuTemu: waktuTemu.trim(),
+        waktuTemu: waktu.trim(),
       },
       include: {
         admin: {
