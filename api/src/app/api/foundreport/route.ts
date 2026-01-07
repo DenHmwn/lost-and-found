@@ -1,5 +1,4 @@
 import prisma from "@/lib/prisma";
-import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 // buat fungsi GET
@@ -68,7 +67,6 @@ export async function POST(req: Request) {
       data;
 
     // ambil id admin dari header cookies
-    const cookieStore = await cookies();
     const headerId = req.headers.get("userId");
     const headerUserRole = req.headers.get("userRole");
 
