@@ -32,7 +32,7 @@ export default function LaporanBarangTemu() {
   };
 
   const handleSubmit = async () => {
-    if (!namaBarang || !lokasiTemu || !deskripsi || !date || !time) {
+    if (!namaBarang.trim() || !lokasiTemu.trim() || !deskripsi.trim() || !date || !time) {
       alert("Harap lengkapi semua data sebelum mengirim laporan.");
       return;
     }
