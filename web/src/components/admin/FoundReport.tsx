@@ -40,11 +40,11 @@ export default function LaporanBarangTemu() {
     setIsSubmitting(true);
     try {
       const payload = {
-        lokasiTemu,
         deskripsi,
         tanggal: date.toISOString().split("T")[0],
         waktu: time,
         namaBarang: namaBarang.trim(),
+        lokasiTemu: lokasiTemu.trim(),
       };
 
       const res = await api.post("/foundreport", payload);
