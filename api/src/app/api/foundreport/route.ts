@@ -69,8 +69,8 @@ export async function POST(req: Request) {
 
     // ambil id admin dari header cookies
     const cookieStore = await cookies();
-    const headerId = cookieStore.get("user-id")?.value;
-    const headerUserRole = cookieStore.get("user-role")?.value;
+    const headerId = req.headers.get("userId");
+    const headerUserRole = req.headers.get("userRole");
 
     // validasi auth
     if (!headerId || !headerUserRole) {
@@ -152,7 +152,7 @@ export async function POST(req: Request) {
         lokasiTemu: lokasiTemu.trim(),
         adminId: Number(headerId),
         lostReportId: lostReportId ? Number(lostReportId) : null,
-        tanggalTemu,
+        tanggalTemu: formatTanggalTemu,
         waktuTemu: waktuTemu.trim(),
       },
       include: {

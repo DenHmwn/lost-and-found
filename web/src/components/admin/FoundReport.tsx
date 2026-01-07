@@ -14,6 +14,7 @@ import { ChevronDownIcon, PackageSearchIcon } from "lucide-react";
 import React from "react";
 import { CustomButtonOutline, CustomButtonPrimary } from "../custom/CustomButtonPrimary";
 import { useRouter } from "next/navigation";
+import { createDate } from "@/lib/scripts";
 
 export default function LaporanBarangTemu() {
   // State untuk calendar
@@ -32,7 +33,7 @@ export default function LaporanBarangTemu() {
   };
 
   const handleSubmit = async () => {
-    if (!namaBarang || !lokasiTemu || !deskripsi || !date || !time) {
+    if (!namaBarang.trim() || !lokasiTemu.trim() || !deskripsi.trim() || !date || !time) {
       alert("Harap lengkapi semua data sebelum mengirim laporan.");
       return;
     }
@@ -40,11 +41,11 @@ export default function LaporanBarangTemu() {
     setIsSubmitting(true);
     try {
       const payload = {
-        namaBarang,
-        lokasiTemu,
-        deskripsi,
-        tanggal: date.toISOString().split("T")[0],
-        waktu: time,
+        namaBarang: namaBarang.trim(),
+        lokasiTemu: lokasiTemu.trim(),
+        deskripsi : deskripsi.trim(),
+        tanggalTemu:createDate(date!),
+        waktuTemu: time,
       };
 
       const res = await api.post("/foundreport", payload);
