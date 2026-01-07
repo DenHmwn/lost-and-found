@@ -82,7 +82,6 @@ export async function POST(req: Request) {
     const lostReportIdRaw = data?.lostReportId;
 
     // Ambil id admin & role dari header middleware
-    // (samakan dengan middleware kamu yang set: "userId" dan "userRole")
     const headerId = req.headers.get("userId") || req.headers.get("user-id") || req.headers.get("user_id");
 
     const headerUserRole = req.headers.get("userRole") || req.headers.get("user-role") || req.headers.get("user_role");
@@ -181,8 +180,7 @@ export async function POST(req: Request) {
     }
 
     // create report
-    const report = await prisma.foundReport.
-    create({
+    const report = await prisma.foundReport.create({
       data: {
         namaBarang,
         deskripsi,
