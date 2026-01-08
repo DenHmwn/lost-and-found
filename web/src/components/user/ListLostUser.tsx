@@ -289,6 +289,12 @@ export default function ListLostUser() {
                               className="transition-colors hover:bg-muted/50"
                             >
                               <TableCell className="px-6 py-4">
+                                <section className="flex items-center gap-2">
+                                  <Tag className="h-4 w-4" />
+                                  <span className="text-sm">{report.id}</span>
+                                </section>
+                              </TableCell>
+                              <TableCell className="px-6 py-4">
                                 <section className="flex items-start gap-3">
                                   <section className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
                                     <Package className="h-5 w-5 text-primary" />
