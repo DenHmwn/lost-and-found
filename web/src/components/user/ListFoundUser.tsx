@@ -219,9 +219,9 @@ export default function ListFoundUser() {
                           <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
                             Tanggal Penemuan
                           </TableHead>
-                          <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                          {/* <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
                             Tanggal Laporan
-                          </TableHead>
+                          </TableHead> */}
                         </TableRow>
                       </TableHeader>
                       <TableBody className="sectionide-y sectionide-border">
