@@ -277,7 +277,7 @@ export default function ListFoundUser() {
                                   </span>
                                 </section>
                               </TableCell>
-                              <TableCell className="px-6 py-4">
+                              {/* <TableCell className="px-6 py-4">
                                 <section className="flex items-center gap-2">
                                   <section className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10">
                                     <User className="h-4 w-4 text-primary" />
@@ -291,7 +291,7 @@ export default function ListFoundUser() {
                                     </p>
                                   </section>
                                 </section>
-                              </TableCell>
+                              </TableCell> */}
                               <TableCell className="px-6 py-4">
                                 <StatusReportBadge
                                   status={report.statusReport}
