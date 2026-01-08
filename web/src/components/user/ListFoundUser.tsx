@@ -260,9 +260,9 @@ export default function ListFoundUser() {
                                       {report.deskripsi}
                                     </p> */}
                                     {report.lostReportId && (
-                                      <span className="inline-flex items-center gap-1 mt-1 text-xs text-purple-600 bg-purple-50 px-2 py-0.5 rounded">
-                                        <CheckCircle2 className="h-3 w-3" />
-                                        Tercocok dengan laporan #
+                                      <span className="inline-flex items-center gap-1 mt-1 text-xs text-yellow-800 bg-yellow-50 px-2 py-0.5 rounded">
+                                        Barang ini mungkin cocok dengan laporan{" "}
+                                        {""}
                                         {report.lostReportId}
                                       </span>
                                     )}
