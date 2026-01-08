@@ -7,7 +7,7 @@ import { useLostReports } from "@/hooks/useLostReport";
 import { LostReport } from "@/types/LostReport";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { AppSidebarAdmin } from "@/components/AppSidebarAdmin";
-import { formatDate } from "@/lib/scripts";
+import { formatDate, formatTimeAgo } from "@/lib/scripts";
 import { Button } from "../ui/button";
 import { Toggle } from "../ui/toggle";
 import { useState } from "react";
@@ -257,7 +257,8 @@ export default function ListLostAdmin() {
                           <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">Pelapor</TableHead>
                           <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">Status Laporan</TableHead>
                           <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">Kondisi Laporan</TableHead>
-                          <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">Tanggal</TableHead>
+                          <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">Tanggal Kehilangan</TableHead>
+                          <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">Tanggal Laporan</TableHead>
                           <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">Aksi status</TableHead>
                           <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">Aksi laporan</TableHead>
                         </TableRow>
@@ -311,7 +312,13 @@ export default function ListLostAdmin() {
                               <TableCell className="px-6 py-4">
                                 <section className="flex items-center gap-2 text-sm text-muted-foreground">
                                   <Calendar className="h-4 w-4" />
-                                  <span className="text-xs">{formatDate(report.createdAt)}</span>
+                                  <span className="text-xs">{formatDate(report.tanggalHilang, report.waktuHilang)}</span>
+                                </section>
+                              </TableCell>
+                              <TableCell className="px-6 py-4">
+                                <section className="flex items-center gap-2 text-sm text-muted-foreground">
+                                  <Calendar className="h-4 w-4" />
+                                  <span className="text-xs">{formatTimeAgo(report.createdAt)}</span>
                                 </section>
                               </TableCell>
                               <TableCell className="px-6 py-4 text-center">

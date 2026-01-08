@@ -7,7 +7,7 @@ import { useFoundReports } from "@/hooks/useFoundReport";
 import { FoundReport } from "@/types/FoundReport";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { AppSidebarAdmin } from "@/components/AppSidebarAdmin";
-import { formatDate } from "@/lib/scripts";
+import { formatDate, formatTimeAgo } from "@/lib/scripts";
 import { api } from "@/lib/axios";
 import { useState } from "react";
 import { Button } from "../ui/button";
@@ -185,7 +185,10 @@ export default function ListFoundAdmin() {
                             Kondisi Laporan
                           </TableHead>
                           <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                            Tanggal
+                            Tanggal Penemuan
+                          </TableHead>
+                          <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                            Tanggal Laporan
                           </TableHead>
                           <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
                             Aksi Laporan
@@ -245,7 +248,13 @@ export default function ListFoundAdmin() {
                               <TableCell className="px-6 py-4">
                                 <section className="flex items-center gap-2 text-sm text-muted-foreground">
                                   <Calendar className="h-4 w-4" />
-                                  <span className="text-xs">{formatDate(report.createdAt)}</span>
+                                  <span className="text-xs">{formatDate(report.tanggalTemu, report.waktuTemu)}</span>
+                                </section>
+                              </TableCell>
+                              <TableCell className="px-6 py-4">
+                                <section className="flex items-center gap-2 text-sm text-muted-foreground">
+                                  <Calendar className="h-4 w-4" />
+                                  <span className="text-xs">{formatTimeAgo(report.createdAt)}</span>
                                 </section>
                               </TableCell>
                               <TableCell className="px-6 py-4 text-center">
