@@ -11,6 +11,7 @@ import {
   MapPin,
   User,
   Calendar,
+  Tag,
 } from "lucide-react";
 import { useLostReports } from "@/hooks/useLostReport";
 import { LostReport } from "@/types/LostReport";
