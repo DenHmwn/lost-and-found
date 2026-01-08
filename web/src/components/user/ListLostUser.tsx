@@ -11,6 +11,7 @@ import {
   MapPin,
   User,
   Calendar,
+  Tag,
 } from "lucide-react";
 import { useLostReports } from "@/hooks/useLostReport";
 import { LostReport } from "@/types/LostReport";
@@ -241,6 +242,9 @@ export default function ListLostUser() {
                       <TableHeader>
                         <TableRow className="border-b bg-muted/30">
                           <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                            No Laporan
+                          </TableHead>
+                          <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
                             Info Barang
                           </TableHead>
                           <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
@@ -285,6 +289,12 @@ export default function ListLostUser() {
                               key={report.id}
                               className="transition-colors hover:bg-muted/50"
                             >
+                              <TableCell className="px-6 py-4">
+                                <section className="flex items-center gap-2">
+                                  <Tag className="h-4 w-4" />
+                                  <span className="text-sm">{report.id}</span>
+                                </section>
+                              </TableCell>
                               <TableCell className="px-6 py-4">
                                 <section className="flex items-start gap-3">
                                   <section className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">

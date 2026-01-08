@@ -2,7 +2,7 @@
 
 import { SiteHeader } from "@/components/SiteHeader";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { Loader2, Clock, CheckCircle2, XCircle, Package, MapPin, User, Calendar } from "lucide-react";
+import { Loader2, Clock, CheckCircle2, XCircle, Package, MapPin, User, Calendar, Tag } from "lucide-react";
 import { useLostReports } from "@/hooks/useLostReport";
 import { LostReport } from "@/types/LostReport";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -102,22 +102,6 @@ export default function ListLostAdmin() {
   };
 
   const [updatingLostStatus, setUpdatingLostStatus] = useState<number | null>(null);
-
-  // buat fungsi uodate lost status report
-  const handleUpdateLostStatusReport = async (id: number, newStatus: "Done" | "Closed") => {
-    setUpdatingLostStatus(id);
-    try {
-      await api.put(`/lostreport/${id}`, {
-        statusReport: newStatus,
-      });
-      window.location.reload();
-    } catch (error) {
-      console.error("Error updating status report:", error);
-      alert("Gagal mengubah status laporan");
-    } finally {
-      setUpdatingLostStatus(null);
-    }
-  };
 
   // buat fungsi aprove
   const handleApprove = async (id: number) => {
@@ -252,6 +236,7 @@ export default function ListLostAdmin() {
                     <Table className="w-full">
                       <TableHeader>
                         <TableRow className="border-b bg-muted/30">
+                          <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">No Laporan</TableHead>
                           <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">Info Barang</TableHead>
                           <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">Lokasi</TableHead>
                           <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">Pelapor</TableHead>
@@ -275,6 +260,12 @@ export default function ListLostAdmin() {
                         ) : (
                           lostReports.map((report: LostReport) => (
                             <TableRow key={report.id} className="transition-colors hover:bg-muted/50">
+                              <TableCell className="px-6 py-4">
+                                <section className="flex items-center gap-2">
+                                  <Tag className="h-4 w-4" />
+                                  <span className="text-sm">{report.id}</span>
+                                </section>
+                              </TableCell>
                               <TableCell className="px-6 py-4">
                                 <section className="flex items-start gap-3">
                                   <section className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">

@@ -210,18 +210,18 @@ export default function ListFoundUser() {
                           <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
                             Lokasi Temu
                           </TableHead>
-                          <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                          {/* <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
                             Admin/Pelapor
-                          </TableHead>
+                          </TableHead> */}
                           <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
                             Status
                           </TableHead>
                           <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
                             Tanggal Penemuan
                           </TableHead>
-                          <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                          {/* <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
                             Tanggal Laporan
-                          </TableHead>
+                          </TableHead> */}
                         </TableRow>
                       </TableHeader>
                       <TableBody className="sectionide-y sectionide-border">
@@ -260,9 +260,9 @@ export default function ListFoundUser() {
                                       {report.deskripsi}
                                     </p> */}
                                     {report.lostReportId && (
-                                      <span className="inline-flex items-center gap-1 mt-1 text-xs text-purple-600 bg-purple-50 px-2 py-0.5 rounded">
-                                        <CheckCircle2 className="h-3 w-3" />
-                                        Tercocok dengan laporan #
+                                      <span className="inline-flex items-center gap-1 mt-1 text-xs text-yellow-800 bg-yellow-50 px-2 py-0.5 rounded">
+                                        Barang ini mungkin cocok dengan laporan{" "}
+                                        {""}
                                         {report.lostReportId}
                                       </span>
                                     )}
@@ -277,7 +277,7 @@ export default function ListFoundUser() {
                                   </span>
                                 </section>
                               </TableCell>
-                              <TableCell className="px-6 py-4">
+                              {/* <TableCell className="px-6 py-4">
                                 <section className="flex items-center gap-2">
                                   <section className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10">
                                     <User className="h-4 w-4 text-primary" />
@@ -291,7 +291,7 @@ export default function ListFoundUser() {
                                     </p>
                                   </section>
                                 </section>
-                              </TableCell>
+                              </TableCell> */}
                               <TableCell className="px-6 py-4">
                                 <StatusReportBadge
                                   status={report.statusReport}
@@ -305,14 +305,14 @@ export default function ListFoundUser() {
                                   </span>
                                 </section>
                               </TableCell>
-                              <TableCell className="px-6 py-4">
+                              {/* <TableCell className="px-6 py-4">
                                 <section className="flex items-center gap-2 text-sm text-muted-foreground">
                                   <Calendar className="h-4 w-4" />
                                   <span className="text-xs">
                                     {formatTimeAgo(report.createdAt)}
                                   </span>
                                 </section>
-                              </TableCell>
+                              </TableCell> */}
                             </TableRow>
                           ))
                         )}
