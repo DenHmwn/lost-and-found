@@ -22,7 +22,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { formatDate } from "@/lib/scripts";
+import { formatDate, formatTimeAgo } from "@/lib/scripts";
 import { AppSidebarUser } from "../AppSidebarUser";
 import SkeletonListItem from "../SkeletonListItem";
 
