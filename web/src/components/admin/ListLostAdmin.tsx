@@ -103,22 +103,6 @@ export default function ListLostAdmin() {
 
   const [updatingLostStatus, setUpdatingLostStatus] = useState<number | null>(null);
 
-  // buat fungsi uodate lost status report
-  const handleUpdateLostStatusReport = async (id: number, newStatus: "Done" | "Closed") => {
-    setUpdatingLostStatus(id);
-    try {
-      await api.put(`/lostreport/${id}`, {
-        statusReport: newStatus,
-      });
-      window.location.reload();
-    } catch (error) {
-      console.error("Error updating status report:", error);
-      alert("Gagal mengubah status laporan");
-    } finally {
-      setUpdatingLostStatus(null);
-    }
-  };
-
   // buat fungsi aprove
   const handleApprove = async (id: number) => {
     setUpdatingLostStatus(id);
