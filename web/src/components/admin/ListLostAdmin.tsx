@@ -7,7 +7,7 @@ import { useLostReports } from "@/hooks/useLostReport";
 import { LostReport } from "@/types/LostReport";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { AppSidebarAdmin } from "@/components/AppSidebarAdmin";
-import { formatDate } from "@/lib/scripts";
+import { formatDate, formatTimeAgo } from "@/lib/scripts";
 import { Button } from "../ui/button";
 import { Toggle } from "../ui/toggle";
 import { useState } from "react";
