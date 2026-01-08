@@ -2,7 +2,7 @@
 
 import { SiteHeader } from "@/components/SiteHeader";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { Loader2, Clock, CheckCircle2, XCircle, Package, MapPin, User, Calendar } from "lucide-react";
+import { Loader2, Clock, CheckCircle2, XCircle, Package, MapPin, User, Calendar, Tag } from "lucide-react";
 import { useLostReports } from "@/hooks/useLostReport";
 import { LostReport } from "@/types/LostReport";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
