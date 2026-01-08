@@ -248,7 +248,7 @@ export default function ListFoundAdmin() {
                               <TableCell className="px-6 py-4">
                                 <section className="flex items-center gap-2 text-sm text-muted-foreground">
                                   <Calendar className="h-4 w-4" />
-                                  <span className="text-xs">{formatDate(report.createdAt)}</span>
+                                  <span className="text-xs">{formatTimeAgo(report.createdAt)}</span>
                                 </section>
                               </TableCell>
                               <TableCell className="px-6 py-4 text-center">
