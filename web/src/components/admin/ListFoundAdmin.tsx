@@ -12,6 +12,7 @@ import { api } from "@/lib/axios";
 import { useState } from "react";
 import { Button } from "../ui/button";
 import SkeletonListItem from "../SkeletonListItem";
+import axios from "axios";
 
 export default function ListFoundAdmin() {
   // Fetch data menggunakan custom hook
@@ -67,9 +68,13 @@ export default function ListFoundAdmin() {
         statusReport: newStatus,
       });
       window.location.reload();
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Error updating status report:", error);
-      alert("Gagal mengubah status laporan");
+      if (axios.isAxiosError(error)) {
+        const message = error.response?.data.message;
+        // alert( error.message ||"Gagal mengubah status laporan");
+        alert (message);
+      }
     } finally {
       setUpdatingReport(null);
     }
