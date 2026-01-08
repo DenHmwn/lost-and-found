@@ -241,6 +241,9 @@ export default function ListLostUser() {
                       <TableHeader>
                         <TableRow className="border-b bg-muted/30">
                           <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                            No Laporan
+                          </TableHead>
+                          <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
                             Info Barang
                           </TableHead>
                           <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
