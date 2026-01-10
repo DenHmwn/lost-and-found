@@ -85,10 +85,13 @@ export default function ListFoundAdmin() {
       const res = await api.put(`/foundreport/${id}`, {
         statusReport: newStatus,
       });
-      window.location.reload();
-    } catch (error) {
+      mutate();
+    } catch (error: unknown) {
       console.error("Error updating status report:", error);
-      alert("Gagal mengubah status laporan");
+      if (axios.isAxiosError(error)) {
+        const message = error.response?.data.message;
+        alert(message);
+      }
     } finally {
       setUpdatingReport(null);
     }
