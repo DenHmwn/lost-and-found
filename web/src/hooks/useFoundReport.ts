@@ -11,5 +11,6 @@ export function useFoundReports() {
     data: data?.data,
     error,
     isLoading,
+    mutate
   };
 }
