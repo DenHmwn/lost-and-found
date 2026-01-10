@@ -25,7 +25,8 @@ import { LostReport } from "@/types/LostReport";
 
 export default function ListFoundAdmin() {
   // Fetch data menggunakan custom hook
-  const { data: FoundReports = [], error, isLoading } = useFoundReports();
+  const { data: foundReports = [], error, isLoading, mutate } = useFoundReports();
+  const { data: lostReports = [] } = useLostReports();
 
   // Status Report Badge
   const StatusReportBadge = ({ status }: { status: "Done" | "OnProgress" | "Closed" }) => {
