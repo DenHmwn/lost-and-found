@@ -2,10 +2,26 @@
 
 import { SiteHeader } from "@/components/SiteHeader";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { Loader2, Clock, CheckCircle2, XCircle, Package, MapPin, User, Calendar } from "lucide-react";
+import {
+  Loader2,
+  Clock,
+  CheckCircle2,
+  XCircle,
+  Package,
+  MapPin,
+  User,
+  Calendar,
+} from "lucide-react";
 import { useFoundReports } from "@/hooks/useFoundReport";
 import { FoundReport } from "@/types/FoundReport";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { AppSidebarAdmin } from "@/components/AppSidebarAdmin";
 import { formatDate, formatTimeAgo } from "@/lib/scripts";
 import { api } from "@/lib/axios";
@@ -20,7 +36,11 @@ export default function ListFoundAdmin() {
   const { data: lostReports = [] } = useLostReports();
 
   // Status Report Badge
-  const StatusReportBadge = ({ status }: { status: "Done" | "OnProgress" | "Closed" }) => {
+  const StatusReportBadge = ({
+    status,
+  }: {
+    status: "Done" | "OnProgress" | "Closed";
+  }) => {
     const variants = {
       Done: {
         color: "bg-green-50 text-green-700 border-green-200",
@@ -38,16 +58,30 @@ export default function ListFoundAdmin() {
 
     const variant = variants[status];
 
-    return <span className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-1 text-xs font-medium ${variant.color}`}>{variant.text}</span>;
+    return (
+      <span
+        className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-1 text-xs font-medium ${variant.color}`}
+      >
+        {variant.text}
+      </span>
+    );
   };
 
   // Stats Cards
   const getStats = () => {
-    const total = FoundReports.length;
-    const done = FoundReports.filter((r: FoundReport) => r.statusReport === "Done").length;
-    const onProgress = FoundReports.filter((r: FoundReport) => r.statusReport === "OnProgress").length;
-    const closed = FoundReports.filter((r: FoundReport) => r.statusReport === "Closed").length;
-    const matched = FoundReports.filter((r: FoundReport) => r.lostReportId !== null).length;
+    const total = foundReports.length;
+    const done = foundReports.filter(
+      (r: FoundReport) => r.statusReport === "Done"
+    ).length;
+    const onProgress = foundReports.filter(
+      (r: FoundReport) => r.statusReport === "OnProgress"
+    ).length;
+    const closed = foundReports.filter(
+      (r: FoundReport) => r.statusReport === "Closed"
+    ).length;
+    const matched = foundReports.filter(
+      (r: FoundReport) => r.lostReportId !== null
+    ).length;
 
     return { total, done, onProgress, closed, matched };
   };
@@ -62,7 +96,10 @@ export default function ListFoundAdmin() {
   }
 
   // Fungsi untuk update statusReport
-  const handleUpdateStatusReport = async (id: number, newStatus: "Done" | "Closed") => {
+  const handleUpdateStatusReport = async (
+    id: number,
+    newStatus: "Done" | "Closed"
+  ) => {
     setUpdatingReport(id);
     try {
       const res = await api.put(`/foundreport/${id}`, {
@@ -73,8 +110,7 @@ export default function ListFoundAdmin() {
       console.error("Error updating status report:", error);
       if (axios.isAxiosError(error)) {
         const message = error.response?.data.message;
-        // alert( error.message ||"Gagal mengubah status laporan");
-        alert (message);
+        alert(message);
       }
     } finally {
       setUpdatingReport(null);
@@ -102,8 +138,12 @@ export default function ListFoundAdmin() {
                   <Package className="h-5 w-5 text-primary" />
                 </section>
                 <section>
-                  <h1 className="text-2xl font-bold tracking-tight">Barang Temu</h1>
-                  <p className="text-sm text-muted-foreground">Kelola dan pantau semua laporan barang yang ditemukan</p>
+                  <h1 className="text-2xl font-bold tracking-tight">
+                    Barang Temu
+                  </h1>
+                  <p className="text-sm text-muted-foreground">
+                    Kelola dan pantau semua laporan barang yang ditemukan
+                  </p>
                 </section>
               </section>
             </header>
@@ -112,7 +152,9 @@ export default function ListFoundAdmin() {
               <section className="rounded-lg border border-red-200 bg-red-50 p-6 text-center">
                 <XCircle className="mx-auto h-10 w-10 text-red-600 mb-2" />
                 <p className="font-medium text-red-900">Gagal memuat data</p>
-                <p className="text-sm text-red-700 mt-1">Silakan coba refresh halaman atau hubungi administrator</p>
+                <p className="text-sm text-red-700 mt-1">
+                  Silakan coba refresh halaman atau hubungi administrator
+                </p>
               </section>
             ) : (
               <article>
@@ -121,7 +163,9 @@ export default function ListFoundAdmin() {
                   <section className="rounded-lg border bg-card p-6 shadow-sm">
                     <section className="flex items-center justify-between">
                       <section>
-                        <p className="text-sm font-medium text-muted-foreground">Total Laporan</p>
+                        <p className="text-sm font-medium text-muted-foreground">
+                          Total Laporan
+                        </p>
                         <p className="mt-2 text-3xl font-bold">{stats.total}</p>
                       </section>
                       <section className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100">
@@ -133,8 +177,12 @@ export default function ListFoundAdmin() {
                   <section className="rounded-lg border bg-card p-6 shadow-sm">
                     <section className="flex items-center justify-between">
                       <section>
-                        <p className="text-sm font-medium text-muted-foreground">Dalam Proses</p>
-                        <p className="mt-2 text-3xl font-bold">{stats.onProgress}</p>
+                        <p className="text-sm font-medium text-muted-foreground">
+                          Dalam Proses
+                        </p>
+                        <p className="mt-2 text-3xl font-bold">
+                          {stats.onProgress}
+                        </p>
                       </section>
                       <section className="flex h-12 w-12 items-center justify-center rounded-lg bg-orange-100">
                         <Clock className="h-6 w-6 text-orange-600" />
@@ -145,7 +193,9 @@ export default function ListFoundAdmin() {
                   <section className="rounded-lg border bg-card p-6 shadow-sm">
                     <section className="flex items-center justify-between">
                       <section>
-                        <p className="text-sm font-medium text-muted-foreground">Selesai</p>
+                        <p className="text-sm font-medium text-muted-foreground">
+                          Selesai
+                        </p>
                         <p className="mt-2 text-3xl font-bold">{stats.done}</p>
                       </section>
                       <section className="flex h-12 w-12 items-center justify-center rounded-lg bg-green-100">
@@ -157,8 +207,12 @@ export default function ListFoundAdmin() {
                   <section className="rounded-lg border bg-card p-6 shadow-sm">
                     <section className="flex items-center justify-between">
                       <section>
-                        <p className="text-sm font-medium text-muted-foreground">Tercocok</p>
-                        <p className="mt-2 text-3xl font-bold">{stats.matched}</p>
+                        <p className="text-sm font-medium text-muted-foreground">
+                          Tercocok
+                        </p>
+                        <p className="mt-2 text-3xl font-bold">
+                          {stats.matched}
+                        </p>
                       </section>
                       <section className="flex h-12 w-12 items-center justify-center rounded-lg bg-purple-100">
                         <CheckCircle2 className="h-6 w-6 text-purple-600" />
@@ -170,8 +224,12 @@ export default function ListFoundAdmin() {
                 {/* Table */}
                 <section className="rounded-lg border bg-card shadow-sm">
                   <section className="border-b bg-muted/50 px-6 py-4">
-                    <h2 className="font-semibold">Daftar Laporan Barang Temu</h2>
-                    <p className="text-sm text-muted-foreground">Total {FoundReports.length} laporan barang yang ditemukan</p>
+                    <h2 className="font-semibold">
+                      Daftar Laporan Barang Temu
+                    </h2>
+                    <p className="text-sm text-muted-foreground">
+                      Total {foundReports.length} laporan barang yang ditemukan
+                    </p>
                   </section>
 
                   <section className="overflow-x-auto">
@@ -202,12 +260,20 @@ export default function ListFoundAdmin() {
                         </TableRow>
                       </TableHeader>
                       <TableBody className="sectionide-y sectionide-border">
-                        {FoundReports.length === 0 ? (
+                        {foundReports.length === 0 ? (
                           <TableRow>
-                            <TableCell colSpan={5} className="px-6 py-16 text-center">
+                            <TableCell
+                              colSpan={5}
+                              className="px-6 py-16 text-center"
+                            >
                               <Package className="mx-auto h-12 w-12 text-muted-foreground/50" />
-                              <p className="mt-4 font-medium text-muted-foreground">Belum ada laporan</p>
-                              <p className="text-sm text-muted-foreground">Laporan barang yang ditemukan akan muncul di sini</p>
+                              <p className="mt-4 font-medium text-muted-foreground">
+                                Belum ada laporan
+                              </p>
+                              <p className="text-sm text-muted-foreground">
+                                Laporan barang yang ditemukan akan muncul di
+                                sini
+                              </p>
                             </TableCell>
                           </TableRow>
                         ) : (
