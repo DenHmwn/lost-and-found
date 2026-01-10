@@ -348,12 +348,49 @@ export default function ListFoundAdmin() {
                                     Done
                                   </Button>
 
-                                  <Button
-                                    onClick={() => handleUpdateStatusReport(Number(report.id), "Closed")}
-                                    disabled={updatingReport === report.id || report.statusReport === "Closed"}
-                                    className={`inline-flex items-center gap-1 rounded-md px-3 py-1 text-xs font-medium text-white transition
-                                      ${report.statusReport === "Closed" ? "bg-red-300 cursor-not-allowed" : "bg-red-600 hover:bg-red-700"}
+                                    <Button
+                                      onClick={() =>
+                                        handleUpdateStatusReport(
+                                          Number(report.id),
+                                          "Closed"
+                                        )
+                                      }
+                                      disabled={
+                                        updatingReport === report.id ||
+                                        report.statusReport === "Closed"
+                                      }
+                                      className={`inline-flex items-center gap-1 rounded-md px-3 py-1 text-xs font-medium text-white transition
+                                      ${
+                                        report.statusReport === "Closed"
+                                          ? "bg-red-300 cursor-not-allowed"
+                                          : "bg-red-600 hover:bg-red-700"
+                                      }
                                     `}
+                                    >
+                                      {updatingReport === report.id ? (
+                                        <Loader2 className="h-4 w-4 animate-spin" />
+                                      ) : (
+                                        <XCircle className="h-4 w-4" />
+                                      )}
+                                      Closed
+                                    </Button>
+                                  </section>
+                                </TableCell>
+                                <TableCell className="px-6 py-4 text-center">
+                                  <Button
+                                    disabled={alreadyMatched}
+                                    onClick={() => {
+                                      if (!matchedLost) {
+                                        alert(
+                                          "Barang ini Belum Ada Kecocokan Dengan List Barang Hilang"
+                                        );
+                                        return;
+                                      } else
+                                        alert(
+                                          `Laporan barang ${report.namaBarang} sudah tercocokkan dengan laporan ${matchedLost.id}`
+                                        );
+                                      handleMatch(report.id, matchedLost!.id);
+                                    }}
                                   >
                                     {updatingReport === report.id ? <Loader2 className="h-4 w-4 animate-spin" /> : <XCircle className="h-4 w-4" />}
                                     Closed
