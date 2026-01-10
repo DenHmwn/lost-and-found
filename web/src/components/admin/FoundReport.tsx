@@ -120,6 +120,7 @@ export default function LaporanBarangTemu() {
                       </PopoverTrigger>
                       <PopoverContent className="w-auto overflow-hidden p-0" align="start">
                         <Calendar
+                          disabled={{after: new Date()}}
                           mode="single"
                           selected={date}
                           captionLayout="dropdown"
