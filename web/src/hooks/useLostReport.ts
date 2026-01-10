@@ -11,5 +11,6 @@ export function useLostReports() {
     data: data?.data,
     error,
     isLoading,
+    mutate
   };
 }
