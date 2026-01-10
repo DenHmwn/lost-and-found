@@ -96,6 +96,19 @@ export default function ListFoundAdmin() {
       setUpdatingReport(null);
     }
   };
+  const handleMatch = async (foundReportId: number, lostReportId: number) => {
+    try {
+      await api.put(`/foundreport/${foundReportId}`, {
+        lostReportId,
+      });
+      mutate();
+    } catch (error) {
+      console.error("Gagal mencocokkan laporan", error);
+      if (axios.isAxiosError(error)) {
+        alert(error?.response?.data.message || "Gagal mencocokkan laporan");
+      }
+    }
+  };
 
   return (
     <SidebarProvider
