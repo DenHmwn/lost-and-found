@@ -5,7 +5,14 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import {
 import { useFoundReports } from "@/hooks/useFoundReport";
 import { FoundReport } from "@/types/FoundReport";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { AppSidebarAdmin } from "@/components/AppSidebarAdmin";
 import { formatDate, formatTimeAgo } from "@/lib/scripts";
 import { api } from "@/lib/axios";
