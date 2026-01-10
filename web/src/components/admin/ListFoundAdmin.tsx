@@ -52,11 +52,19 @@ export default function ListFoundAdmin() {
 
   // Stats Cards
   const getStats = () => {
-    const total = FoundReports.length;
-    const done = FoundReports.filter((r: FoundReport) => r.statusReport === "Done").length;
-    const onProgress = FoundReports.filter((r: FoundReport) => r.statusReport === "OnProgress").length;
-    const closed = FoundReports.filter((r: FoundReport) => r.statusReport === "Closed").length;
-    const matched = FoundReports.filter((r: FoundReport) => r.lostReportId !== null).length;
+    const total = foundReports.length;
+    const done = foundReports.filter(
+      (r: FoundReport) => r.statusReport === "Done"
+    ).length;
+    const onProgress = foundReports.filter(
+      (r: FoundReport) => r.statusReport === "OnProgress"
+    ).length;
+    const closed = foundReports.filter(
+      (r: FoundReport) => r.statusReport === "Closed"
+    ).length;
+    const matched = foundReports.filter(
+      (r: FoundReport) => r.lostReportId !== null
+    ).length;
 
     return { total, done, onProgress, closed, matched };
   };
