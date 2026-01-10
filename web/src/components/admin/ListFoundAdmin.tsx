@@ -16,7 +16,8 @@ import axios from "axios";
 
 export default function ListFoundAdmin() {
   // Fetch data menggunakan custom hook
-  const { data: FoundReports = [], error, isLoading } = useFoundReports();
+  const { data: foundReports = [], error, isLoading, mutate } = useFoundReports();
+  const { data: lostReports = [] } = useLostReports();
 
   // Status Report Badge
   const StatusReportBadge = ({ status }: { status: "Done" | "OnProgress" | "Closed" }) => {
@@ -67,7 +68,7 @@ export default function ListFoundAdmin() {
       const res = await api.put(`/foundreport/${id}`, {
         statusReport: newStatus,
       });
-      window.location.reload();
+      mutate();
     } catch (error: unknown) {
       console.error("Error updating status report:", error);
       if (axios.isAxiosError(error)) {
