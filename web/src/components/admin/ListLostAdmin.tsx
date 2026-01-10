@@ -16,7 +16,7 @@ import SkeletonListItem from "../SkeletonListItem";
 
 export default function ListLostAdmin() {
   // Fetch data menggunakan custom hook
-  const { data: lostReports = [], error, isLoading } = useLostReports();
+  const { data: lostReports = [], error, isLoading, mutate } = useLostReports();
 
   // Status Badge Component
   const StatusBadge = ({ status }: { status: "PENDING" | "APPROVED" | "REJECTED" }) => {
@@ -92,7 +92,7 @@ export default function ListLostAdmin() {
       const res = await api.put(`/lostreport/${id}`, {
         statusReport: newStatus,
       });
-      window.location.reload();
+      mutate();
     } catch (error) {
       console.error("Error updating status report:", error);
       alert("Gagal mengubah status laporan");
@@ -110,7 +110,7 @@ export default function ListLostAdmin() {
       await api.put(`/lostreport/${id}`, {
         status: "APPROVED",
       });
-      window.location.reload();
+      mutate();
     } catch (error) {
       console.error("Gagal menyetujui laporan", error);
       alert("Gagal menyetujui laporan");
@@ -126,7 +126,7 @@ export default function ListLostAdmin() {
       await api.put(`/lostreport/${id}`, {
         status: "REJECTED",
       });
-      window.location.reload();
+      mutate();
     } catch (error) {
       console.error("Gagal menolak laporan", error);
       alert("Gagal menolak laporan");
