@@ -151,7 +151,7 @@ export async function POST(req: Request) {
         adminId: Number(headerId),
         lostReportId: lostReportId ? Number(lostReportId) : null,
         tanggalTemu: formatTanggalTemu,
-        waktuTemu: waktuTemu.trim(),
+        waktuTemu: String(waktuTemu).trim(),
       },
       include: {
         admin: {

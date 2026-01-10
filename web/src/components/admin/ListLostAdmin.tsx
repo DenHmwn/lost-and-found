@@ -2,12 +2,12 @@
 
 import { SiteHeader } from "@/components/SiteHeader";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { Loader2, Clock, CheckCircle2, XCircle, Package, MapPin, User, Calendar } from "lucide-react";
+import { Loader2, Clock, CheckCircle2, XCircle, Package, MapPin, User, Calendar, Tag } from "lucide-react";
 import { useLostReports } from "@/hooks/useLostReport";
 import { LostReport } from "@/types/LostReport";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { AppSidebarAdmin } from "@/components/AppSidebarAdmin";
-import { formatDate } from "@/lib/scripts";
+import { formatDate, formatTimeAgo } from "@/lib/scripts";
 import { Button } from "../ui/button";
 import { Toggle } from "../ui/toggle";
 import { useState } from "react";
@@ -16,7 +16,7 @@ import SkeletonListItem from "../SkeletonListItem";
 
 export default function ListLostAdmin() {
   // Fetch data menggunakan custom hook
-  const { data: lostReports = [], error, isLoading } = useLostReports();
+  const { data: lostReports = [], error, isLoading, mutate } = useLostReports();
 
   // Status Badge Component
   const StatusBadge = ({ status }: { status: "PENDING" | "APPROVED" | "REJECTED" }) => {
@@ -92,7 +92,7 @@ export default function ListLostAdmin() {
       const res = await api.put(`/lostreport/${id}`, {
         statusReport: newStatus,
       });
-      window.location.reload();
+      mutate();
     } catch (error) {
       console.error("Error updating status report:", error);
       alert("Gagal mengubah status laporan");
@@ -103,22 +103,6 @@ export default function ListLostAdmin() {
 
   const [updatingLostStatus, setUpdatingLostStatus] = useState<number | null>(null);
 
-  // buat fungsi uodate lost status report
-  const handleUpdateLostStatusReport = async (id: number, newStatus: "Done" | "Closed") => {
-    setUpdatingLostStatus(id);
-    try {
-      await api.put(`/lostreport/${id}`, {
-        statusReport: newStatus,
-      });
-      window.location.reload();
-    } catch (error) {
-      console.error("Error updating status report:", error);
-      alert("Gagal mengubah status laporan");
-    } finally {
-      setUpdatingLostStatus(null);
-    }
-  };
-
   // buat fungsi aprove
   const handleApprove = async (id: number) => {
     setUpdatingLostStatus(id);
@@ -126,7 +110,7 @@ export default function ListLostAdmin() {
       await api.put(`/lostreport/${id}`, {
         status: "APPROVED",
       });
-      window.location.reload();
+      mutate();
     } catch (error) {
       console.error("Gagal menyetujui laporan", error);
       alert("Gagal menyetujui laporan");
@@ -142,7 +126,7 @@ export default function ListLostAdmin() {
       await api.put(`/lostreport/${id}`, {
         status: "REJECTED",
       });
-      window.location.reload();
+      mutate();
     } catch (error) {
       console.error("Gagal menolak laporan", error);
       alert("Gagal menolak laporan");
@@ -252,12 +236,14 @@ export default function ListLostAdmin() {
                     <Table className="w-full">
                       <TableHeader>
                         <TableRow className="border-b bg-muted/30">
+                          <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">No Laporan</TableHead>
                           <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">Info Barang</TableHead>
                           <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">Lokasi</TableHead>
                           <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">Pelapor</TableHead>
                           <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">Status Laporan</TableHead>
                           <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">Kondisi Laporan</TableHead>
-                          <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">Tanggal</TableHead>
+                          <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">Tanggal Kehilangan</TableHead>
+                          <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">Tanggal Laporan</TableHead>
                           <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">Aksi status</TableHead>
                           <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">Aksi laporan</TableHead>
                         </TableRow>
@@ -274,6 +260,12 @@ export default function ListLostAdmin() {
                         ) : (
                           lostReports.map((report: LostReport) => (
                             <TableRow key={report.id} className="transition-colors hover:bg-muted/50">
+                              <TableCell className="px-6 py-4">
+                                <section className="flex items-center gap-2">
+                                  <Tag className="h-4 w-4" />
+                                  <span className="text-sm">{report.id}</span>
+                                </section>
+                              </TableCell>
                               <TableCell className="px-6 py-4">
                                 <section className="flex items-start gap-3">
                                   <section className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
@@ -311,7 +303,13 @@ export default function ListLostAdmin() {
                               <TableCell className="px-6 py-4">
                                 <section className="flex items-center gap-2 text-sm text-muted-foreground">
                                   <Calendar className="h-4 w-4" />
-                                  <span className="text-xs">{formatDate(report.createdAt)}</span>
+                                  <span className="text-xs">{formatDate(report.tanggalHilang, report.waktuHilang)}</span>
+                                </section>
+                              </TableCell>
+                              <TableCell className="px-6 py-4">
+                                <section className="flex items-center gap-2 text-sm text-muted-foreground">
+                                  <Calendar className="h-4 w-4" />
+                                  <span className="text-xs">{formatTimeAgo(report.createdAt)}</span>
                                 </section>
                               </TableCell>
                               <TableCell className="px-6 py-4 text-center">

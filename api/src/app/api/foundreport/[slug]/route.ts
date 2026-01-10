@@ -245,6 +245,8 @@ export async function PUT(
               : null
             : existingRecord.lostReportId,
         statusReport: data.statusReport || existingRecord.statusReport,
+        tanggalTemu: data.tanggalTemu || existingRecord.tanggalTemu,
+        waktuTemu: data.waktuTemu || existingRecord.waktuTemu,
       },
       include: {
         admin: {

@@ -2,7 +2,7 @@ import useSWR from "swr";
 import { fetcher } from "./usefetch";
 
 export function useFoundReports() {
-  const { data, error, isLoading } = useSWR(
+  const { data, error, isLoading, mutate } = useSWR(
     "/foundreport",
     fetcher
   );
@@ -11,5 +11,6 @@ export function useFoundReports() {
     data: data?.data,
     error,
     isLoading,
+    mutate
   };
 }
