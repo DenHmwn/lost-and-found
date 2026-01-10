@@ -19,6 +19,9 @@ import { api } from "@/lib/axios";
 import { useState } from "react";
 import { Button } from "../ui/button";
 import SkeletonListItem from "../SkeletonListItem";
+import axios from "axios";
+import { useLostReports } from "@/hooks/useLostReport";
+import { LostReport } from "@/types/LostReport";
 
 export default function ListFoundAdmin() {
   // Fetch data menggunakan custom hook
