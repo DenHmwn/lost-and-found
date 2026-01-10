@@ -220,7 +220,10 @@ export default function ListFoundAdmin() {
                             Kondisi Laporan
                           </TableHead>
                           <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                            Tanggal
+                            Tanggal Penemuan
+                          </TableHead>
+                          <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                            Tanggal Laporan
                           </TableHead>
                           <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
                             Aksi Laporan
@@ -228,21 +231,56 @@ export default function ListFoundAdmin() {
                         </TableRow>
                       </TableHeader>
                       <TableBody className="sectionide-y sectionide-border">
-                        {FoundReports.length === 0 ? (
+                        {foundReports.length === 0 ? (
                           <TableRow>
-                            <TableCell colSpan={5} className="px-6 py-16 text-center">
+                            <TableCell
+                              colSpan={5}
+                              className="px-6 py-16 text-center"
+                            >
                               <Package className="mx-auto h-12 w-12 text-muted-foreground/50" />
-                              <p className="mt-4 font-medium text-muted-foreground">Belum ada laporan</p>
-                              <p className="text-sm text-muted-foreground">Laporan barang yang ditemukan akan muncul di sini</p>
+                              <p className="mt-4 font-medium text-muted-foreground">
+                                Belum ada laporan
+                              </p>
+                              <p className="text-sm text-muted-foreground">
+                                Laporan barang yang ditemukan akan muncul di
+                                sini
+                              </p>
                             </TableCell>
                           </TableRow>
                         ) : (
-                          FoundReports.map((report: FoundReport) => (
-                            <TableRow key={report.id} className="transition-colors hover:bg-muted/50">
-                              <TableCell className="px-6 py-4">
-                                <section className="flex items-start gap-3">
-                                  <section className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
-                                    <Package className="h-5 w-5 text-primary" />
+                          foundReports.map((report: FoundReport) => {
+                            const matchedLost = lostReports.find(
+                              (lost: LostReport) =>
+                                lost.namaBarang.toLowerCase() ===
+                                report.namaBarang.toLowerCase()
+                            );
+
+                            const alreadyMatched = report.lostReportId !== null;
+                            return (
+                              <TableRow
+                                key={report.id}
+                                className="transition-colors hover:bg-muted/50"
+                              >
+                                <TableCell className="px-6 py-4">
+                                  <section className="flex items-start gap-3">
+                                    <section className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
+                                      <Package className="h-5 w-5 text-primary" />
+                                    </section>
+                                    <section className="min-w-0 flex-1">
+                                      <p className="font-medium text-sm">
+                                        {report.namaBarang}
+                                      </p>
+                                      <p className="text-xs text-muted-foreground line-clamp-2 mt-0.5">
+                                        {report.deskripsi}
+                                      </p>
+                                      {report.lostReportId && (
+                                        <span className="inline-flex items-center gap-1 mt-1 text-xs text-yellow-800 bg-yellow-50 px-2 py-0.5 rounded">
+                                          Barang ini mungkin cocok dengan
+                                          laporan {""}
+                                          {report.lostReportId}
+                                        </span>
+                                      )}
+                                    </section>
                                   </section>
                                   <section className="min-w-0 flex-1">
                                     <p className="font-medium text-sm">{report.namaBarang}</p>
@@ -268,9 +306,21 @@ export default function ListFoundAdmin() {
                                   <section className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10">
                                     <User className="h-4 w-4 text-primary" />
                                   </section>
-                                  <section>
-                                    <p className="text-sm font-medium">{report.admin.name}</p>
-                                    <p className="text-xs text-muted-foreground">{report.admin.notelp}</p>
+                                </TableCell>
+                                <TableCell className="px-6 py-4">
+                                  <StatusReportBadge
+                                    status={report.statusReport}
+                                  />
+                                </TableCell>
+                                <TableCell className="px-6 py-4">
+                                  <section className="flex items-center gap-2 text-sm text-muted-foreground">
+                                    <Calendar className="h-4 w-4" />
+                                    <span className="text-xs">
+                                      {formatDate(
+                                        report.tanggalTemu,
+                                        report.waktuTemu
+                                      )}
+                                    </span>
                                   </section>
                                 </section>
                               </TableCell>
