@@ -60,6 +60,10 @@ export default function LostReport() {
 
   const router = useRouter();
 
+  const handleBatal = () => {
+    router.back();
+  }
+
   return (
     <SidebarProvider
       style={
