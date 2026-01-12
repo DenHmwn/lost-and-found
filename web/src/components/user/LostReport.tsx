@@ -14,7 +14,7 @@ import { api } from "@/lib/axios";
 import { ChevronDownIcon, PackageSearchIcon } from "lucide-react";
 import React from "react";
 import { createDate, filterLokasi, filterNamaBarang, formatDateReport } from "@/lib/scripts";
-import { CustomButtonPrimary } from "../custom/CustomButtonPrimary";
+import { CustomButtonOutline, CustomButtonPrimary } from "../custom/CustomButtonPrimary";
 
 export default function LostReport() {
   // State untuk calendar
