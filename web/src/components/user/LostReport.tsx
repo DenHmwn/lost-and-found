@@ -57,6 +57,8 @@ export default function LostReport() {
     }
   };
 
+  const router = useRouter();
+
   return (
     <SidebarProvider
       style={
