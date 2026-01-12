@@ -164,7 +164,7 @@ export default function LostReport() {
 
                   <section className=" flex justify-end gap-5">
                     <Button variant="outline">Batal</Button>
-                    <Button onClick={handleSubmit}>Kirim Laporan</Button>
+                    <CustomButtonPrimary onClick={handleSubmit} label="Kirim Laporan"/>
                   </section>
                 </CardContent>
               </Card>
