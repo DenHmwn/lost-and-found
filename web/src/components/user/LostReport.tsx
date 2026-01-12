@@ -14,6 +14,8 @@ import { api } from "@/lib/axios";
 import { ChevronDownIcon, PackageSearchIcon } from "lucide-react";
 import React from "react";
 import { createDate, filterLokasi, filterNamaBarang, formatDateReport } from "@/lib/scripts";
+import { CustomButtonOutline, CustomButtonPrimary } from "../custom/CustomButtonPrimary";
+import { useRouter } from "next/navigation";
 
 export default function LostReport() {
   // State untuk calendar
@@ -55,6 +57,12 @@ export default function LostReport() {
       alert(message);
     }
   };
+
+  const router = useRouter();
+
+  const handleBatal = () => {
+    router.back();
+  }
 
   return (
     <SidebarProvider
@@ -163,8 +171,8 @@ export default function LostReport() {
                   </section>
 
                   <section className=" flex justify-end gap-5">
-                    <Button variant="outline">Batal</Button>
-                    <Button onClick={handleSubmit}>Kirim Laporan</Button>
+                    <CustomButtonOutline  onClick={handleBatal} label="Batal"/>
+                    <CustomButtonPrimary onClick={handleSubmit} label="Kirim Laporan"/>
                   </section>
                 </CardContent>
               </Card>
