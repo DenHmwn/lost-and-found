@@ -57,7 +57,7 @@ export async function middleware(req: NextRequest) {
   // Get token dari Authorization header ATAU cookie
   // const authHeader = req.headers.get("authorization");
   // const tokenFromHeader = authHeader?.split(" ")[1];
-  const cookieToken = req.cookies.get("accessToken")?.value;  
+  const cookieToken = req.cookies.get("accessToken")?.value;
   const token = cookieToken;
   if (!token) {
     const res = NextResponse.json(
