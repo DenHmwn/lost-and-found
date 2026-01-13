@@ -74,17 +74,15 @@ export async function middleware(req: NextRequest) {
     await jwtVerify(token, SECRET);
 
     // Buat request header untuk user info
-    const requestHeaders = new Headers(req.headers);
-    requestHeaders.set("userId", String(payload.id));
-    requestHeaders.set("userName", String(payload.name));
-    requestHeaders.set("userRole", String(payload.role));
-    requestHeaders.set("authenticated", "true");
-
     const response = NextResponse.next({
       request: {
         headers: requestHeaders,
       },
     });
+    // const requestHeaders = new Headers(req.headers);
+    // requestHeaders.set("userId", String(payload.id));
+    // requestHeaders.set("userName", String(payload.name));
+    // requestHeaders.set("userRole", String(payload.role));
 
     return setCorsHeaders(response);
   } catch (err) {
