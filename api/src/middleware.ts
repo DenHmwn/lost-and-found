@@ -70,7 +70,8 @@ export async function middleware(req: NextRequest) {
   // Verifikasi token
   try {
     // const secret = new TextEncoder().encode(process.env.JWT_SECRET!)
-    const { payload } = await jwtVerify(token, SECRET);
+    // const { payload } = await jwtVerify(token, SECRET);
+    await jwtVerify(token, SECRET);
 
     // Buat request header untuk user info
     const requestHeaders = new Headers(req.headers);
