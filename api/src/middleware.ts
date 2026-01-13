@@ -57,7 +57,7 @@ export async function middleware(req: NextRequest) {
   // Get token dari Authorization header ATAU cookie
   // const authHeader = req.headers.get("authorization");
   // const tokenFromHeader = authHeader?.split(" ")[1];
-  const cookieToken = req.cookies.get("accessToken")?.value;  
+  const cookieToken = req.cookies.get("accessToken")?.value;
   const token = cookieToken;
   if (!token) {
     const res = NextResponse.json(
@@ -70,20 +70,20 @@ export async function middleware(req: NextRequest) {
   // Verifikasi token
   try {
     // const secret = new TextEncoder().encode(process.env.JWT_SECRET!)
-    const { payload } = await jwtVerify(token, SECRET);
+    // const { payload } = await jwtVerify(token, SECRET);
+    await jwtVerify(token, SECRET);
 
     // Buat request header untuk user info
-    const requestHeaders = new Headers(req.headers);
-    requestHeaders.set("userId", String(payload.id));
-    requestHeaders.set("userName", String(payload.name));
-    requestHeaders.set("userRole", String(payload.role));
-    requestHeaders.set("authenticated", "true");
+    // const requestHeaders = new Headers(req.headers);
+    // requestHeaders.set("userId", String(payload.id));
+    // requestHeaders.set("userName", String(payload.name));
+    // requestHeaders.set("userRole", String(payload.role));
+    const response = NextResponse.next();
 
-    const response = NextResponse.next({
-      request: {
-        headers: requestHeaders,
-      },
-    });
+    // response.cookies.set("userId", String(payload.id));
+    // response.cookies.set("userName", String(payload.name));
+    // response.cookies.set("userRole", String(payload.role));
+    // response.cookies.set("authenticated", "true");
 
     return setCorsHeaders(response);
   } catch (err) {
