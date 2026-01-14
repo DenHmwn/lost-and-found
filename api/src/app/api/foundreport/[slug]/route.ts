@@ -311,14 +311,15 @@ export async function DELETE(
     // ambil token dari cookie helpoer
     const admin = await getAuth();
 
-    if (!headerId) {
+    if (!admin) {
       return NextResponse.json(
         { success: false, message: "Anda belum login, silahkan login" },
         { status: 401 }
       );
     }
 
-    const currentAdminId = Number(headerId);
+    const headerId = Number(admin.id);
+    const headerRole = admin.role;
 
     const existingRecord = await prisma.foundReport.findUnique({
       where: { id },
@@ -334,7 +335,7 @@ export async function DELETE(
       );
     }
 
-    if (headerRole !== "ADMIN" || existingRecord.adminId !== currentAdminId) {
+    if (headerRole !== "ADMIN" || existingRecord.adminId !== headerId) {
       return NextResponse.json(
         {
           success: false,
