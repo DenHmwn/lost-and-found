@@ -91,9 +91,10 @@ export async function PUT(
       );
     }
 
-    const cookieStore = await cookies();
-    const token = cookieStore.get("accessToken")?.value;
-    if (!token) {
+    // ambil token dari helper
+    const user = await getAuth();
+
+    if (!user) {
       return NextResponse.json(
         { success: false, message: "Unauthorized: Token tidak valid atau belum login." },
         { status: 401 }
