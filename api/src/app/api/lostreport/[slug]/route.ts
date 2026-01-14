@@ -99,9 +99,9 @@ export async function PUT(
       );
     }
 
-    const { payload } = await jwtVerify(token, SECRET);
-    const currentUserId = Number(payload.id);
-    const currentUserRole = String(payload.role);
+    const headerId = Number(user.id);
+    const headerRole = user.role;
+
     const isEditingItem =
       data.namaBarang !== undefined ||
       data.deskripsi !== undefined ||
@@ -161,8 +161,8 @@ export async function PUT(
     }
     // cek apakah user yang request pemilik laporan atau admin
     if (
-      existingRecord.userId !== currentUserId &&
-      currentUserRole !== "ADMIN"
+      existingRecord.userId !== headerId &&
+      headerRole !== "ADMIN"
     ) {
       return NextResponse.json(
         {
