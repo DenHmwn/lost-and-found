@@ -73,8 +73,7 @@ export async function POST(req: Request) {
     } = data;
 
     // ambil id admin dari header cookies
-    const headerId = req.headers.get("userId");
-    const headerUserRole = req.headers.get("userRole");
+    const admin = await getAuth();
 
     // validasi auth
     if (!headerId || !headerUserRole) {
