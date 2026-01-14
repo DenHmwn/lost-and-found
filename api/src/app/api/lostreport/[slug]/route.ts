@@ -95,7 +95,7 @@ export async function PUT(
     const token = cookieStore.get("accessToken")?.value;
     if (!token) {
       return NextResponse.json(
-        { success: false, message: "Terjadi kesalahan, Silakan login ulang" },
+        { success: false, message: "Unauthorized: Token tidak valid atau belum login." },
         { status: 401 }
       );
     }
@@ -262,7 +262,7 @@ export async function DELETE(
 
     if (!token) {
       return NextResponse.json(
-        { success: false, message: "Anda belum login, silahkan login" },
+        { success: false, message: "Unauthorized: Token tidak valid atau belum login." },
         { status: 401 }
       );
     }
