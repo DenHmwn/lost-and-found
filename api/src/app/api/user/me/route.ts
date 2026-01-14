@@ -8,8 +8,11 @@ export async function GET(req: NextRequest) {
     // Get user info dari header di middleware
     const userId = req.headers.get("user-id");
 
-    if (!userId) {
-       return NextResponse.json({ message: "Akses ditolak: Identitas pengguna tidak valid." }, { status: 403 });
+    if (!users) {
+      return NextResponse.json(
+        { message: "Akses ditolak: Identitas pengguna tidak valid." },
+        { status: 403 }
+      );
     }
 
     // Fetch user data from database
@@ -39,10 +42,9 @@ export async function GET(req: NextRequest) {
       message: "Data user berhasil diambil",
       data: user,
     });
-
   } catch (error) {
     console.error(" Error di /api/user/me:", error);
-    
+
     return NextResponse.json(
       {
         success: false,
