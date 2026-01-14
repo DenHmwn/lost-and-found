@@ -108,9 +108,8 @@ export async function PUT(
         { status: 400 }
       );
     }
-    // ambil data dari header
-    const cookieStore = await cookies();
-    const token = cookieStore.get("accessToken")?.value;
+    // ambil data dari helper
+    const admin = await getAuth();
 
     if (!token) {
       return NextResponse.json(
