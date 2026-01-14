@@ -1,9 +1,7 @@
 import prisma from "@/lib/prisma";
 import { LostStatus, StatusReport } from "@prisma/client";
 import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
-import { jwtVerify } from "jose";
-import { SECRET } from "@/lib/secret";
+import { getAuth } from "@/lib/getAuth";
 
 // buat fungsi GET by id
 export async function GET(
