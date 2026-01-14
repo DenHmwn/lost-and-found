@@ -58,14 +58,8 @@ export async function POST(req: Request) {
     // ambil id admin dari helper
     const user = await getAuth();
 
-    const cookieStore = await cookies();
-    const headerIdFromCookie = cookieStore.get("userId")?.value;
-    const headerRoleFromCookie = cookieStore.get("userRole")?.value;
-
-    const headerId = headerIdFromMw ?? headerIdFromCookie;
-    const headerRole = headerRoleFromMw ?? headerRoleFromCookie;
-
-    if (!headerId || !headerRole) {
+    // cek user
+    if (!user) {
       return NextResponse.json(
         { success: false, message: "Unauthorized: Token tidak valid atau belum login." },
         { status: 401 }
