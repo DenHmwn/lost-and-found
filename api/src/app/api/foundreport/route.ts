@@ -63,8 +63,14 @@ export async function GET() {
 export async function POST(req: Request) {
   try {
     const data = await req.json();
-    const { namaBarang, deskripsi, lokasiTemu, lostReportId, tanggalTemu, waktuTemu } =
-      data;
+    const {
+      namaBarang,
+      deskripsi,
+      lokasiTemu,
+      lostReportId,
+      tanggalTemu,
+      waktuTemu,
+    } = data;
 
     // ambil id admin dari header cookies
     const headerId = req.headers.get("userId");
@@ -73,7 +79,7 @@ export async function POST(req: Request) {
     // validasi auth
     if (!headerId || !headerUserRole) {
       return NextResponse.json(
-        { success: false, message: "Unauthorized: Silakan login ulang" },
+        { success: false, message: "Unauthorized: Token tidak valid atau belum login." },
         { status: 401 }
       );
     }
@@ -90,7 +96,13 @@ export async function POST(req: Request) {
     }
 
     // validasi input data
-    if (!namaBarang || !deskripsi || !lokasiTemu || !tanggalTemu || !waktuTemu) {
+    if (
+      !namaBarang ||
+      !deskripsi ||
+      !lokasiTemu ||
+      !tanggalTemu ||
+      !waktuTemu
+    ) {
       return NextResponse.json(
         {
           success: false,
