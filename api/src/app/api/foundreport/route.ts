@@ -77,14 +77,18 @@ export async function POST(req: Request) {
     const admin = await getAuth();
 
     // validasi auth
-    if (!headerId || !headerUserRole) {
+    if (!admin) {
       return NextResponse.json(
         { success: false, message: "Unauthorized: Token tidak valid atau belum login." },
         { status: 401 }
       );
     }
+
+    const headerId = Number(admin.id);
+    const headerRole = admin.role;
+
     // Validasi Role ADMIN
-    if (headerUserRole !== "ADMIN") {
+    if (headerRole !== "ADMIN") {
       return NextResponse.json(
         {
           success: false,
