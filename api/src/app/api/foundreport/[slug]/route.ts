@@ -308,9 +308,8 @@ export async function DELETE(
       );
     }
 
-    const cookieStore = await cookies();
-    const headerId = cookieStore.get("userId")?.value;
-    const headerRole = cookieStore.get("userRole")?.value;
+    // ambil token dari cookie helpoer
+    const admin = await getAuth();
 
     if (!headerId) {
       return NextResponse.json(
