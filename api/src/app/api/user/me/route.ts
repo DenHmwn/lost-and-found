@@ -5,8 +5,8 @@ const prisma = new PrismaClient();
 
 export async function GET(req: NextRequest) {
   try {
-    // Get user info dari header di middleware
-    const userId = req.headers.get("user-id");
+    // ambil id admin dari helper
+   const users = await getAuth();
 
     if (!users) {
       return NextResponse.json(
