@@ -258,16 +258,15 @@ export async function DELETE(
     // ambil token dari cookie
     const user = await getAuth();
 
-    if (!token) {
+    if (!user) {
       return NextResponse.json(
         { success: false, message: "Unauthorized: Token tidak valid atau belum login." },
         { status: 401 }
       );
     }
 
-    const { payload } = await jwtVerify(token, SECRET);
-    const currentUserId = Number(payload.id);
-    const currentUserRole = String(payload.role);
+    const currentUserId = Number(user.id);
+    const currentUserRole = user.role;
 
     const existingRecord = await prisma.lostReport.findUnique({
       where: { id },
