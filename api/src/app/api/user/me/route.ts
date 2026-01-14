@@ -16,9 +16,11 @@ export async function GET(req: NextRequest) {
       );
     }
 
+    const headerId = Number(users.id);
+
     // Fetch user data from database
     const user = await prisma.user.findUnique({
-      where: { id: parseInt(userId) },
+      where: { id: headerId },
       select: {
         id: true,
         name: true,
