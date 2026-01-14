@@ -65,6 +65,9 @@ export async function POST(req: Request) {
         { status: 401 }
       );
     }
+    
+    const headerId = Number(user.id);
+    const headerRole = user.role;
 
     if (headerRole !== "USER") {
       return NextResponse.json(
