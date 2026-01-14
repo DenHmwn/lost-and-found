@@ -256,8 +256,7 @@ export async function DELETE(
     }
 
     // ambil token dari cookie
-    const cookieStore = await cookies();
-    const token = cookieStore.get("accessToken")?.value;
+    const user = await getAuth();
 
     if (!token) {
       return NextResponse.json(
