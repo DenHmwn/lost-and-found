@@ -120,7 +120,7 @@ export async function PUT(
     const headerRole = admin.role;
 
     // Cek Role ADMIN
-    if (currentRole !== "ADMIN") {
+    if (headerRole !== "ADMIN") {
       return NextResponse.json(
         { success: false, message: "Hanya Admin yang boleh mengedit." },
         { status: 403 }
@@ -143,7 +143,7 @@ export async function PUT(
     }
 
     // cek pemilik laporan
-    if (existingRecord.adminId !== currentAdminId) {
+    if (existingRecord.adminId !== haderId) {
       return NextResponse.json(
         {
           success: false,
