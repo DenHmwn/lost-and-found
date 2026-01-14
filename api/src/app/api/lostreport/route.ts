@@ -55,8 +55,8 @@ export async function POST(req: Request) {
     const { namaBarang, deskripsi, lokasiHilang, tanggalHilang, waktuHilang } =
       data;
 
-    const headerIdFromMw = req.headers.get("userId");
-    const headerRoleFromMw = req.headers.get("userRole");
+    // ambil id admin dari helper
+    const user = await getAuth();
 
     const cookieStore = await cookies();
     const headerIdFromCookie = cookieStore.get("userId")?.value;
