@@ -116,9 +116,8 @@ export async function PUT(
       );
     }
 
-    const { payload } = await jwtVerify(token, SECRET);
-    const currentAdminId = Number(payload.id);
-    const currentRole = String(payload.role);
+    const haderId = Number(admin.id);
+    const headerRole = admin.role;
 
     // Cek Role ADMIN
     if (currentRole !== "ADMIN") {
