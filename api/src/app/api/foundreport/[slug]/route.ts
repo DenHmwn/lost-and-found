@@ -109,9 +109,9 @@ export async function PUT(
     // ambil data dari helper
     const admin = await getAuth();
 
-    if (!token) {
+    if (!admin) {
       return NextResponse.json(
-        { success: false, message: "Terjadi kesalahan, silakan login ulang" },
+        { success: false, message: "Unauthorized: Token tidak valid atau belum login." },
         { status: 401 }
       );
     }
