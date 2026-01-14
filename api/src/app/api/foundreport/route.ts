@@ -1,3 +1,4 @@
+import { getAuth } from "@/lib/getAuth";
 import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
@@ -63,22 +64,31 @@ export async function GET() {
 export async function POST(req: Request) {
   try {
     const data = await req.json();
-    const { namaBarang, deskripsi, lokasiTemu, lostReportId, tanggalTemu, waktuTemu } =
-      data;
+    const {
+      namaBarang,
+      deskripsi,
+      lokasiTemu,
+      lostReportId,
+      tanggalTemu,
+      waktuTemu,
+    } = data;
 
     // ambil id admin dari header cookies
-    const headerId = req.headers.get("userId");
-    const headerUserRole = req.headers.get("userRole");
+    const admin = await getAuth();
 
     // validasi auth
-    if (!headerId || !headerUserRole) {
+    if (!admin) {
       return NextResponse.json(
-        { success: false, message: "Unauthorized: Silakan login ulang" },
+        { success: false, message: "Unauthorized: Token tidak valid atau belum login." },
         { status: 401 }
       );
     }
+
+    const headerId = Number(admin.id);
+    const headerRole = admin.role;
+
     // Validasi Role ADMIN
-    if (headerUserRole !== "ADMIN") {
+    if (headerRole !== "ADMIN") {
       return NextResponse.json(
         {
           success: false,
@@ -90,7 +100,13 @@ export async function POST(req: Request) {
     }
 
     // validasi input data
-    if (!namaBarang || !deskripsi || !lokasiTemu || !tanggalTemu || !waktuTemu) {
+    if (
+      !namaBarang ||
+      !deskripsi ||
+      !lokasiTemu ||
+      !tanggalTemu ||
+      !waktuTemu
+    ) {
       return NextResponse.json(
         {
           success: false,

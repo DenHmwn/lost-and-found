@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { LostStatus } from "@prisma/client";
 import prisma from "@/lib/prisma";
-import { cookies } from "next/headers";
+import { getAuth } from "@/lib/getAuth";
 
 // GET semua laporan lost
 export async function GET() {
@@ -52,24 +52,22 @@ export const runtime = "nodejs";
 export async function POST(req: Request) {
   try {
     const data = await req.json();
-    const { namaBarang, deskripsi, lokasiHilang, tanggalHilang, waktuHilang } = data;
+    const { namaBarang, deskripsi, lokasiHilang, tanggalHilang, waktuHilang } =
+      data;
 
-    const headerIdFromMw = req.headers.get("userId");
-    const headerRoleFromMw = req.headers.get("userRole");
+    // ambil id admin dari helper
+    const user = await getAuth();
 
-    const cookieStore = await cookies();
-    const headerIdFromCookie = cookieStore.get("userId")?.value;
-    const headerRoleFromCookie = cookieStore.get("userRole")?.value;
-
-    const headerId = headerIdFromMw ?? headerIdFromCookie;
-    const headerRole = headerRoleFromMw ?? headerRoleFromCookie;
-
-    if (!headerId || !headerRole) {
+    // cek user
+    if (!user) {
       return NextResponse.json(
-        { success: false, message: "Unauthorized: User tidak dikenali." },
+        { success: false, message: "Unauthorized: Token tidak valid atau belum login." },
         { status: 401 }
       );
     }
+    
+    const headerId = Number(user.id);
+    const headerRole = user.role;
 
     if (headerRole !== "USER") {
       return NextResponse.json(
@@ -78,9 +76,18 @@ export async function POST(req: Request) {
       );
     }
 
-    if (!namaBarang || !deskripsi || !lokasiHilang || !tanggalHilang || !waktuHilang) {
+    if (
+      !namaBarang ||
+      !deskripsi ||
+      !lokasiHilang ||
+      !tanggalHilang ||
+      !waktuHilang
+    ) {
       return NextResponse.json(
-        { success: false, message: "Data tidak lengkap. Pastikan semua field terisi." },
+        {
+          success: false,
+          message: "Data tidak lengkap. Pastikan semua field terisi.",
+        },
         { status: 400 }
       );
     }
@@ -117,7 +124,11 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json(
-      { success: true, message: "Laporan barang hilang berhasil dibuat.", data: report },
+      {
+        success: true,
+        message: "Laporan barang hilang berhasil dibuat.",
+        data: report,
+      },
       { status: 201 }
     );
   } catch (error: unknown) {

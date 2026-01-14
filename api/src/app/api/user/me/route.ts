@@ -1,3 +1,4 @@
+import { getAuth } from "@/lib/getAuth";
 import { PrismaClient } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -5,16 +6,21 @@ const prisma = new PrismaClient();
 
 export async function GET(req: NextRequest) {
   try {
-    // Get user info dari header di middleware
-    const userId = req.headers.get("user-id");
+    // ambil id admin dari helper
+   const users = await getAuth();
 
-    if (!userId) {
-       return NextResponse.json({ message: "Akses ditolak: Identitas pengguna tidak valid." }, { status: 403 });
+    if (!users) {
+      return NextResponse.json(
+        { message: "Akses ditolak: Identitas pengguna tidak valid." },
+        { status: 403 }
+      );
     }
+
+    const headerId = Number(users.id);
 
     // Fetch user data from database
     const user = await prisma.user.findUnique({
-      where: { id: parseInt(userId) },
+      where: { id: headerId },
       select: {
         id: true,
         name: true,
@@ -39,10 +45,9 @@ export async function GET(req: NextRequest) {
       message: "Data user berhasil diambil",
       data: user,
     });
-
   } catch (error) {
     console.error(" Error di /api/user/me:", error);
-    
+
     return NextResponse.json(
       {
         success: false,
