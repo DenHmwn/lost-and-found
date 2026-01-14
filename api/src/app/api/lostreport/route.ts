@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { LostStatus } from "@prisma/client";
 import prisma from "@/lib/prisma";
-import { cookies } from "next/headers";
+import { getAuth } from "@/lib/getAuth";
 
 // GET semua laporan lost
 export async function GET() {
