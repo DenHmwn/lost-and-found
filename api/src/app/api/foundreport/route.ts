@@ -1,3 +1,4 @@
+import { getAuth } from "@/lib/getAuth";
 import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
