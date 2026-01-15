@@ -61,11 +61,14 @@ export async function POST(req: Request) {
     // cek user
     if (!user) {
       return NextResponse.json(
-        { success: false, message: "Unauthorized: Token tidak valid atau belum login." },
+        {
+          success: false,
+          message: "Unauthorized: Token tidak valid atau belum login.",
+        },
         { status: 401 }
       );
     }
-    
+
     const headerId = Number(user.id);
     const headerRole = user.role;
 
@@ -139,4 +142,3 @@ export async function POST(req: Request) {
     );
   }
 }
-
