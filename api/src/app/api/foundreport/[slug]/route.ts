@@ -111,7 +111,10 @@ export async function PUT(
 
     if (!admin) {
       return NextResponse.json(
-        { success: false, message: "Unauthorized: Token tidak valid atau belum login." },
+        {
+          success: false,
+          message: "Unauthorized: Token tidak valid atau belum login.",
+        },
         { status: 401 }
       );
     }
