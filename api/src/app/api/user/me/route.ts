@@ -7,7 +7,7 @@ const prisma = new PrismaClient();
 export async function GET(req: NextRequest) {
   try {
     // ambil id admin dari helper
-   const users = await getAuth();
+    const users = await getAuth();
 
     if (!users) {
       return NextResponse.json(
