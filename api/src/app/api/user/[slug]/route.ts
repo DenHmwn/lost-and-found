@@ -69,13 +69,15 @@ export const PUT = async (
     const userId = Number(slug);
 
     if (isNaN(userId)) {
-      return NextResponse.json({
-        message: "id tidak valid",
-        success: false,
-      },
-    {
-        status: 400,
-    });
+      return NextResponse.json(
+        {
+          message: "id tidak valid",
+          success: false,
+        },
+        {
+          status: 400,
+        }
+      );
     }
 
     const data = await request.json();
@@ -116,13 +118,15 @@ export const PUT = async (
       }
     );
   } catch (error: unknown) {
-    return NextResponse.json({
-      message: (error as Error).message || "Terjadi kesalahan",
-      success: false,
-    },
-  {
-      status: 500,
-  });
+    return NextResponse.json(
+      {
+        message: (error as Error).message || "Terjadi kesalahan",
+        success: false,
+      },
+      {
+        status: 500,
+      }
+    );
   }
 };
 
