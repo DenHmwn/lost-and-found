@@ -301,7 +301,9 @@ export default function ListFoundAdmin() {
                             const matchedLost = lostReports.find(
                               (lost: LostReport) =>
                                 lost.namaBarang.toLowerCase() ===
-                                report.namaBarang.toLowerCase()
+                                  report.namaBarang.toLowerCase() &&
+                                lost.lokasiHilang.toLowerCase() ===
+                                  report.lokasiTemu.toLowerCase()
                             );
 
                             const alreadyMatched = report.lostReportId !== null;
