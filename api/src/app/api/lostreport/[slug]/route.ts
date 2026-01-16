@@ -94,7 +94,10 @@ export async function PUT(
 
     if (!user) {
       return NextResponse.json(
-        { success: false, message: "Unauthorized: Token tidak valid atau belum login." },
+        {
+          success: false,
+          message: "Unauthorized: Token tidak valid atau belum login.",
+        },
         { status: 401 }
       );
     }
@@ -160,10 +163,7 @@ export async function PUT(
       );
     }
     // cek apakah user yang request pemilik laporan atau admin
-    if (
-      existingRecord.userId !== headerId &&
-      headerRole !== "ADMIN"
-    ) {
+    if (existingRecord.userId !== headerId && headerRole !== "ADMIN") {
       return NextResponse.json(
         {
           success: false,
@@ -260,7 +260,10 @@ export async function DELETE(
 
     if (!user) {
       return NextResponse.json(
-        { success: false, message: "Unauthorized: Token tidak valid atau belum login." },
+        {
+          success: false,
+          message: "Unauthorized: Token tidak valid atau belum login.",
+        },
         { status: 401 }
       );
     }
