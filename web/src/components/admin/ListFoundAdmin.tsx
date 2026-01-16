@@ -34,7 +34,12 @@ import { LostReport } from "@/types/LostReport";
 
 export default function ListFoundAdmin() {
   // Fetch data menggunakan custom hook
-  const { data: foundReports = [], error, isLoading, mutate } = useFoundReports();
+  const {
+    data: foundReports = [],
+    error,
+    isLoading,
+    mutate,
+  } = useFoundReports();
   const { data: lostReports = [] } = useLostReports();
 
   // Status Report Badge
@@ -296,7 +301,9 @@ export default function ListFoundAdmin() {
                             const matchedLost = lostReports.find(
                               (lost: LostReport) =>
                                 lost.namaBarang.toLowerCase() ===
-                                report.namaBarang.toLowerCase()
+                                  report.namaBarang.toLowerCase() &&
+                                lost.lokasiHilang.toLowerCase() ===
+                                  report.lokasiTemu.toLowerCase()
                             );
 
                             const alreadyMatched = report.lostReportId !== null;
