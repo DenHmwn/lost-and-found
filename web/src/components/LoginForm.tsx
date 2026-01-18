@@ -31,7 +31,6 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
 
     try {
       const { data } = await api.post("/auth/login", { email, password });
-      console.log("Login response:", data);
       if (data.success) {
       
         const role = data.user?.role;
