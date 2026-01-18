@@ -3,9 +3,16 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { SECRET } from "./lib/secret";
 
+const frontOrigin = process.env.FRONT_ORIGIN!;
+const allowedOrigin = frontOrigin.split(",");
+
 // Helper function untuk set CORS headers
-  response.headers.set("Access-Control-Allow-Origin", "http://localhost:3000");
 function setCorsHeaders(req: NextRequest, response: NextResponse) {
+  const origin = req.headers.get("origin");
+  if (origin && allowedOrigin.includes(origin)) {
+    response.headers.set("Access-Control-Allow-Origin", origin);
+    response.headers.set("Vary", "Origin");
+  }
   response.headers.set(
     "Access-Control-Allow-Methods",
     "GET, POST, DELETE, PUT, PATCH, OPTIONS",
