@@ -4,15 +4,15 @@ import type { NextRequest } from "next/server";
 import { SECRET } from "./lib/secret";
 
 // Helper function untuk set CORS headers
-function setCorsHeaders(response: NextResponse) {
   response.headers.set("Access-Control-Allow-Origin", "http://localhost:3000");
+function setCorsHeaders(req: NextRequest, response: NextResponse) {
   response.headers.set(
     "Access-Control-Allow-Methods",
-    "GET, POST, DELETE, PUT, PATCH, OPTIONS"
+    "GET, POST, DELETE, PUT, PATCH, OPTIONS",
   );
   response.headers.set(
     "Access-Control-Allow-Headers",
-    "Content-Type, Authorization"
+    "Content-Type, Authorization",
   );
   response.headers.set("Access-Control-Allow-Credentials", "true");
   response.headers.set("Access-Control-Max-Age", "86400");
@@ -25,7 +25,7 @@ export async function middleware(req: NextRequest) {
   // Handle preflight options request
   if (req.method === "OPTIONS") {
     const response = new NextResponse(null, { status: 200 });
-    return setCorsHeaders(response);
+    return setCorsHeaders(req, response);
   }
 
   // Skip nextjs internal paths
@@ -51,20 +51,17 @@ export async function middleware(req: NextRequest) {
   // Allow user registration
   if (pathname === "/api/user" && req.method === "POST") {
     const response = NextResponse.next();
-    return setCorsHeaders(response);
+    return setCorsHeaders(req, response);
   }
 
-  // Get token dari Authorization header ATAU cookie
-  // const authHeader = req.headers.get("authorization");
-  // const tokenFromHeader = authHeader?.split(" ")[1];
   const cookieToken = req.cookies.get("accessToken")?.value;
   const token = cookieToken;
   if (!token) {
     const res = NextResponse.json(
       { success: false, message: "Token tidak ada", authenticated: false },
-      { status: 401 }
+      { status: 401 },
     );
-    return setCorsHeaders(res);
+    return setCorsHeaders(req, res);
   }
 
   // Verifikasi token
@@ -94,9 +91,9 @@ export async function middleware(req: NextRequest) {
         error: err instanceof Error ? err.message : String(err),
         authenticated: false,
       },
-      { status: 401 }
+      { status: 401 },
     );
-    return setCorsHeaders(response);
+    return setCorsHeaders(req, response);
   }
 }
 
