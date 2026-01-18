@@ -66,22 +66,8 @@ export async function middleware(req: NextRequest) {
 
   // Verifikasi token
   try {
-    // const secret = new TextEncoder().encode(process.env.JWT_SECRET!)
-    // const { payload } = await jwtVerify(token, SECRET);
     await jwtVerify(token, SECRET);
-
-    // Buat request header untuk user info
-    // const requestHeaders = new Headers(req.headers);
-    // requestHeaders.set("userId", String(payload.id));
-    // requestHeaders.set("userName", String(payload.name));
-    // requestHeaders.set("userRole", String(payload.role));
     const response = NextResponse.next();
-
-    // response.cookies.set("userId", String(payload.id));
-    // response.cookies.set("userName", String(payload.name));
-    // response.cookies.set("userRole", String(payload.role));
-    // response.cookies.set("authenticated", "true");
-
     return setCorsHeaders(req, response);
   } catch (err) {
     const response = NextResponse.json(
