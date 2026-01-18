@@ -33,19 +33,8 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
-  if (pathname.startsWith("/api/auth/refresh")) {
-    const res = NextResponse.next();
-    return setCorsHeaders(res);
-  }
-
-  // Kasih akses auth routes
-  if (
-    pathname.startsWith("/api/auth/login") ||
-    pathname.startsWith("/api/auth/register") ||
-    pathname.startsWith("/api/auth/verify")
-  ) {
-    const response = NextResponse.next();
-    return setCorsHeaders(response);
+ if (pathname.startsWith("/api/auth")) {
+   return setCorsHeaders(req, NextResponse.next());
   }
 
   // Allow user registration
