@@ -82,7 +82,7 @@ export async function middleware(req: NextRequest) {
     // response.cookies.set("userRole", String(payload.role));
     // response.cookies.set("authenticated", "true");
 
-    return setCorsHeaders(response);
+    return setCorsHeaders(req, response);
   } catch (err) {
     const response = NextResponse.json(
       {
