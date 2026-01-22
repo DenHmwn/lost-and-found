@@ -104,13 +104,13 @@ export default function ListLostUser() {
   const getStats = () => {
     const total = lostReports.length;
     const pending = lostReports.filter(
-      (r: LostReport) => r.status === "PENDING"
+      (r: LostReport) => r.status === "PENDING",
     ).length;
     const approved = lostReports.filter(
-      (r: LostReport) => r.status === "APPROVED"
+      (r: LostReport) => r.status === "APPROVED",
     ).length;
     const onProgress = lostReports.filter(
-      (r: LostReport) => r.statusReport === "OnProgress"
+      (r: LostReport) => r.statusReport === "OnProgress",
     ).length;
 
     return { total, pending, approved, onProgress };
@@ -345,7 +345,10 @@ export default function ListLostUser() {
                                 <section className="flex items-center gap-2 text-sm text-muted-foreground">
                                   <Calendar className="h-4 w-4" />
                                   <span className="text-xs">
-                                    {formatDate(report.tanggalHilang, report.waktuHilang)}
+                                    {formatDate(
+                                      report.tanggalHilang,
+                                      report.waktuHilang,
+                                    )}
                                   </span>
                                 </section>
                               </TableCell>

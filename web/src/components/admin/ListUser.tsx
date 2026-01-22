@@ -6,7 +6,14 @@ import { SidebarInset, SidebarProvider } from "../ui/sidebar";
 import { SiteHeader } from "../SiteHeader";
 import { IconUsers } from "@tabler/icons-react";
 import { Loader2, Mail, Phone, User as UserIcon, XCircle } from "lucide-react";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "../ui/table";
 import { useUsers } from "@/hooks/useUsers";
 import { Users } from "@/types/users";
 import SkeletonMember from "../SkeletonListMember";
@@ -42,7 +49,9 @@ export default function ListUser() {
               </section>
               <section>
                 <h1 className="text-2xl font-bold tracking-tight">List User</h1>
-                <p className="text-sm text-muted-foreground">Daftar user yang sudah terdaftar</p>
+                <p className="text-sm text-muted-foreground">
+                  Daftar user yang sudah terdaftar
+                </p>
               </section>
             </section>
           </header>
@@ -60,30 +69,46 @@ export default function ListUser() {
               <section className="rounded-lg border bg-card shadow-sm">
                 <section className="border-b bg-muted/50 px-6 py-4">
                   <h2 className="font-semibold">Daftar User</h2>
-                  <p className="text-sm text-muted-foreground">Total {user.length} user</p>
+                  <p className="text-sm text-muted-foreground">
+                    Total {user.length} user
+                  </p>
                 </section>
 
                 <section className="overflow-x-auto">
                   <Table className="w-full">
                     <TableHeader>
                       <TableRow className="bg-muted/30">
-                        <TableHead className="px-6 py-4 text-xs uppercase">Nama</TableHead>
-                        <TableHead className="px-6 py-4 text-xs uppercase">Email</TableHead>
-                        <TableHead className="px-6 py-4 text-xs uppercase">No. Telp</TableHead>
+                        <TableHead className="px-6 py-4 text-xs uppercase">
+                          Nama
+                        </TableHead>
+                        <TableHead className="px-6 py-4 text-xs uppercase">
+                          Email
+                        </TableHead>
+                        <TableHead className="px-6 py-4 text-xs uppercase">
+                          No. Telp
+                        </TableHead>
                       </TableRow>
                     </TableHeader>
 
                     <TableBody>
                       {user.length === 0 ? (
                         <TableRow>
-                          <TableCell colSpan={3} className="px-6 py-16 text-center">
+                          <TableCell
+                            colSpan={3}
+                            className="px-6 py-16 text-center"
+                          >
                             <IconUsers className="mx-auto h-12 w-12 text-muted-foreground/50" />
-                            <p className="mt-4 font-medium text-muted-foreground">Belum ada user</p>
+                            <p className="mt-4 font-medium text-muted-foreground">
+                              Belum ada user
+                            </p>
                           </TableCell>
                         </TableRow>
                       ) : (
                         user.map((user: Users) => (
-                          <TableRow key={user.id} className="hover:bg-muted/50 transition">
+                          <TableRow
+                            key={user.id}
+                            className="hover:bg-muted/50 transition"
+                          >
                             <TableCell className="px-6 py-4">
                               <section className="flex items-center gap-2">
                                 <span className="font-medium">{user.name}</span>
@@ -91,11 +116,15 @@ export default function ListUser() {
                             </TableCell>
 
                             <TableCell className="px-6 py-4">
-                              <section className="flex items-center gap-2 text-sm">{user.email}</section>
+                              <section className="flex items-center gap-2 text-sm">
+                                {user.email}
+                              </section>
                             </TableCell>
 
                             <TableCell className="px-6 py-4">
-                              <section className="flex items-center gap-2 text-sm">{user.notelp}</section>
+                              <section className="flex items-center gap-2 text-sm">
+                                {user.notelp}
+                              </section>
                             </TableCell>
                           </TableRow>
                         ))

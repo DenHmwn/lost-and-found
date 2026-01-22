@@ -78,16 +78,16 @@ export default function ListFoundAdmin() {
   const getStats = () => {
     const total = foundReports.length;
     const done = foundReports.filter(
-      (r: FoundReport) => r.statusReport === "Done"
+      (r: FoundReport) => r.statusReport === "Done",
     ).length;
     const onProgress = foundReports.filter(
-      (r: FoundReport) => r.statusReport === "OnProgress"
+      (r: FoundReport) => r.statusReport === "OnProgress",
     ).length;
     const closed = foundReports.filter(
-      (r: FoundReport) => r.statusReport === "Closed"
+      (r: FoundReport) => r.statusReport === "Closed",
     ).length;
     const matched = foundReports.filter(
-      (r: FoundReport) => r.lostReportId !== null
+      (r: FoundReport) => r.lostReportId !== null,
     ).length;
 
     return { total, done, onProgress, closed, matched };
@@ -105,7 +105,7 @@ export default function ListFoundAdmin() {
   // Fungsi untuk update statusReport
   const handleUpdateStatusReport = async (
     id: number,
-    newStatus: "Done" | "Closed"
+    newStatus: "Done" | "Closed",
   ) => {
     setUpdatingReport(id);
     try {
@@ -303,7 +303,7 @@ export default function ListFoundAdmin() {
                                 lost.namaBarang.toLowerCase() ===
                                   report.namaBarang.toLowerCase() &&
                                 lost.lokasiHilang.toLowerCase() ===
-                                  report.lokasiTemu.toLowerCase()
+                                  report.lokasiTemu.toLowerCase(),
                             );
 
                             const alreadyMatched = report.lostReportId !== null;
@@ -368,7 +368,7 @@ export default function ListFoundAdmin() {
                                     <span className="text-xs">
                                       {formatDate(
                                         report.tanggalTemu,
-                                        report.waktuTemu
+                                        report.waktuTemu,
                                       )}
                                     </span>
                                   </section>
@@ -387,7 +387,7 @@ export default function ListFoundAdmin() {
                                       onClick={() =>
                                         handleUpdateStatusReport(
                                           Number(report.id),
-                                          "Done"
+                                          "Done",
                                         )
                                       }
                                       disabled={
@@ -414,7 +414,7 @@ export default function ListFoundAdmin() {
                                       onClick={() =>
                                         handleUpdateStatusReport(
                                           Number(report.id),
-                                          "Closed"
+                                          "Closed",
                                         )
                                       }
                                       disabled={
@@ -444,12 +444,12 @@ export default function ListFoundAdmin() {
                                     onClick={() => {
                                       if (!matchedLost) {
                                         alert(
-                                          "Barang ini Belum Ada Kecocokan Dengan List Barang Hilang"
+                                          "Barang ini Belum Ada Kecocokan Dengan List Barang Hilang",
                                         );
                                         return;
                                       } else
                                         alert(
-                                          `Laporan barang ${report.namaBarang} sudah tercocokkan dengan laporan ${matchedLost.id}`
+                                          `Laporan barang ${report.namaBarang} sudah tercocokkan dengan laporan ${matchedLost.id}`,
                                         );
                                       handleMatch(report.id, matchedLost!.id);
                                     }}

@@ -66,16 +66,16 @@ export default function ListFoundUser() {
   const getStats = () => {
     const total = FoundReports.length;
     const done = FoundReports.filter(
-      (r: FoundReport) => r.statusReport === "Done"
+      (r: FoundReport) => r.statusReport === "Done",
     ).length;
     const onProgress = FoundReports.filter(
-      (r: FoundReport) => r.statusReport === "OnProgress"
+      (r: FoundReport) => r.statusReport === "OnProgress",
     ).length;
     const closed = FoundReports.filter(
-      (r: FoundReport) => r.statusReport === "Closed"
+      (r: FoundReport) => r.statusReport === "Closed",
     ).length;
     const matched = FoundReports.filter(
-      (r: FoundReport) => r.lostReportId !== null
+      (r: FoundReport) => r.lostReportId !== null,
     ).length;
 
     return { total, done, onProgress, closed, matched };
@@ -301,7 +301,10 @@ export default function ListFoundUser() {
                                 <section className="flex items-center gap-2 text-sm text-muted-foreground">
                                   <Calendar className="h-4 w-4" />
                                   <span className="text-xs">
-                                    {formatDate(report.tanggalTemu, report.waktuTemu)}
+                                    {formatDate(
+                                      report.tanggalTemu,
+                                      report.waktuTemu,
+                                    )}
                                   </span>
                                 </section>
                               </TableCell>
