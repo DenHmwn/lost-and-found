@@ -1,5 +1,5 @@
 import useSWR from "swr";
-import { fetcher } from "./usefetch";
+import { fetcher } from "./useFetch";
 
 export function useFoundReports() {
   const { data, error, isLoading, mutate } = useSWR("/foundreport", fetcher);
