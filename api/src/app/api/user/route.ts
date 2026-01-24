@@ -2,13 +2,25 @@ import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
 // buat GET user
-export const GET = async () => {
+export const GET = async (req: NextRequest) => {
+  const searchParams = req.nextUrl.searchParams;
+  // ambil query params
+  const page = Number(searchParams.get("page")) || 1;
+  const limit = Number(searchParams.get("limit")) || 10;
+
+  const skip = (Number(page) - 1) * limit;
+
+  // ambil total data
+  const totalData = await prisma.foundReport.count();
+
   const users = await prisma.user.findMany({
     where: {
       role: {
         in: ["USER", "ADMIN"],
       },
     },
+    skip,
+    take: limit,
     select: {
       id: true,
       name: true,
@@ -24,11 +36,17 @@ export const GET = async () => {
     {
       success: true,
       message: "Berhasil mengambil data laporan",
+      pagination: {
+        page,
+        limit,
+        totalData,
+        totalPage: Math.ceil(totalData / limit),
+      },
       data: users,
     },
     {
       status: 200,
-    }
+    },
   );
 };
 // Buat POST user
@@ -55,7 +73,7 @@ export const POST = async (req: NextRequest) => {
       },
       {
         status: 409,
-      }
+      },
     );
   }
   // simpan data sesuai request
@@ -77,6 +95,6 @@ export const POST = async (req: NextRequest) => {
     },
     {
       status: 201,
-    }
+    },
   );
 };
