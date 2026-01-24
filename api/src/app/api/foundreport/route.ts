@@ -1,11 +1,23 @@
 import { getAuth } from "@/lib/getAuth";
 import prisma from "@/lib/prisma";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 // buat fungsi GET
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
+    const searchParams = req.nextUrl.searchParams;
+    // ambil query params
+    const page = Number(searchParams.get("page")) || 1;
+    const limit = Number(searchParams.get("limit")) || 10;
+
+    const skip = (Number(page) - 1) * limit;
+
+    // ambil total data
+    const totalData = await prisma.foundReport.count();
+
     const reports = await prisma.foundReport.findMany({
+      skip,
+      take: limit,
       include: {
         // rellasi ke admin yang buat laporan temu
         admin: {
@@ -41,11 +53,17 @@ export async function GET() {
       {
         success: true,
         message: "Berhasil mengambil data barang temuan",
+        pagination: {
+          page,
+          limit,
+          totalData,
+          totalPage: Math.ceil(totalData / limit),
+        },
         data: reports,
       },
       {
         status: 200,
-      }
+      },
     );
     // Response Error
   } catch (error) {
@@ -56,7 +74,7 @@ export async function GET() {
         message: "Gagal mengambil data barang temuan",
         error: error instanceof Error ? error.message : "Unknown error",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -83,7 +101,7 @@ export async function POST(req: Request) {
           success: false,
           message: "Unauthorized: Token tidak valid atau belum login.",
         },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -98,7 +116,7 @@ export async function POST(req: Request) {
           message:
             "Akses Ditolak. Hanya ADMIN yang dapat membuat laporan temuan.",
         },
-        { status: 403 }
+        { status: 403 },
       );
     }
 
@@ -116,7 +134,7 @@ export async function POST(req: Request) {
           message:
             "Data tidak lengkap. Pastikan nama barang, deskripsi, lokasi temuan, dan admin ID terisi.",
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -125,7 +143,7 @@ export async function POST(req: Request) {
     if (isNaN(formatTanggalTemu.getTime())) {
       return NextResponse.json(
         { success: false, message: "Format tanggal tidak valid." },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -141,7 +159,7 @@ export async function POST(req: Request) {
             success: false,
             message: "Laporan barang hilang tidak ditemukan",
           },
-          { status: 404 }
+          { status: 404 },
         );
       }
       // Cek apakah lostReport sudah memiliki foundReport
@@ -156,7 +174,7 @@ export async function POST(req: Request) {
             message:
               "Laporan barang hilang ini sudah memiliki pasangan barang temuan",
           },
-          { status: 409 }
+          { status: 409 },
         );
       }
     }
@@ -202,7 +220,7 @@ export async function POST(req: Request) {
         message: "Laporan barang temuan berhasil dibuat",
         data: report,
       },
-      { status: 201 }
+      { status: 201 },
     );
     // response error
   } catch (error) {
@@ -213,7 +231,7 @@ export async function POST(req: Request) {
         message: "Gagal membuat laporan barang temuan",
         error: error instanceof Error ? error.message : "Unknown error",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
