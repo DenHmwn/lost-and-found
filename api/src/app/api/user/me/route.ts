@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 const prisma = new PrismaClient();
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   try {
     // ambil id admin dari helper
     const users = await getAuth();
