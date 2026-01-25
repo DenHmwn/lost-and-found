@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
   const skip = (Number(page) - 1) * limit;
 
   // ambil total data
-  const totalData = await prisma.foundReport.count();
+  const totalData = await prisma.lostReport.count();
 
   try {
     // data semua laporan sama laporan include relasi

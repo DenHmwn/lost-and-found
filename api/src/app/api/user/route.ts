@@ -11,7 +11,7 @@ export const GET = async (req: NextRequest) => {
   const skip = (Number(page) - 1) * limit;
 
   // ambil total data
-  const totalData = await prisma.foundReport.count();
+  const totalData = await prisma.user.count();
 
   const users = await prisma.user.findMany({
     where: {
