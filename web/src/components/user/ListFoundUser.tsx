@@ -3,13 +3,11 @@
 import { SiteHeader } from "@/components/SiteHeader";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import {
-  Loader2,
   Clock,
   CheckCircle2,
   XCircle,
   Package,
   MapPin,
-  User,
   Calendar,
 } from "lucide-react";
 import { useFoundReports } from "@/hooks/useFoundReport";
@@ -22,7 +20,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { formatDate, formatTimeAgo } from "@/lib/scripts";
+import { formatDate } from "@/lib/scripts";
 import { AppSidebarUser } from "../AppSidebarUser";
 import SkeletonListItem from "../SkeletonListItem";
 
