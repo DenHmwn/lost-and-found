@@ -1,13 +1,25 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { LostStatus } from "@prisma/client";
 import prisma from "@/lib/prisma";
 import { getAuth } from "@/lib/getAuth";
 
 // GET semua laporan lost
-export async function GET() {
+export async function GET(req: NextRequest) {
+  const searchParams = req.nextUrl.searchParams;
+  // ambil query params
+  const page = Number(searchParams.get("page")) || 1;
+  const limit = Number(searchParams.get("limit")) || 10;
+
+  const skip = (Number(page) - 1) * limit;
+
+  // ambil total data
+  const totalData = await prisma.foundReport.count();
+
   try {
     // data semua laporan sama laporan include relasi
     const reports = await prisma.lostReport.findMany({
+      skip,
+      take: limit,
       include: {
         user: {
           select: {
@@ -30,9 +42,15 @@ export async function GET() {
       {
         success: true,
         message: "Berhasil mengambil data laporan",
+        pagination: {
+          page,
+          limit,
+          totalData,
+          totalPage: Math.ceil(totalData / limit),
+        },
         data: reports,
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     console.error("Error fetching lost reports:", error);
@@ -42,7 +60,7 @@ export async function GET() {
         message: "Gagal mengambil data laporan",
         error: error instanceof Error ? error.message : "Unknown error",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -65,7 +83,7 @@ export async function POST(req: Request) {
           success: false,
           message: "Unauthorized: Token tidak valid atau belum login.",
         },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -75,7 +93,7 @@ export async function POST(req: Request) {
     if (headerRole !== "USER") {
       return NextResponse.json(
         { success: false, message: "Hanya user yang dapat membuat laporan." },
-        { status: 403 }
+        { status: 403 },
       );
     }
 
@@ -91,7 +109,7 @@ export async function POST(req: Request) {
           success: false,
           message: "Data tidak lengkap. Pastikan semua field terisi.",
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -99,7 +117,7 @@ export async function POST(req: Request) {
     if (!Number.isFinite(userId)) {
       return NextResponse.json(
         { success: false, message: "User ID tidak valid." },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -107,7 +125,7 @@ export async function POST(req: Request) {
     if (Number.isNaN(formatTanggalHilang.getTime())) {
       return NextResponse.json(
         { success: false, message: "Format tanggal tidak valid." },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -132,13 +150,13 @@ export async function POST(req: Request) {
         message: "Laporan barang hilang berhasil dibuat.",
         data: report,
       },
-      { status: 201 }
+      { status: 201 },
     );
   } catch (error: unknown) {
     const msg = error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
       { success: false, message: "Gagal membuat laporan", error: msg },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
