@@ -2,15 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { LostStatus } from "@prisma/client";
 import prisma from "@/lib/prisma";
 import { getAuth } from "@/lib/getAuth";
+import { pagination } from "@/lib/pagination";
 
 // GET semua laporan lost
 export async function GET(req: NextRequest) {
-  const searchParams = req.nextUrl.searchParams;
-  // ambil query params
-  const page = Number(searchParams.get("page")) || 1;
-  const limit = Number(searchParams.get("limit")) || 10;
-
-  const skip = (Number(page) - 1) * limit;
+  const { page, limit, skip } = pagination(req);
 
   // ambil total data
   const totalData = await prisma.lostReport.count();
