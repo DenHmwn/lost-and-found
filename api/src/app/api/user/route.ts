@@ -1,14 +1,10 @@
+import { pagination } from "@/lib/pagination";
 import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
 // buat GET user
 export const GET = async (req: NextRequest) => {
-  const searchParams = req.nextUrl.searchParams;
-  // ambil query params
-  const page = Number(searchParams.get("page")) || 1;
-  const limit = Number(searchParams.get("limit")) || 10;
-
-  const skip = (Number(page) - 1) * limit;
+  const { page, limit, skip } = pagination(req);
 
   // ambil total data
   const totalData = await prisma.user.count();
