@@ -214,6 +214,7 @@ export default function LostReport() {
                         type="time"
                         id="time-picker"
                         step="60"
+                        value={time}
                         onChange={(e) => setTime(e.target.value)}
                       />
                     </section>
