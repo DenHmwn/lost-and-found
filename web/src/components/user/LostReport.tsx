@@ -36,7 +36,7 @@ import {
 import { useRouter } from "next/navigation";
 
 export default function LostReport() {
-  // State untuk calendar
+
   const [namaBarang, setNamaBarang] = useState("");
   const [lokasiHilang, setLokasiHilang] = useState("");
   const [deskripsi, setDeskripsi] = useState("");
@@ -214,6 +214,7 @@ export default function LostReport() {
                         type="time"
                         id="time-picker"
                         step="60"
+                        value={time}
                         onChange={(e) => setTime(e.target.value)}
                       />
                     </section>
