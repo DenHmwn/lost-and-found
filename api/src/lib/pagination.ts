@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 
-export function pagination(req: NextRequest) {
+export const pagination = (req: NextRequest) => {
   const searchParams = req.nextUrl.searchParams;
   // ambil query params
   const page = Number(searchParams.get("page")) || 1;
@@ -12,4 +12,4 @@ export function pagination(req: NextRequest) {
     limit,
     skip,
   };
-}
+};
