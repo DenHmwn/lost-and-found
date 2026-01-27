@@ -36,7 +36,7 @@ import {
 import { useRouter } from "next/navigation";
 
 export default function LostReport() {
-  // State untuk calendar
+
   const [namaBarang, setNamaBarang] = useState("");
   const [lokasiHilang, setLokasiHilang] = useState("");
   const [deskripsi, setDeskripsi] = useState("");
