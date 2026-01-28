@@ -233,7 +233,7 @@ export default function ListLostUser() {
                   <section className="border-b bg-muted/50 px-6 py-4">
                     <h2 className="font-semibold">Daftar Laporan</h2>
                     <p className="text-sm text-muted-foreground">
-                      Total {lostReports.length} laporan barang hilang
+                      {lostReports.length} laporan barang hilang
                     </p>
                   </section>
 
@@ -271,7 +271,7 @@ export default function ListLostUser() {
                         {lostReports.length === 0 ? (
                           <TableRow>
                             <TableCell
-                              colSpan={6}
+                              colSpan={8}
                               className="px-6 py-16 text-center"
                             >
                               <Package className="mx-auto h-12 w-12 text-muted-foreground/50" />
