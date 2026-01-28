@@ -271,7 +271,7 @@ export default function ListLostUser() {
                         {lostReports.length === 0 ? (
                           <TableRow>
                             <TableCell
-                              colSpan={6}
+                              colSpan={8}
                               className="px-6 py-16 text-center"
                             >
                               <Package className="mx-auto h-12 w-12 text-muted-foreground/50" />
