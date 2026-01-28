@@ -63,16 +63,16 @@ export default function ListFoundUser() {
   // Stats Cards
   const getStats = () => {
     const total = FoundReports.length;
-    const done = FoundReports.filter(
+    const done = foundReports.filter(
       (r: FoundReport) => r.statusReport === "Done",
     ).length;
-    const onProgress = FoundReports.filter(
+    const onProgress = foundReports.filter(
       (r: FoundReport) => r.statusReport === "OnProgress",
     ).length;
-    const closed = FoundReports.filter(
+    const closed = foundReports.filter(
       (r: FoundReport) => r.statusReport === "Closed",
     ).length;
-    const matched = FoundReports.filter(
+    const matched = foundReports.filter(
       (r: FoundReport) => r.lostReportId !== null,
     ).length;
 
@@ -223,7 +223,7 @@ export default function ListFoundUser() {
                         </TableRow>
                       </TableHeader>
                       <TableBody className="sectionide-y sectionide-border">
-                        {FoundReports.length === 0 ? (
+                        {foundReports.length === 0 ? (
                           <TableRow>
                             <TableCell
                               colSpan={5}
@@ -240,7 +240,7 @@ export default function ListFoundUser() {
                             </TableCell>
                           </TableRow>
                         ) : (
-                          FoundReports.map((report: FoundReport) => (
+                          foundReports.map((report: FoundReport) => (
                             <TableRow
                               key={report.id}
                               className="transition-colors hover:bg-muted/50"
