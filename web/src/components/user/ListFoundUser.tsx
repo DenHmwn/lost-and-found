@@ -194,7 +194,7 @@ export default function ListFoundUser() {
                       Daftar Laporan Barang Temu
                     </h2>
                     <p className="text-sm text-muted-foreground">
-                      Total {FoundReports.length} laporan barang yang ditemukan
+                      {foundReports.length} laporan barang yang ditemukan
                     </p>
                   </section>
 
