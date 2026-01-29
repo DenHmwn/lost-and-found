@@ -15,13 +15,11 @@ import {
   TableRow,
 } from "../ui/table";
 import { useUsers } from "@/hooks/useUsers";
-import { Users } from "@/types/users";
+import { Users } from "@/types/Users";
 import SkeletonMember from "../SkeletonListMember";
 
 export default function ListUser() {
   const { data: users, isLoading, error } = useUsers();
-
-  const user = users?.filter((user: Users) => user.role === "USER") || [];
 
   if (isLoading) {
     return <SkeletonMember />;
@@ -70,7 +68,7 @@ export default function ListUser() {
                 <section className="border-b bg-muted/50 px-6 py-4">
                   <h2 className="font-semibold">Daftar User</h2>
                   <p className="text-sm text-muted-foreground">
-                    Total {user.length} user
+                    Total {users.length} user
                   </p>
                 </section>
 
@@ -91,7 +89,7 @@ export default function ListUser() {
                     </TableHeader>
 
                     <TableBody>
-                      {user.length === 0 ? (
+                      {users.length === 0 ? (
                         <TableRow>
                           <TableCell
                             colSpan={3}
@@ -104,7 +102,7 @@ export default function ListUser() {
                           </TableCell>
                         </TableRow>
                       ) : (
-                        user.map((user: Users) => (
+                        users.map((user: Users) => (
                           <TableRow
                             key={user.id}
                             className="hover:bg-muted/50 transition"
