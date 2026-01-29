@@ -24,9 +24,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { AppSidebarAdmin } from "@/components/AppSidebarAdmin";
-import { formatDate, formatTimeAgo } from "@/lib/scripts";
+import { formatDate, formatTimeAgo } from "@/utils/date";
 import { Button } from "../ui/button";
-import { Toggle } from "../ui/toggle";
 import { useState } from "react";
 import { api } from "@/lib/axios";
 import SkeletonListItem from "../SkeletonListItem";

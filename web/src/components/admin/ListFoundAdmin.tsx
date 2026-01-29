@@ -23,7 +23,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { AppSidebarAdmin } from "@/components/AppSidebarAdmin";
-import { formatDate, formatTimeAgo } from "@/lib/scripts";
+import { formatDate, formatTimeAgo } from "@/utils/date";
 import { api } from "@/lib/axios";
 import { useState } from "react";
 import { Button } from "../ui/button";

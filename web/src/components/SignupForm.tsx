@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { api } from "@/lib/axios";
-import { filterNotelp } from "@/lib/scripts";
+import { filterNotelp } from "@/utils/scripts";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
