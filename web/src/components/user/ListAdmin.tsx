@@ -1,10 +1,9 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import { SidebarInset, SidebarProvider } from "../ui/sidebar";
 import { SiteHeader } from "../SiteHeader";
 import { AppSidebarUser } from "../AppSidebarUser";
 import { IconUsers } from "@tabler/icons-react";
-import { useUsers } from "@/hooks/useUsers";
 import { XCircle } from "lucide-react";
 import {
   Table,
