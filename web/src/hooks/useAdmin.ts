@@ -1,15 +1,14 @@
 import useSWR from "swr";
 import { fetcher } from "../services/fetchService";
 
-export function useLostReports(page = 1, limit = 10) {
+export function useAdmin() {
   const { data, error, isLoading, mutate } = useSWR(
-    `/lostreport?page=${page}&limit=${limit}`,
+    "/user?role=ADMIN",
     fetcher,
   );
 
   return {
     data: data?.data,
-    pagination: data?.pagination,
     error,
     isLoading,
     mutate,

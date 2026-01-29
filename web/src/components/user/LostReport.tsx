@@ -24,19 +24,17 @@ import { api } from "@/lib/axios";
 import { ChevronDownIcon, PackageSearchIcon } from "lucide-react";
 import React from "react";
 import {
-  createDate,
   filterLokasi,
   filterNamaBarang,
-  formatDateReport,
-} from "@/lib/scripts";
+} from "@/utils/scripts";
 import {
   CustomButtonOutline,
   CustomButtonPrimary,
 } from "../custom/CustomButtonPrimary";
 import { useRouter } from "next/navigation";
+import { createDate, formatDateReport } from "@/utils/date";
 
 export default function LostReport() {
-
   const [namaBarang, setNamaBarang] = useState("");
   const [lokasiHilang, setLokasiHilang] = useState("");
   const [deskripsi, setDeskripsi] = useState("");

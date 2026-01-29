@@ -27,7 +27,7 @@ import {
   CustomButtonPrimary,
 } from "../custom/CustomButtonPrimary";
 import { useRouter } from "next/navigation";
-import { createDate } from "@/lib/scripts";
+import { createDate } from "@/utils/date";
 
 export default function LaporanBarangTemu() {
   // State untuk calendar

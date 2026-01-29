@@ -20,7 +20,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { formatDate } from "@/lib/scripts";
+import { formatDate } from "@/utils/date";
 import { AppSidebarUser } from "../AppSidebarUser";
 import SkeletonListItem from "../SkeletonListItem";
 

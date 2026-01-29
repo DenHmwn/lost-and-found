@@ -1,4 +1,4 @@
-import { Users } from "./users";
+import { Users } from "./Users";
 
 export interface LostReport {
   id: number;

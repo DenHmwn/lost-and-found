@@ -4,9 +4,7 @@ import { SidebarInset, SidebarProvider } from "../ui/sidebar";
 import { SiteHeader } from "../SiteHeader";
 import { AppSidebarUser } from "../AppSidebarUser";
 import { IconUsers } from "@tabler/icons-react";
-import { useUsers } from "@/hooks/useUsers";
-import { Loader2, XCircle } from "lucide-react";
-import { Users } from "@/types/users";
+import { XCircle } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -16,12 +14,11 @@ import {
   TableRow,
 } from "../ui/table";
 import SkeletonMember from "../SkeletonListMember";
+import { Users } from "@/types/Users";
+import { useAdmin } from "@/hooks/useAdmin";
 
 export default function ListAdmin() {
-  const { data: users, isLoading, error } = useUsers();
-
-  // filter hanya admin
-  const admin = users?.filter((user: Users) => user.role === "ADMIN") || [];
+  const { data: admin, error, isLoading } = useAdmin();
 
   if (isLoading) {
     return <SkeletonMember />;

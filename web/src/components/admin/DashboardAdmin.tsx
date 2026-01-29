@@ -7,7 +7,7 @@ import { useLostReports } from "@/hooks/useLostReport";
 import { useUsers } from "@/hooks/useUsers";
 import { FoundReport } from "@/types/FoundReport";
 import { LostReport } from "@/types/LostReport";
-import { Users } from "@/types/users";
+import { Users } from "@/types/Users";
 import {
   AlertCircle,
   CheckCircle,
@@ -20,9 +20,8 @@ import {
 import { useMemo } from "react";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
-import SekeletonDashboard from "../SkeletonDashboard";
 import SkeletonDasboard from "../SkeletonDashboard";
-import { formatTimeAgo } from "@/lib/scripts";
+import { formatTimeAgo } from "@/utils/date";
 
 export default function DashboardAdmin() {
   interface RecentItem extends Partial<FoundReport & LostReport> {
