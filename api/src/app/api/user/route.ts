@@ -1,20 +1,32 @@
 import { pagination } from "@/lib/pagination";
 import prisma from "@/lib/prisma";
+import { Prisma } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
 // buat GET user
 export const GET = async (req: NextRequest) => {
   const { page, limit, skip } = pagination(req);
 
+  const roleParam = req.nextUrl.searchParams.get("role");
+
+  const role =
+    roleParam === "ADMIN" || roleParam === "USER"
+      ? (roleParam as "ADMIN" | "USER")
+      : null;
+
+  const where: Prisma.UserWhereInput = role
+    ? { role }
+    : {
+        role: {
+          in: ["USER", "ADMIN"],
+        },
+      };
+
   // ambil total data
-  const totalData = await prisma.user.count();
+  const totalData = await prisma.user.count({ where });
 
   const users = await prisma.user.findMany({
-    where: {
-      role: {
-        in: ["USER", "ADMIN"],
-      },
-    },
+    where,
     skip,
     take: limit,
     select: {
