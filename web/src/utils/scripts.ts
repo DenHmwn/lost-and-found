@@ -51,3 +51,4 @@ export const filterNamaBarang = (value: string) => {
 export const filterLokasi = (value: string) => {
   return value.replace(/[^a-zA-Z0-9\s.,()\-/#&]/g, "");
 };
+
