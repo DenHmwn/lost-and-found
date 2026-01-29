@@ -1,9 +1,9 @@
 import useSWR from "swr";
-import { fetcher } from "./useFetch";
+import { fetcher } from "../services/fetchService";
 
 export function useUsers(page = 1, limit = 10) {
   const { data, error, isLoading, mutate } = useSWR(
-    `/user?page=${page}&limit=${limit}`,
+    `/user? role=USER&page=${page}&limit=${limit}`,
     fetcher,
   );
 
@@ -12,6 +12,6 @@ export function useUsers(page = 1, limit = 10) {
     pagination: data?.pagination,
     error,
     isLoading,
-    mutate
+    mutate,
   };
 }
