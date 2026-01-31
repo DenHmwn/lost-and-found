@@ -26,10 +26,27 @@ import {
 import { formatDate, formatTimeAgo } from "@/utils/date";
 import { AppSidebarUser } from "../AppSidebarUser";
 import SkeletonListItem from "../SkeletonListItem";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "../ui/pagination";
 
 export default function ListLostUser() {
+  const { page, setPage } = useQueryPagination();
   // Fetch data menggunakan custom hook
-  const { data: lostReports = [], error, isLoading } = useLostReports();
+  const {
+    data: lostReports = [],
+    error,
+    isLoading,
+    pagination,
+  } = useLostReports(page);
+
+  const totalPages = pagination?.totalPage;
 
   // Status Badge Component
   const StatusBadge = ({
@@ -100,9 +117,16 @@ export default function ListLostUser() {
     );
   };
 
+  const handlePrev = () => {
+    if (page > 1) return setPage(page - 1);
+  };
+  const handleNext = () => {
+    if (page < totalPages) return setPage(page + 1);
+  };
+
   // Stats Cards
   const getStats = () => {
-    const total = lostReports.length;
+    const total = pagination?.totalData;
     const pending = lostReports.filter(
       (r: LostReport) => r.status === "PENDING",
     ).length;
@@ -369,6 +393,31 @@ export default function ListLostUser() {
                 </section>
               </article>
             )}
+            <Pagination>
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious
+                    onClick={handlePrev}
+                    aria-disabled={page === 1}
+                    className={
+                      page === 1 ? "pointer-events-none opacity-50" : ""
+                    }
+                  />
+                </PaginationItem>
+
+                <PaginationItem>
+                  <PaginationNext
+                    onClick={handleNext}
+                    aria-disabled={page === totalPages}
+                    className={
+                      page === totalPages
+                        ? "pointer-events-none opacity-50"
+                        : ""
+                    }
+                  />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
           </section>
         </section>
       </SidebarInset>
