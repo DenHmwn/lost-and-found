@@ -32,6 +32,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "../ui/pagination";
+import { getPaginationItems, useQueryPagination } from "@/hooks/usePagination";
 
 export default function ListFoundUser() {
   const { page, setPage } = useQueryPagination();
@@ -360,6 +361,24 @@ export default function ListFoundUser() {
                     }
                   />
                 </PaginationItem>
+
+                {getPaginationItems(page, totalPages).map((pageItems, index) => (
+                  <PaginationItem key={index}>
+                    {pageItems === "..." ? (
+                      <PaginationEllipsis />
+                    ) : (
+                      <PaginationLink
+                        isActive={page === pageItems}
+                        onClick={() => setPage(pageItems)}
+                        className={
+                          page === pageItems ? "pointer-events-none opacity-50" : ""
+                        }
+                      >
+                        {pageItems}
+                      </PaginationLink>
+                    )}
+                  </PaginationItem>
+                ))}
 
                 <PaginationItem>
                   <PaginationNext
