@@ -23,10 +23,28 @@ import {
 import { formatDate } from "@/utils/date";
 import { AppSidebarUser } from "../AppSidebarUser";
 import SkeletonListItem from "../SkeletonListItem";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "../ui/pagination";
+import { getPaginationItems, useQueryPagination } from "@/hooks/usePagination";
 
 export default function ListFoundUser() {
+  const { page, setPage } = useQueryPagination();
   // Fetch data menggunakan custom hook
-  const { data: FoundReports = [], error, isLoading } = useFoundReports();
+  const {
+    data: foundReports = [],
+    error,
+    isLoading,
+    pagination,
+  } = useFoundReports(page);
+
+  const totalPages = pagination?.totalPage;
 
   // Status Report Badge
   const StatusReportBadge = ({
@@ -62,7 +80,7 @@ export default function ListFoundUser() {
 
   // Stats Cards
   const getStats = () => {
-    const total = FoundReports.length;
+    const total = pagination?.totalData;
     const done = foundReports.filter(
       (r: FoundReport) => r.statusReport === "Done",
     ).length;
@@ -80,6 +98,13 @@ export default function ListFoundUser() {
   };
 
   const stats = getStats();
+
+  const handlePrev = () => {
+    if (page > 1) return setPage(page - 1);
+  };
+  const handleNext = () => {
+    if (page < totalPages) return setPage(page + 1);
+  };
 
   if (isLoading) return <SkeletonListItem />;
 
@@ -132,7 +157,9 @@ export default function ListFoundUser() {
                         <p className="text-sm font-medium text-muted-foreground">
                           Total Laporan
                         </p>
-                        <p className="mt-2 text-3xl font-bold">{stats.total}</p>
+                        <p className="mt-2 text-3xl font-bold">
+                          {pagination?.totalData}
+                        </p>
                       </section>
                       <section className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100">
                         <Package className="h-6 w-6 text-blue-600" />
@@ -323,6 +350,49 @@ export default function ListFoundUser() {
                 </section>
               </article>
             )}
+            <Pagination>
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious
+                    onClick={handlePrev}
+                    aria-disabled={page === 1}
+                    className={
+                      page === 1 ? "pointer-events-none opacity-50" : ""
+                    }
+                  />
+                </PaginationItem>
+
+                {getPaginationItems(page, totalPages).map((pageItems, index) => (
+                  <PaginationItem key={index}>
+                    {pageItems === "..." ? (
+                      <PaginationEllipsis />
+                    ) : (
+                      <PaginationLink
+                        isActive={page === pageItems}
+                        onClick={() => setPage(pageItems)}
+                        className={
+                          page === pageItems ? "pointer-events-none opacity-50" : ""
+                        }
+                      >
+                        {pageItems}
+                      </PaginationLink>
+                    )}
+                  </PaginationItem>
+                ))}
+
+                <PaginationItem>
+                  <PaginationNext
+                    onClick={handleNext}
+                    aria-disabled={page === totalPages}
+                    className={
+                      page === totalPages
+                        ? "pointer-events-none opacity-50"
+                        : ""
+                    }
+                  />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
           </section>
         </section>
       </SidebarInset>
