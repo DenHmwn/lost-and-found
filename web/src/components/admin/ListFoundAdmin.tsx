@@ -31,16 +31,22 @@ import SkeletonListItem from "../SkeletonListItem";
 import axios from "axios";
 import { useLostReports } from "@/hooks/useLostReport";
 import { LostReport } from "@/types/LostReport";
+import { getPaginationItems, useQueryPagination } from "@/hooks/usePagination";
+import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "../ui/pagination";
 
 export default function ListFoundAdmin() {
+  const { page, setPage } = useQueryPagination();
   // Fetch data menggunakan custom hook
   const {
     data: foundReports = [],
     error,
     isLoading,
+    pagination,
     mutate,
-  } = useFoundReports();
+  } = useFoundReports(page);
   const { data: lostReports = [] } = useLostReports();
+
+  const totalPages = pagination?.totalPage;
 
   // Status Report Badge
   const StatusReportBadge = ({
@@ -135,6 +141,13 @@ export default function ListFoundAdmin() {
         alert(error?.response?.data.message || "Gagal mencocokkan laporan");
       }
     }
+  };
+
+  const handlePrev = () => {
+    if (page > 1) return setPage(page - 1);
+  };
+  const handleNext = () => {
+    if (page < totalPages) return setPage(page + 1);
   };
 
   return (
@@ -467,6 +480,53 @@ export default function ListFoundAdmin() {
                 </section>
               </article>
             )}
+            <Pagination>
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious
+                    onClick={handlePrev}
+                    aria-disabled={page === 1}
+                    className={
+                      page === 1 ? "pointer-events-none opacity-50" : ""
+                    }
+                  />
+                </PaginationItem>
+
+                {getPaginationItems(page, totalPages).map(
+                  (pageItems, index) => (
+                    <PaginationItem key={index}>
+                      {pageItems === "..." ? (
+                        <PaginationEllipsis />
+                      ) : (
+                        <PaginationLink
+                          isActive={page === pageItems}
+                          onClick={() => setPage(pageItems)}
+                          className={
+                            page === pageItems
+                              ? "pointer-events-none opacity-50"
+                              : ""
+                          }
+                        >
+                          {pageItems}
+                        </PaginationLink>
+                      )}
+                    </PaginationItem>
+                  ),
+                )}
+
+                <PaginationItem>
+                  <PaginationNext
+                    onClick={handleNext}
+                    aria-disabled={page === totalPages}
+                    className={
+                      page === totalPages
+                        ? "pointer-events-none opacity-50"
+                        : ""
+                    }
+                  />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
           </section>
         </section>
       </SidebarInset>
