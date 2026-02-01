@@ -249,7 +249,7 @@ export default function ListLostAdmin() {
                         <p className="text-sm font-medium text-muted-foreground">
                           Total Laporan
                         </p>
-                        <p className="mt-2 text-3xl font-bold">{stats.total}</p>
+                        <p className="mt-2 text-3xl font-bold">{pagination.totalData}</p>
                       </section>
                       <section className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100">
                         <Package className="h-6 w-6 text-blue-600" />
