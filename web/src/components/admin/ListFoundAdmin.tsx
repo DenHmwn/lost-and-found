@@ -199,7 +199,7 @@ export default function ListFoundAdmin() {
                         <p className="text-sm font-medium text-muted-foreground">
                           Total Laporan
                         </p>
-                        <p className="mt-2 text-3xl font-bold">{stats.total}</p>
+                        <p className="mt-2 text-3xl font-bold">{pagination.totalData}</p>
                       </section>
                       <section className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100">
                         <Package className="h-6 w-6 text-blue-600" />
@@ -261,7 +261,7 @@ export default function ListFoundAdmin() {
                       Daftar Laporan Barang Temu
                     </h2>
                     <p className="text-sm text-muted-foreground">
-                      Total {foundReports.length} laporan barang yang ditemukan
+                      {foundReports.length} laporan barang yang ditemukan
                     </p>
                   </section>
 
