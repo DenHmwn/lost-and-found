@@ -32,7 +32,16 @@ import axios from "axios";
 import { useLostReports } from "@/hooks/useLostReport";
 import { LostReport } from "@/types/LostReport";
 import { getPaginationItems, useQueryPagination } from "@/hooks/usePagination";
-import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "../ui/pagination";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "../ui/pagination";
+import { useFoundReports } from "@/hooks/fetch/useFoundReport";
 
 export default function ListFoundAdmin() {
   const { page, setPage } = useQueryPagination();
@@ -199,7 +208,9 @@ export default function ListFoundAdmin() {
                         <p className="text-sm font-medium text-muted-foreground">
                           Total Laporan
                         </p>
-                        <p className="mt-2 text-3xl font-bold">{pagination.totalData}</p>
+                        <p className="mt-2 text-3xl font-bold">
+                          {pagination?.totalData}
+                        </p>
                       </section>
                       <section className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100">
                         <Package className="h-6 w-6 text-blue-600" />
