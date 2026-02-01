@@ -30,7 +30,15 @@ import { useState } from "react";
 import { api } from "@/lib/axios";
 import SkeletonListItem from "../SkeletonListItem";
 import { getPaginationItems, useQueryPagination } from "@/hooks/usePagination";
-import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "../ui/pagination";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "../ui/pagination";
 
 export default function ListLostAdmin() {
   const { page, setPage } = useQueryPagination();
@@ -249,7 +257,9 @@ export default function ListLostAdmin() {
                         <p className="text-sm font-medium text-muted-foreground">
                           Total Laporan
                         </p>
-                        <p className="mt-2 text-3xl font-bold">{pagination.totalData}</p>
+                        <p className="mt-2 text-3xl font-bold">
+                          {pagination.totalData}
+                        </p>
                       </section>
                       <section className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100">
                         <Package className="h-6 w-6 text-blue-600" />
@@ -311,7 +321,7 @@ export default function ListLostAdmin() {
                   <section className="border-b bg-muted/50 px-6 py-4">
                     <h2 className="font-semibold">Daftar Laporan</h2>
                     <p className="text-sm text-muted-foreground">
-                      Total {lostReports.length} laporan barang hilang
+                      {lostReports.length} laporan barang hilang
                     </p>
                   </section>
 
