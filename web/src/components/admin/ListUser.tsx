@@ -17,9 +17,29 @@ import {
 import { useUsers } from "@/hooks/useUsers";
 import { Users } from "@/types/Users";
 import SkeletonMember from "../SkeletonListMember";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "../ui/pagination";
+import { getPaginationItems, useQueryPagination } from "@/hooks/usePagination";
 
 export default function ListUser() {
-  const { data: users, isLoading, error } = useUsers();
+  const { page, setPage } = useQueryPagination();
+  const { data: users, isLoading, pagination, error } = useUsers(page);
+
+  const totalPages = pagination?.totalPage;
+
+  const handlePrev = () => {
+    if (page > 1) return setPage(page - 1);
+  };
+  const handleNext = () => {
+    if (page < totalPages) return setPage(page + 1);
+  };
 
   if (isLoading) {
     return <SkeletonMember />;
@@ -68,7 +88,7 @@ export default function ListUser() {
                 <section className="border-b bg-muted/50 px-6 py-4">
                   <h2 className="font-semibold">Daftar User</h2>
                   <p className="text-sm text-muted-foreground">
-                    Total {users.length} user
+                    Total {pagination.totalData} user
                   </p>
                 </section>
 
@@ -133,6 +153,47 @@ export default function ListUser() {
               </section>
             </article>
           )}
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious
+                  onClick={handlePrev}
+                  aria-disabled={page === 1}
+                  className={page === 1 ? "pointer-events-none opacity-50" : ""}
+                />
+              </PaginationItem>
+
+              {getPaginationItems(page, totalPages).map((pageItems, index) => (
+                <PaginationItem key={index}>
+                  {pageItems === "..." ? (
+                    <PaginationEllipsis />
+                  ) : (
+                    <PaginationLink
+                      isActive={page === pageItems}
+                      onClick={() => setPage(pageItems)}
+                      className={
+                        page === pageItems
+                          ? "pointer-events-none opacity-50"
+                          : ""
+                      }
+                    >
+                      {pageItems}
+                    </PaginationLink>
+                  )}
+                </PaginationItem>
+              ))}
+
+              <PaginationItem>
+                <PaginationNext
+                  onClick={handleNext}
+                  aria-disabled={page === totalPages}
+                  className={
+                    page === totalPages ? "pointer-events-none opacity-50" : ""
+                  }
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
         </section>
       </SidebarInset>
     </SidebarProvider>
