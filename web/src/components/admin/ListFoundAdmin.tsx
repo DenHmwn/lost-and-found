@@ -12,7 +12,6 @@ import {
   User,
   Calendar,
 } from "lucide-react";
-import { useFoundReports } from "@/hooks/useFoundReport";
 import { FoundReport } from "@/types/FoundReport";
 import {
   Table,
@@ -29,7 +28,7 @@ import { useState } from "react";
 import { Button } from "../ui/button";
 import SkeletonListItem from "../SkeletonListItem";
 import axios from "axios";
-import { useLostReports } from "@/hooks/useLostReport";
+import { useLostReports } from "@/hooks/fetch/useLostReport";
 import { LostReport } from "@/types/LostReport";
 import { getPaginationItems, useQueryPagination } from "@/hooks/usePagination";
 import {

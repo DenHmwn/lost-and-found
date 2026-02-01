@@ -5,7 +5,7 @@ import { AppSidebarAdmin } from "../AppSidebarAdmin";
 import { SidebarInset, SidebarProvider } from "../ui/sidebar";
 import { SiteHeader } from "../SiteHeader";
 import { IconUsers } from "@tabler/icons-react";
-import { Loader2, Mail, Phone, User as UserIcon, XCircle } from "lucide-react";
+import { XCircle } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -14,7 +14,6 @@ import {
   TableHeader,
   TableRow,
 } from "../ui/table";
-import { useUsers } from "@/hooks/useUsers";
 import { Users } from "@/types/Users";
 import SkeletonMember from "../SkeletonListMember";
 import {
@@ -27,6 +26,7 @@ import {
   PaginationPrevious,
 } from "../ui/pagination";
 import { getPaginationItems, useQueryPagination } from "@/hooks/usePagination";
+import { useUsers } from "@/hooks/fetch/useUsers";
 
 export default function ListUser() {
   const { page, setPage } = useQueryPagination();
@@ -122,7 +122,7 @@ export default function ListUser() {
                           </TableCell>
                         </TableRow>
                       ) : (
-                        users.map((user: Users) => (
+                        (users as Users[]).map((user) => (
                           <TableRow
                             key={user.id}
                             className="hover:bg-muted/50 transition"

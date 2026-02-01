@@ -13,7 +13,7 @@ import {
   Calendar,
   Tag,
 } from "lucide-react";
-import { useLostReports } from "@/hooks/useLostReport";
+import { useLostReports } from "@/hooks/fetch/useLostReport";
 import { LostReport } from "@/types/LostReport";
 import {
   Table,
