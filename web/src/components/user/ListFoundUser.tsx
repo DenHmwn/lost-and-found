@@ -10,7 +10,6 @@ import {
   MapPin,
   Calendar,
 } from "lucide-react";
-import { useFoundReports } from "@/hooks/useFoundReport";
 import { FoundReport } from "@/types/FoundReport";
 import {
   Table,
@@ -33,6 +32,7 @@ import {
   PaginationPrevious,
 } from "../ui/pagination";
 import { getPaginationItems, useQueryPagination } from "@/hooks/usePagination";
+import { useFoundReports } from "@/hooks/fetch/useFoundReport";
 
 export default function ListFoundUser() {
   const { page, setPage } = useQueryPagination();

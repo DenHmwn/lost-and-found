@@ -13,7 +13,7 @@ import {
   Calendar,
   Tag,
 } from "lucide-react";
-import { useLostReports } from "@/hooks/useLostReport";
+import { useLostReports } from "@/hooks/fetch/useLostReport";
 import { LostReport } from "@/types/LostReport";
 import {
   Table,
@@ -406,23 +406,27 @@ export default function ListLostUser() {
                   />
                 </PaginationItem>
 
-                {getPaginationItems(page, totalPages).map((pageItems, index) => (
-                  <PaginationItem key={index}>
-                    {pageItems === "..." ? (
-                      <PaginationEllipsis />
-                    ) : (
-                      <PaginationLink
-                        isActive={page === pageItems}
-                        onClick={() => setPage(pageItems)}
-                        className={
-                          page === pageItems ? "pointer-events-none opacity-50" : ""
-                        }
-                      >
-                        {pageItems}
-                      </PaginationLink>
-                    )}
-                  </PaginationItem>
-                ))}
+                {getPaginationItems(page, totalPages).map(
+                  (pageItems, index) => (
+                    <PaginationItem key={index}>
+                      {pageItems === "..." ? (
+                        <PaginationEllipsis />
+                      ) : (
+                        <PaginationLink
+                          isActive={page === pageItems}
+                          onClick={() => setPage(pageItems)}
+                          className={
+                            page === pageItems
+                              ? "pointer-events-none opacity-50"
+                              : ""
+                          }
+                        >
+                          {pageItems}
+                        </PaginationLink>
+                      )}
+                    </PaginationItem>
+                  ),
+                )}
 
                 <PaginationItem>
                   <PaginationNext
