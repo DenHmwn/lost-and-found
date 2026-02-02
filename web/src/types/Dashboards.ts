@@ -1,6 +1,6 @@
 import { LucideIcon } from "lucide-react";
 
-export interface StatsCardConfig {
+export interface StatsCardConfigTypes {
   title: string;
   value: string | number;
   change: string;
@@ -10,7 +10,7 @@ export interface StatsCardConfig {
   textColor: string;
   };
 
-export interface RecentItem {
+export interface RecentItemTypes {
   type: "hilang" | "ditemukan";
   itemName: string;
   createdAt: string;
