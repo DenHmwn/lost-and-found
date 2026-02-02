@@ -40,13 +40,13 @@ export const useDashboardStats = () => {
     const today = new Date().toDateString();
     const lostToday =
       lostReports?.filter((item: LostReport | undefined) => {
-        const date = item?.createdAt || item?.createdAt;
+        const date = item?.createdAt;
         return date ? new Date(date).toDateString() === today : false;
       }).length || 0;
 
     const foundToday =
       foundReports?.filter((item: FoundReport | undefined) => {
-        const date = item?.createdAt || item?.createdAt;
+        const date = item?.createdAt;
         return date ? new Date(date).toDateString() === today : false;
       }).length || 0;
 
@@ -61,7 +61,7 @@ export const useDashboardStats = () => {
     };
   }, [foundReports, lostReports, users, admin]);
 
-// calculate success rate
+  // calculate success rate
   const successRate = useMemo(() => {
     if (!foundReports || foundReports.length === 0) return 0;
     return Math.round((stats.claimed / stats.totalFound) * 100);
@@ -71,17 +71,19 @@ export const useDashboardStats = () => {
   const recentItems = useMemo(() => {
     if (!foundReports && !lostReports) return [];
 
-    const foundItems: RecentItem[] = (foundReports || []).map(
+    const foundItems: RecentItemTypes[] = (foundReports || []).map(
       (item: FoundReport) => ({
         ...item,
         type: "ditemukan" as const,
+        itemName: item.namaBarang,
       }),
     );
 
-    const lostItems: RecentItem[] = (lostReports || []).map(
+    const lostItems: RecentItemTypes[] = (lostReports || []).map(
       (item: LostReport) => ({
         ...item,
         type: "hilang" as const,
+        itemName: item.namaBarang,
       }),
     );
 
