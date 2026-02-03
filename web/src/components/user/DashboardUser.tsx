@@ -1,27 +1,22 @@
 "use client";
 import {
-  AlertCircle,
   CheckCircle,
-  Clock,
   Package,
   Search,
-  TrendingUp,
   User,
 } from "lucide-react";
 import { AppSidebarUser } from "../AppSidebarUser";
 import { SiteHeader } from "../SiteHeader";
 import { SidebarInset, SidebarProvider } from "../ui/sidebar";
-import { useRouter } from "next/navigation";
-import { Button } from "../ui/button";
 import SkeletonDasboard from "../SkeletonDashboard";
-import { formatTimeAgo } from "@/utils/date";
 import { useDashboardStats } from "@/hooks/useDashboardStats";
+import StatsGrid from "../dashboard/StatsGrid";
+import { StatsCardConfigTypes } from "@/types/Dashboards";
 
 export default function DashboardUser() {
-  const router = useRouter();
   const { stats, recentItems, successRate, isLoading } = useDashboardStats();
 
-  const statsConfig = [
+  const statsConfig: StatsCardConfigTypes[] = [
     {
       title: "Total Barang Hilang",
       value: stats.totalLost,
@@ -104,33 +99,7 @@ export default function DashboardUser() {
               <article>
                 <section className="p-6">
                   {/* Stats Grid */}
-                  <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-                    {statsConfig.map((stat, index) => {
-                      const Icon = stat.icon;
-                      return (
-                        <section
-                          key={index}
-                          className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow"
-                        >
-                          <section className="flex items-center justify-between mb-4">
-                            <section
-                              className={`${stat.lightBg} p-3 rounded-lg`}
-                            >
-                              <Icon className={`w-6 h-6 ${stat.textColor}`} />
-                            </section>
-                            <TrendingUp className="w-4 h-4 text-green-500" />
-                          </section>
-                          <h3 className="text-gray-600 text-sm font-medium mb-1">
-                            {stat.title}
-                          </h3>
-                          <p className="text-3xl font-bold text-gray-900 mb-1">
-                            {stat.value}
-                          </p>
-                          <p className="text-xs text-gray-500">{stat.change}</p>
-                        </section>
-                      );
-                    })}
-                  </section>
+                  <StatsGrid statsConfig={statsConfig} />
                   {/* Recent Activity */}
                   <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     {/* Recent Items List */}
