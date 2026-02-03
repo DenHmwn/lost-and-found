@@ -6,6 +6,7 @@ import { CheckCircle, Package, Search, User } from "lucide-react";
 import SkeletonDasboard from "../SkeletonDashboard";
 import { useDashboardStats } from "@/hooks/useDashboardStats";
 import StatsGrid from "../dashboard/StatsGrid";
+import { StatsCardConfigTypes } from "@/types/Dashboards";
 
 export default function DashboardAdmin() {
   const router = useRouter();
