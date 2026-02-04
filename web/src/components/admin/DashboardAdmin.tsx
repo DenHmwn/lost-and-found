@@ -9,8 +9,6 @@ import StatsGrid from "../dashboard/StatsGrid";
 import { StatsCardConfigTypes } from "@/types/Dashboards";
 
 export default function DashboardAdmin() {
-  const router = useRouter();
-
   const { stats, recentItems, successRate, isLoading } = useDashboardStats();
 
   const statsConfig: StatsCardConfigTypes[] = [
