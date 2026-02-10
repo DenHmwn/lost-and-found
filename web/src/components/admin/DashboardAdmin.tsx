@@ -6,7 +6,10 @@ import { CheckCircle, Package, Search, User } from "lucide-react";
 import SkeletonDasboard from "../SkeletonDashboard";
 import { useDashboardStats } from "@/hooks/useDashboardStats";
 import StatsGrid from "../dashboard/StatsGrid";
+import RecentActivity from "../dashboard/RecentActivity";
 import { StatsCardConfigTypes } from "@/types/Dashboards";
+import SuccessRate from "../dashboard/SuccessRate";
+import QuickAdmin from "../dashboard/QuickAdmin";
 
 export default function DashboardAdmin() {
   const { stats, recentItems, successRate, isLoading } = useDashboardStats();
@@ -99,68 +102,12 @@ export default function DashboardAdmin() {
                     <RecentActivity recentItems={recentItems} />
                     {/* Quick Stats */}
                     <section className="space-y-6">
-                      {/* Success Rate */}
-                      <section className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                        <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                          Tingkat Keberhasilan
-                        </h3>
-                        <section className="flex items-center justify-center">
-                          <section className="relative w-32 h-32">
-                            <svg className="w-32 h-32 transform -rotate-90">
-                              <circle
-                                cx="64"
-                                cy="64"
-                                r="56"
-                                stroke="#e5e7eb"
-                                strokeWidth="12"
-                                fill="none"
-                              />
-                              <circle
-                                cx="64"
-                                cy="64"
-                                r="56"
-                                stroke="#10b981"
-                                strokeWidth="12"
-                                fill="none"
-                                strokeDasharray={`${2 * Math.PI * 56 * (successRate / 100)} ${2 * Math.PI * 56}`}
-                                strokeLinecap="round"
-                              />
-                            </svg>
-                            <section className="absolute inset-0 flex items-center justify-center">
-                              <span className="text-3xl font-bold text-gray-900">
-                                {successRate}%
-                              </span>
-                            </section>
-                          </section>
-                        </section>
-                        <p className="text-center text-sm text-gray-600 mt-4">
-                          {stats.claimed} dari {stats.totalFound} barang
-                          berhasil dikembalikan
-                        </p>
-                      </section>
-
-                      {/* Quick Actions */}
-                      <section className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                        <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                          Aksi Cepat
-                        </h3>
-                        <section className="space-y-3">
-                          <Button
-                            className="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-3 px-4 rounded-lg transition-colors"
-                            onClick={() => router.push("/homepage/admin/found")}
-                          >
-                            Lihat Laporan Temuan
-                          </Button>
-                          <Button
-                            className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-3 px-4 rounded-lg transition-colors"
-                            onClick={() =>
-                              router.push("/homepage/admin/list-user")
-                            }
-                          >
-                            Kelola User
-                          </Button>
-                        </section>
-                      </section>
+                      <SuccessRate
+                        successRate={successRate}
+                        claimed={stats.claimed}
+                        totalFound={stats.totalFound}
+                      />
+                      <QuickAdmin />
                     </section>
                   </section>
                 </section>
