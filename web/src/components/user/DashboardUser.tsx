@@ -109,6 +109,7 @@ export default function DashboardUser() {
                         claimed={stats.claimed}
                         totalFound={stats.totalFound}
                       />
+                      <QuickUser />
                     </section>
                   </section>
                 </section>
