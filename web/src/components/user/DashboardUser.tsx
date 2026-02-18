@@ -9,6 +9,7 @@ import StatsGrid from "../dashboard/StatsGrid";
 import { StatsCardConfigTypes } from "@/types/Dashboards";
 import RecentActivity from "../dashboard/RecentActivity";
 import SuccessRate from "../dashboard/SuccessRate";
+import QuickUser from "../dashboard/QuickUser";
 
 export default function DashboardUser() {
   const { stats, recentItems, successRate, isLoading } = useDashboardStats();
@@ -109,6 +110,7 @@ export default function DashboardUser() {
                         claimed={stats.claimed}
                         totalFound={stats.totalFound}
                       />
+                      <QuickUser />
                     </section>
                   </section>
                 </section>
