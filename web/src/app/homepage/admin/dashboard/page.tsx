@@ -1,6 +1,10 @@
 import DashboardAdmin from "@/components/admin/DashboardAdmin";
+import SkeletonDasboard from "@/components/SkeletonDashboard";
+import { Suspense } from "react";
 export default function DashboardAdminPage() {
   return (
-    <DashboardAdmin/>
+    <Suspense fallback={<SkeletonDasboard />}>
+      <DashboardAdmin />
+    </Suspense>
   );
 }

@@ -1,7 +1,11 @@
 import ListUser from '@/components/admin/ListUser'
+import SkeletonMember from '@/components/SkeletonListMember'
+import { Suspense } from 'react'
 
 export default function ListUserPage() {
   return (
-    <ListUser/>
+    <Suspense fallback={<SkeletonMember/>}>
+      <ListUser/>
+    </Suspense>
   )
 }
