@@ -3,16 +3,13 @@
 import { SiteHeader } from "@/components/SiteHeader";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import {
-  Loader2,
   Clock,
   CheckCircle2,
   XCircle,
   Package,
   MapPin,
-  User,
   Calendar,
 } from "lucide-react";
-import { useFoundReports } from "@/hooks/useFoundReport";
 import { FoundReport } from "@/types/FoundReport";
 import {
   Table,
@@ -22,13 +19,32 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { formatDate } from "@/lib/scripts";
+import { formatDate } from "@/utils/date";
 import { AppSidebarUser } from "../AppSidebarUser";
 import SkeletonListItem from "../SkeletonListItem";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "../ui/pagination";
+import { getPaginationItems, useQueryPagination } from "@/hooks/usePagination";
+import { useFoundReports } from "@/hooks/fetch/useFoundReport";
 
 export default function ListFoundUser() {
+  const { page, setPage } = useQueryPagination();
   // Fetch data menggunakan custom hook
-  const { data: FoundReports = [], error, isLoading } = useFoundReports();
+  const {
+    data: foundReports = [],
+    error,
+    isLoading,
+    pagination,
+  } = useFoundReports(page);
+
+  const totalPages = pagination?.totalPage;
 
   // Status Report Badge
   const StatusReportBadge = ({
@@ -64,24 +80,31 @@ export default function ListFoundUser() {
 
   // Stats Cards
   const getStats = () => {
-    const total = FoundReports.length;
-    const done = FoundReports.filter(
-      (r: FoundReport) => r.statusReport === "Done"
+    const total = pagination?.totalData;
+    const done = foundReports.filter(
+      (r: FoundReport) => r.statusReport === "Done",
     ).length;
-    const onProgress = FoundReports.filter(
-      (r: FoundReport) => r.statusReport === "OnProgress"
+    const onProgress = foundReports.filter(
+      (r: FoundReport) => r.statusReport === "OnProgress",
     ).length;
-    const closed = FoundReports.filter(
-      (r: FoundReport) => r.statusReport === "Closed"
+    const closed = foundReports.filter(
+      (r: FoundReport) => r.statusReport === "Closed",
     ).length;
-    const matched = FoundReports.filter(
-      (r: FoundReport) => r.lostReportId !== null
+    const matched = foundReports.filter(
+      (r: FoundReport) => r.lostReportId !== null,
     ).length;
 
     return { total, done, onProgress, closed, matched };
   };
 
   const stats = getStats();
+
+  const handlePrev = () => {
+    if (page > 1) return setPage(page - 1);
+  };
+  const handleNext = () => {
+    if (page < totalPages) return setPage(page + 1);
+  };
 
   if (isLoading) return <SkeletonListItem />;
 
@@ -134,7 +157,9 @@ export default function ListFoundUser() {
                         <p className="text-sm font-medium text-muted-foreground">
                           Total Laporan
                         </p>
-                        <p className="mt-2 text-3xl font-bold">{stats.total}</p>
+                        <p className="mt-2 text-3xl font-bold">
+                          {pagination?.totalData}
+                        </p>
                       </section>
                       <section className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100">
                         <Package className="h-6 w-6 text-blue-600" />
@@ -196,7 +221,7 @@ export default function ListFoundUser() {
                       Daftar Laporan Barang Temu
                     </h2>
                     <p className="text-sm text-muted-foreground">
-                      Total {FoundReports.length} laporan barang yang ditemukan
+                      {foundReports.length} laporan barang yang ditemukan
                     </p>
                   </section>
 
@@ -210,19 +235,22 @@ export default function ListFoundUser() {
                           <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
                             Lokasi Temu
                           </TableHead>
-                          <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                          {/* <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
                             Admin/Pelapor
-                          </TableHead>
+                          </TableHead> */}
                           <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
                             Status
                           </TableHead>
                           <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                            Tanggal
+                            Tanggal Penemuan
                           </TableHead>
+                          {/* <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                            Tanggal Laporan
+                          </TableHead> */}
                         </TableRow>
                       </TableHeader>
                       <TableBody className="sectionide-y sectionide-border">
-                        {FoundReports.length === 0 ? (
+                        {foundReports.length === 0 ? (
                           <TableRow>
                             <TableCell
                               colSpan={5}
@@ -239,7 +267,7 @@ export default function ListFoundUser() {
                             </TableCell>
                           </TableRow>
                         ) : (
-                          FoundReports.map((report: FoundReport) => (
+                          foundReports.map((report: FoundReport) => (
                             <TableRow
                               key={report.id}
                               className="transition-colors hover:bg-muted/50"
@@ -257,9 +285,9 @@ export default function ListFoundUser() {
                                       {report.deskripsi}
                                     </p> */}
                                     {report.lostReportId && (
-                                      <span className="inline-flex items-center gap-1 mt-1 text-xs text-purple-600 bg-purple-50 px-2 py-0.5 rounded">
-                                        <CheckCircle2 className="h-3 w-3" />
-                                        Tercocok dengan laporan #
+                                      <span className="inline-flex items-center gap-1 mt-1 text-xs text-yellow-800 bg-yellow-50 px-2 py-0.5 rounded">
+                                        Barang ini mungkin cocok dengan laporan{" "}
+                                        {""}
                                         {report.lostReportId}
                                       </span>
                                     )}
@@ -274,7 +302,7 @@ export default function ListFoundUser() {
                                   </span>
                                 </section>
                               </TableCell>
-                              <TableCell className="px-6 py-4">
+                              {/* <TableCell className="px-6 py-4">
                                 <section className="flex items-center gap-2">
                                   <section className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10">
                                     <User className="h-4 w-4 text-primary" />
@@ -288,7 +316,7 @@ export default function ListFoundUser() {
                                     </p>
                                   </section>
                                 </section>
-                              </TableCell>
+                              </TableCell> */}
                               <TableCell className="px-6 py-4">
                                 <StatusReportBadge
                                   status={report.statusReport}
@@ -298,10 +326,21 @@ export default function ListFoundUser() {
                                 <section className="flex items-center gap-2 text-sm text-muted-foreground">
                                   <Calendar className="h-4 w-4" />
                                   <span className="text-xs">
-                                    {formatDate(report.createdAt)}
+                                    {formatDate(
+                                      report.tanggalTemu,
+                                      report.waktuTemu,
+                                    )}
                                   </span>
                                 </section>
                               </TableCell>
+                              {/* <TableCell className="px-6 py-4">
+                                <section className="flex items-center gap-2 text-sm text-muted-foreground">
+                                  <Calendar className="h-4 w-4" />
+                                  <span className="text-xs">
+                                    {formatTimeAgo(report.createdAt)}
+                                  </span>
+                                </section>
+                              </TableCell> */}
                             </TableRow>
                           ))
                         )}
@@ -311,6 +350,49 @@ export default function ListFoundUser() {
                 </section>
               </article>
             )}
+            <Pagination>
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious
+                    onClick={handlePrev}
+                    aria-disabled={page === 1}
+                    className={
+                      page === 1 ? "pointer-events-none opacity-50" : ""
+                    }
+                  />
+                </PaginationItem>
+
+                {getPaginationItems(page, totalPages).map((pageItems, index) => (
+                  <PaginationItem key={index}>
+                    {pageItems === "..." ? (
+                      <PaginationEllipsis />
+                    ) : (
+                      <PaginationLink
+                        isActive={page === pageItems}
+                        onClick={() => setPage(pageItems)}
+                        className={
+                          page === pageItems ? "pointer-events-none opacity-50" : ""
+                        }
+                      >
+                        {pageItems}
+                      </PaginationLink>
+                    )}
+                  </PaginationItem>
+                ))}
+
+                <PaginationItem>
+                  <PaginationNext
+                    onClick={handleNext}
+                    aria-disabled={page === totalPages}
+                    className={
+                      page === totalPages
+                        ? "pointer-events-none opacity-50"
+                        : ""
+                    }
+                  />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
           </section>
         </section>
       </SidebarInset>

@@ -80,24 +80,24 @@ export async function POST(req: Request) {
       // Tidak bisa diakses JavaScript
       httpOnly: true,
       // HTTPS only di production
-      secure: process.env.NODE_ENV === "production",
+      secure: true,
       // set waktu kedaluwarsa
       maxAge: 20 * 60,
       path: "/",
       // Proteksi CSRF
-      sameSite: "lax",
+      sameSite: "none",
     });
 
     response.cookies.set("refreshToken", refreshToken, {
       // Tidak bisa diakses JavaScript
       httpOnly: true,
       // HTTPS only di production
-      secure: process.env.NODE_ENV === "production",
+      secure: true,
       // set waktu kedaluwarsa
       maxAge: 3 * 24 * 60 * 60,
       path: "/",
       // Proteksi CSRF
-      sameSite: "lax",
+      sameSite: "none",
     });
 
     return response;

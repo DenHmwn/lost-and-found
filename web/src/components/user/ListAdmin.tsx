@@ -4,9 +4,7 @@ import { SidebarInset, SidebarProvider } from "../ui/sidebar";
 import { SiteHeader } from "../SiteHeader";
 import { AppSidebarUser } from "../AppSidebarUser";
 import { IconUsers } from "@tabler/icons-react";
-import { useUsers } from "@/hooks/useUsers";
-import { Loader2, XCircle } from "lucide-react";
-import { Users } from "@/types/users";
+import { XCircle } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -16,12 +14,11 @@ import {
   TableRow,
 } from "../ui/table";
 import SkeletonMember from "../SkeletonListMember";
+import { useAdmin } from "@/hooks/fetch/useAdmin";
+import { Admin } from "@/types/Admin";
 
 export default function ListAdmin() {
-  const { data: users, isLoading, error } = useUsers();
-
-  // filter hanya admin
-  const admin = users?.filter((user: Users) => user.role === "ADMIN") || [];
+  const { data: admin, error, isLoading, pagination } = useAdmin();
 
   if (isLoading) {
     return <SkeletonMember />;
@@ -73,7 +70,7 @@ export default function ListAdmin() {
                 <section className="border-b bg-muted/50 px-6 py-4">
                   <h2 className="font-semibold">Daftar Admin</h2>
                   <p className="text-sm text-muted-foreground">
-                    Total {admin.length} Admin
+                    Total {pagination.totalData} Admin
                   </p>
                 </section>
                 <section className="overflow-x-auto">
@@ -106,26 +103,26 @@ export default function ListAdmin() {
                           </TableCell>
                         </TableRow>
                       ) : (
-                        admin.map((user: Users) => (
+                        admin.map((admin: Admin) => (
                           <TableRow
-                            key={user.id}
+                            key={admin.id}
                             className="hover:bg-muted/50 transition"
                           >
                             <TableCell className="px-6 py-4">
                               <section className="flex items-center gap-2">
-                                <span className="font-medium">{user.name}</span>
+                                <span className="font-medium">{admin.name}</span>
                               </section>
                             </TableCell>
 
                             <TableCell className="px-6 py-4">
                               <section className="flex items-center gap-2 text-sm">
-                                {user.email}
+                                {admin.email}
                               </section>
                             </TableCell>
 
                             <TableCell className="px-6 py-4">
                               <section className="flex items-center gap-2 text-sm">
-                                {user.notelp}
+                                {admin.notelp}
                               </section>
                             </TableCell>
                           </TableRow>

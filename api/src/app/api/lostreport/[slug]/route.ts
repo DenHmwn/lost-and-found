@@ -1,9 +1,7 @@
 import prisma from "@/lib/prisma";
 import { LostStatus, StatusReport } from "@prisma/client";
 import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
-import { jwtVerify } from "jose";
-import { SECRET } from "@/lib/secret";
+import { getAuth } from "@/lib/getAuth";
 
 // buat fungsi GET by id
 export async function GET(
@@ -91,18 +89,22 @@ export async function PUT(
       );
     }
 
-    const cookieStore = await cookies();
-    const token = cookieStore.get("accessToken")?.value;
-    if (!token) {
+    // ambil token dari helper
+    const user = await getAuth();
+
+    if (!user) {
       return NextResponse.json(
-        { success: false, message: "Terjadi kesalahan, Silakan login ulang" },
+        {
+          success: false,
+          message: "Unauthorized: Token tidak valid atau belum login.",
+        },
         { status: 401 }
       );
     }
 
-    const { payload } = await jwtVerify(token, SECRET);
-    const currentUserId = Number(payload.id);
-    const currentUserRole = String(payload.role);
+    const headerId = Number(user.id);
+    const headerRole = user.role;
+
     const isEditingItem =
       data.namaBarang !== undefined ||
       data.deskripsi !== undefined ||
@@ -161,10 +163,7 @@ export async function PUT(
       );
     }
     // cek apakah user yang request pemilik laporan atau admin
-    if (
-      existingRecord.userId !== currentUserId &&
-      currentUserRole !== "ADMIN"
-    ) {
+    if (existingRecord.userId !== headerId && headerRole !== "ADMIN") {
       return NextResponse.json(
         {
           success: false,
@@ -257,19 +256,20 @@ export async function DELETE(
     }
 
     // ambil token dari cookie
-    const cookieStore = await cookies();
-    const token = cookieStore.get("accessToken")?.value;
+    const user = await getAuth();
 
-    if (!token) {
+    if (!user) {
       return NextResponse.json(
-        { success: false, message: "Anda belum login, silahkan login" },
+        {
+          success: false,
+          message: "Unauthorized: Token tidak valid atau belum login.",
+        },
         { status: 401 }
       );
     }
 
-    const { payload } = await jwtVerify(token, SECRET);
-    const currentUserId = Number(payload.id);
-    const currentUserRole = String(payload.role);
+    const currentUserId = Number(user.id);
+    const currentUserRole = user.role;
 
     const existingRecord = await prisma.lostReport.findUnique({
       where: { id },

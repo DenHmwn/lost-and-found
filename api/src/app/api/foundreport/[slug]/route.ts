@@ -1,9 +1,7 @@
 import prisma from "@/lib/prisma";
 import { StatusReport } from "@prisma/client";
 import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
-import { SECRET } from "@/lib/secret";
-import { jwtVerify } from "jose";
+import { getAuth } from "@/lib/getAuth";
 
 // buat Fungsi GET
 export async function GET(
@@ -108,23 +106,24 @@ export async function PUT(
         { status: 400 }
       );
     }
-    // ambil data dari header
-    const cookieStore = await cookies();
-    const token = cookieStore.get("accessToken")?.value;
+    // ambil data dari helper
+    const admin = await getAuth();
 
-    if (!token) {
+    if (!admin) {
       return NextResponse.json(
-        { success: false, message: "Terjadi kesalahan, silakan login ulang" },
+        {
+          success: false,
+          message: "Unauthorized: Token tidak valid atau belum login.",
+        },
         { status: 401 }
       );
     }
 
-    const { payload } = await jwtVerify(token, SECRET);
-    const currentAdminId = Number(payload.id);
-    const currentRole = String(payload.role);
+    const haderId = Number(admin.id);
+    const headerRole = admin.role;
 
     // Cek Role ADMIN
-    if (currentRole !== "ADMIN") {
+    if (headerRole !== "ADMIN") {
       return NextResponse.json(
         { success: false, message: "Hanya Admin yang boleh mengedit." },
         { status: 403 }
@@ -147,7 +146,7 @@ export async function PUT(
     }
 
     // cek pemilik laporan
-    if (existingRecord.adminId !== currentAdminId) {
+    if (existingRecord.adminId !== haderId) {
       return NextResponse.json(
         {
           success: false,
@@ -245,6 +244,8 @@ export async function PUT(
               : null
             : existingRecord.lostReportId,
         statusReport: data.statusReport || existingRecord.statusReport,
+        tanggalTemu: data.tanggalTemu || existingRecord.tanggalTemu,
+        waktuTemu: data.waktuTemu || existingRecord.waktuTemu,
       },
       include: {
         admin: {
@@ -310,19 +311,18 @@ export async function DELETE(
       );
     }
 
-    const headerId =
-      request.headers.get("user-id") ?? request.headers.get("userId");
-    const headerRole =
-      request.headers.get("user-role") ?? request.headers.get("userRole");
+    // ambil token dari cookie helpoer
+    const admin = await getAuth();
 
-    if (!headerId) {
+    if (!admin) {
       return NextResponse.json(
         { success: false, message: "Anda belum login, silahkan login" },
         { status: 401 }
       );
     }
 
-    const currentAdminId = Number(headerId);
+    const headerId = Number(admin.id);
+    const headerRole = admin.role;
 
     const existingRecord = await prisma.foundReport.findUnique({
       where: { id },
@@ -338,7 +338,7 @@ export async function DELETE(
       );
     }
 
-    if (headerRole !== "ADMIN" || existingRecord.adminId !== currentAdminId) {
+    if (headerRole !== "ADMIN" || existingRecord.adminId !== headerId) {
       return NextResponse.json(
         {
           success: false,

@@ -28,17 +28,11 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    setIsLoading(true);
 
     try {
       const { data } = await api.post("/auth/login", { email, password });
-      console.log("Login response:", data);
       if (data.success) {
-        // Simpan token di localStorage (untuk Bearer token)
-        if (data.accessToken) {
-          localStorage.setItem("accessToken", data.accessToken);
-        }
-
+      
         const role = data.user?.role;
 
         // Redirect berdasarkan role

@@ -1,14 +1,34 @@
+import { pagination } from "@/lib/pagination";
 import prisma from "@/lib/prisma";
+import { Prisma } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
 // buat GET user
-export const GET = async () => {
+export const GET = async (req: NextRequest) => {
+  const { page, limit, skip } = pagination(req);
+
+  const roleParam = req.nextUrl.searchParams.get("role");
+
+  const role =
+    roleParam === "ADMIN" || roleParam === "USER"
+      ? (roleParam as "ADMIN" | "USER")
+      : null;
+
+  const where: Prisma.UserWhereInput = role
+    ? { role }
+    : {
+        role: {
+          in: ["USER", "ADMIN"],
+        },
+      };
+
+  // ambil total data
+  const totalData = await prisma.user.count({ where });
+
   const users = await prisma.user.findMany({
-    where: {
-      role: {
-        in: ["USER", "ADMIN"],
-      },
-    },
+    where,
+    skip,
+    take: limit,
     select: {
       id: true,
       name: true,
@@ -24,11 +44,17 @@ export const GET = async () => {
     {
       success: true,
       message: "Berhasil mengambil data laporan",
+      pagination: {
+        page,
+        limit,
+        totalData,
+        totalPage: Math.ceil(totalData / limit),
+      },
       data: users,
     },
     {
       status: 200,
-    }
+    },
   );
 };
 // Buat POST user
@@ -55,7 +81,7 @@ export const POST = async (req: NextRequest) => {
       },
       {
         status: 409,
-      }
+      },
     );
   }
   // simpan data sesuai request
@@ -77,6 +103,6 @@ export const POST = async (req: NextRequest) => {
     },
     {
       status: 201,
-    }
+    },
   );
 };

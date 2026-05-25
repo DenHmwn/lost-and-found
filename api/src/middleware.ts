@@ -3,11 +3,24 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { SECRET } from "./lib/secret";
 
+const frontOrigin = process.env.FRONT_ORIGIN!;
+const allowedOrigin = frontOrigin.split(",");
+
 // Helper function untuk set CORS headers
-function setCorsHeaders(response: NextResponse) {
-  response.headers.set("Access-Control-Allow-Origin", "http://localhost:3000");
-  response.headers.set("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT, PATCH, OPTIONS");
-  response.headers.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
+function setCorsHeaders(req: NextRequest, response: NextResponse) {
+  const origin = req.headers.get("origin");
+  if (origin && allowedOrigin.includes(origin)) {
+    response.headers.set("Access-Control-Allow-Origin", origin);
+    response.headers.set("Vary", "Origin");
+  }
+  response.headers.set(
+    "Access-Control-Allow-Methods",
+    "GET, POST, DELETE, PUT, PATCH, OPTIONS",
+  );
+  response.headers.set(
+    "Access-Control-Allow-Headers",
+    "Content-Type, Authorization",
+  );
   response.headers.set("Access-Control-Allow-Credentials", "true");
   response.headers.set("Access-Control-Max-Age", "86400");
   return response;
@@ -19,7 +32,7 @@ export async function middleware(req: NextRequest) {
   // Handle preflight options request
   if (req.method === "OPTIONS") {
     const response = new NextResponse(null, { status: 200 });
-    return setCorsHeaders(response);
+    return setCorsHeaders(req, response);
   }
 
   // Skip nextjs internal paths
@@ -27,56 +40,31 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
-  if (pathname.startsWith("/api/auth/refresh")) {
-    const res = NextResponse.next();
-    return setCorsHeaders(res);
-  }
-
-  // Kasih akses auth routes
-  if (pathname.startsWith("/api/auth/login") || pathname.startsWith("/api/auth/register") || pathname.startsWith("/api/auth/verify")) {
-    const response = NextResponse.next();
-    return setCorsHeaders(response);
+ if (pathname.startsWith("/api/auth")) {
+   return setCorsHeaders(req, NextResponse.next());
   }
 
   // Allow user registration
   if (pathname === "/api/user" && req.method === "POST") {
     const response = NextResponse.next();
-    return setCorsHeaders(response);
+    return setCorsHeaders(req, response);
   }
 
-  // Get token dari Authorization header ATAU cookie
-  const authHeader = req.headers.get("authorization");
-  const tokenFromHeader = authHeader?.startsWith("Bearer ") ? authHeader.split(" ")[1] : undefined;
   const cookieToken = req.cookies.get("accessToken")?.value;
-  const token = cookieToken || tokenFromHeader;
+  const token = cookieToken;
   if (!token) {
-    const res = NextResponse.json({ success: false, message: "Token tidak ada", authenticated: false }, { status: 401 });
-    return setCorsHeaders(res);
+    const res = NextResponse.json(
+      { success: false, message: "Token tidak ada", authenticated: false },
+      { status: 401 },
+    );
+    return setCorsHeaders(req, res);
   }
 
   // Verifikasi token
   try {
-    // const secret = new TextEncoder().encode(process.env.JWT_SECRET!)
-    const { payload } = await jwtVerify(token, SECRET);
-
-    // Buat request header untuk user info
-    const requestHeaders = new Headers(req.headers);
-    
-    requestHeaders.set("userId", String(payload.id));
-    requestHeaders.set("userName", String(payload.name));
-    requestHeaders.set("userRole", String(payload.role));
-    requestHeaders.set("user-id", String(payload.id));
-    requestHeaders.set("user-name", String(payload.name));
-    requestHeaders.set("user-role", String(payload.role));
-    requestHeaders.set("authenticated", "true");
-
-    const response = NextResponse.next({
-      request: {
-        headers: requestHeaders,
-      },
-    });
-
-    return setCorsHeaders(response);
+    await jwtVerify(token, SECRET);
+    const response = NextResponse.next();
+    return setCorsHeaders(req, response);
   } catch (err) {
     const response = NextResponse.json(
       {
@@ -85,27 +73,12 @@ export async function middleware(req: NextRequest) {
         error: err instanceof Error ? err.message : String(err),
         authenticated: false,
       },
-      { status: 401 }
+      { status: 401 },
     );
-    return setCorsHeaders(response);
+    return setCorsHeaders(req, response);
   }
 }
 
 export const config = {
-  matcher: [
-    "/api/user",
-    "/api/user/:path*",
-
-    "/api/lostreport",
-    "/api/lostreport/:path*",
-
-    "/api/foundreport",
-    "/api/foundreport/:path*",
-
-    "/api/auth/login",
-    "/api/auth/register",
-    // "/api/auth/verify",
-    "/api/auth/logout",
-    "/api/auth/refresh",
-  ],
+  matcher: ["/api/:path*"],
 };

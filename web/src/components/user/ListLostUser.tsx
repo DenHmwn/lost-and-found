@@ -11,8 +11,9 @@ import {
   MapPin,
   User,
   Calendar,
+  Tag,
 } from "lucide-react";
-import { useLostReports } from "@/hooks/useLostReport";
+import { useLostReports } from "@/hooks/fetch/useLostReport";
 import { LostReport } from "@/types/LostReport";
 import {
   Table,
@@ -22,13 +23,31 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { formatDate, formatTimeAgo } from "@/lib/scripts";
+import { formatDate, formatTimeAgo } from "@/utils/date";
 import { AppSidebarUser } from "../AppSidebarUser";
 import SkeletonListItem from "../SkeletonListItem";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "../ui/pagination";
+import { getPaginationItems, useQueryPagination } from "@/hooks/usePagination";
 
 export default function ListLostUser() {
+  const { page, setPage } = useQueryPagination();
   // Fetch data menggunakan custom hook
-  const { data: lostReports = [], error, isLoading } = useLostReports();
+  const {
+    data: lostReports = [],
+    error,
+    isLoading,
+    pagination,
+  } = useLostReports(page);
+
+  const totalPages = pagination?.totalPage;
 
   // Status Badge Component
   const StatusBadge = ({
@@ -99,17 +118,24 @@ export default function ListLostUser() {
     );
   };
 
+  const handlePrev = () => {
+    if (page > 1) return setPage(page - 1);
+  };
+  const handleNext = () => {
+    if (page < totalPages) return setPage(page + 1);
+  };
+
   // Stats Cards
   const getStats = () => {
-    const total = lostReports.length;
+    const total = pagination?.totalData;
     const pending = lostReports.filter(
-      (r: LostReport) => r.status === "PENDING"
+      (r: LostReport) => r.status === "PENDING",
     ).length;
     const approved = lostReports.filter(
-      (r: LostReport) => r.status === "APPROVED"
+      (r: LostReport) => r.status === "APPROVED",
     ).length;
     const onProgress = lostReports.filter(
-      (r: LostReport) => r.statusReport === "OnProgress"
+      (r: LostReport) => r.statusReport === "OnProgress",
     ).length;
 
     return { total, pending, approved, onProgress };
@@ -232,7 +258,7 @@ export default function ListLostUser() {
                   <section className="border-b bg-muted/50 px-6 py-4">
                     <h2 className="font-semibold">Daftar Laporan</h2>
                     <p className="text-sm text-muted-foreground">
-                      Total {lostReports.length} laporan barang hilang
+                      {lostReports.length} laporan barang hilang
                     </p>
                   </section>
 
@@ -240,6 +266,9 @@ export default function ListLostUser() {
                     <Table className="w-full">
                       <TableHeader>
                         <TableRow className="border-b bg-muted/30">
+                          <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                            No Laporan
+                          </TableHead>
                           <TableHead className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
                             Info Barang
                           </TableHead>
@@ -267,7 +296,7 @@ export default function ListLostUser() {
                         {lostReports.length === 0 ? (
                           <TableRow>
                             <TableCell
-                              colSpan={6}
+                              colSpan={8}
                               className="px-6 py-16 text-center"
                             >
                               <Package className="mx-auto h-12 w-12 text-muted-foreground/50" />
@@ -285,6 +314,12 @@ export default function ListLostUser() {
                               key={report.id}
                               className="transition-colors hover:bg-muted/50"
                             >
+                              <TableCell className="px-6 py-4">
+                                <section className="flex items-center gap-2">
+                                  <Tag className="h-4 w-4" />
+                                  <span className="text-sm">{report.id}</span>
+                                </section>
+                              </TableCell>
                               <TableCell className="px-6 py-4">
                                 <section className="flex items-start gap-3">
                                   <section className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
@@ -335,7 +370,10 @@ export default function ListLostUser() {
                                 <section className="flex items-center gap-2 text-sm text-muted-foreground">
                                   <Calendar className="h-4 w-4" />
                                   <span className="text-xs">
-                                    {formatDate(report.tanggalHilang, report.waktuHilang)}
+                                    {formatDate(
+                                      report.tanggalHilang,
+                                      report.waktuHilang,
+                                    )}
                                   </span>
                                 </section>
                               </TableCell>
@@ -356,6 +394,53 @@ export default function ListLostUser() {
                 </section>
               </article>
             )}
+            <Pagination>
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious
+                    onClick={handlePrev}
+                    aria-disabled={page === 1}
+                    className={
+                      page === 1 ? "pointer-events-none opacity-50" : ""
+                    }
+                  />
+                </PaginationItem>
+
+                {getPaginationItems(page, totalPages).map(
+                  (pageItems, index) => (
+                    <PaginationItem key={index}>
+                      {pageItems === "..." ? (
+                        <PaginationEllipsis />
+                      ) : (
+                        <PaginationLink
+                          isActive={page === pageItems}
+                          onClick={() => setPage(pageItems)}
+                          className={
+                            page === pageItems
+                              ? "pointer-events-none opacity-50"
+                              : ""
+                          }
+                        >
+                          {pageItems}
+                        </PaginationLink>
+                      )}
+                    </PaginationItem>
+                  ),
+                )}
+
+                <PaginationItem>
+                  <PaginationNext
+                    onClick={handleNext}
+                    aria-disabled={page === totalPages}
+                    className={
+                      page === totalPages
+                        ? "pointer-events-none opacity-50"
+                        : ""
+                    }
+                  />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
           </section>
         </section>
       </SidebarInset>
