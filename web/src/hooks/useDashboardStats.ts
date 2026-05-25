@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { Users } from "@/types/Users";
+import { Users } from "@/types/users";
 import { FoundReport } from "@/types/FoundReport";
 import { LostReport } from "@/types/LostReport";
 import { Admin } from "@/types/Admin";

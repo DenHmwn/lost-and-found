@@ -14,7 +14,7 @@ import {
   TableHeader,
   TableRow,
 } from "../ui/table";
-import { Users } from "@/types/Users";
+import { Users } from "@/types/users";
 import SkeletonMember from "../SkeletonListMember";
 import {
   Pagination,
